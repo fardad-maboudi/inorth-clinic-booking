@@ -1,0 +1,42 @@
+[
+  {
+    "family": "Fraunces",
+    "slug": "fraunces",
+    "file": "fraunces-variable.woff2",
+    "weight": "100 900",
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+    "intent": "Expressive editorial serif with optical sizing"
+  },
+  {
+    "family": "Cormorant Garamond",
+    "slug": "cormorant-garamond",
+    "file": "cormorant-garamond-variable.woff2",
+    "weight": "300 700",
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf",
+    "intent": "Elegant high-contrast serif for luxury and culture"
+  },
+  {
+    "family": "Manrope",
+    "slug": "manrope",
+    "file": "manrope-variable.woff2",
+    "weight": "200 800",
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/manrope/Manrope%5Bwght%5D.ttf",
+    "intent": "Clear contemporary sans for body copy and products"
+  },
+  {
+    "family": "Sora",
+    "slug": "sora",
+    "file": "sora-variable.woff2",
+    "weight": "100 800",
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/sora/Sora%5Bwght%5D.ttf",
+    "intent": "Geometric headings for technology and modern brands"
+  },
+  {
+    "family": "Outfit",
+    "slug": "outfit",
+    "file": "outfit-variable.woff2",
+    "weight": "100 900",
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/outfit/Outfit%5Bwght%5D.ttf",
+    "intent": "Rounded geometric sans for friendly retail and services"
+  }
+]

@@ -1,0 +1,550 @@
+/* ----------------------------------------------------------------------------
+   Persian / Farsi webfonts — self-hosted, OFL licensed, free to embed.
+   Files live in /public/fonts (served at /fonts/*.woff2). No external CDN.
+   Each family loads an `arabic` subset (Persian glyphs) + a `latin` subset,
+   split by unicode-range so the browser only downloads what the page uses.
+
+   Families shipped:
+     • Vazirmatn — default UI workhorse (variable, weights 100–900)
+     • Estedad   — modern/geometric (weights 400/500/700)
+     • Sahel     — readable body (weights 400/700)
+
+   The agent picks a family by setting --font-heading / --font-body (see @theme).
+   Default for both is Vazirmatn — never Inter (wrong glyphs for Persian text).
+---------------------------------------------------------------------------- */
+
+/* Vazirmatn (variable) */
+@font-face {
+  font-family: "Vazirmatn";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/vazirmatn-arabic.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0898-08E1, U+08E3-08FF,
+    U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFF, U+1EE00-1EEFF;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/vazirmatn-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Estedad */
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/estedad-arabic-400.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF, U+1EE00-1EEFF;
+}
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/estedad-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC;
+}
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/estedad-arabic-500.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF, U+1EE00-1EEFF;
+}
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/estedad-latin-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC;
+}
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/estedad-arabic-700.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF, U+1EE00-1EEFF;
+}
+@font-face {
+  font-family: "Estedad";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/estedad-latin-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC;
+}
+
+/* Sahel */
+@font-face {
+  font-family: "Sahel";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/sahel-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Sahel";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/sahel-700.woff2") format("woff2");
+}
+
+/* ---------------------------------------------------------------------------
+   English / Latin webfonts — self-hosted, free (OFL/Apache), same rules as the
+   Persian fonts above: no external CDN, unicode-range split, font-display:swap.
+   Each @font-face is INERT until its family is actually applied to text, so the
+   browser downloads only the family the app uses, and only the latin / latin-ext
+   subset the page renders. Bundling many here costs disk in the base image, not
+   client bandwidth. Agent selects via --font-heading / --font-body tokens.
+--------------------------------------------------------------------------- */
+
+/* Inter (variable) */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Open Sans (variable) */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Montserrat (variable) */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* DM Sans (variable) */
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/dm-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/dm-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Space Grotesk (variable) */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Nunito (variable) */
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/nunito-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/nunito-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Playfair Display (variable) */
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/playfair-display-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/playfair-display-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Lora (variable) */
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/lora-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/lora-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Merriweather (variable) */
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/merriweather-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/merriweather-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* JetBrains Mono (variable) */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Roboto */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/roboto-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/roboto-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/roboto-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Poppins */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/poppins-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/poppins-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/poppins-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/poppins-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Lato */
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/lato-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/lato-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Plus Jakarta Sans (variable) */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Work Sans (variable) */
+@font-face {
+  font-family: "Work Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/work-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Work Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/work-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+@theme {
+  /* --color-* namespace defines utility-based color palette.
+     ---------------------------------------------------------------------------
+     These are DEFAULTS. The agent's `set_theme` appends a second @theme block
+     that overrides every token below with the app's own brand ramp. They exist
+     so the scaffold is fully styled even before that runs — an undefined
+     `--color-brand-700` silently produces an unstyled button.
+
+     Generated by `be/core` design-system/theme-css.ts from seed #163737 (the
+     scaffold's teal identity), so the shape of this ramp and the shape of a
+     generated one are identical. Keep them in sync: regenerate rather than
+     hand-edit. */
+
+  /* brand color palette — perceptual (HCT) tone ramp */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #0d9488;
+  --color-brand-600: #0f766e;
+  --color-brand-700: #115e59;
+  --color-brand-800: #134e4a;
+  --color-brand-900: #0b3b38;
+  --color-brand-950: #042f2e;
+
+  /* neutral palette — brand-tinted greys */
+  --color-neutral-50: #f8f6f4;
+  --color-neutral-100: #f1eeeb;
+  --color-neutral-200: #e4dfdb;
+  --color-neutral-250: #dcd7d2;
+  --color-neutral-300: #c9c2bc;
+  --color-neutral-400: #a39b95;
+  --color-neutral-500: #807873;
+  --color-neutral-600: #625b57;
+  --color-neutral-700: #4a4440;
+  --color-neutral-800: #352f2c;
+  --color-neutral-900: #26211f;
+  --color-neutral-950: #171312;
+
+  /* semantic roles */
+  --color-accent: #b4415b;
+
+  /* clinic identity — warm rose companion to the teal brand */
+  --color-rose-50: #fdf2f4;
+  --color-rose-100: #fbe3e8;
+  --color-rose-200: #f6c7d1;
+  --color-rose-500: #d05a75;
+  --color-rose-600: #b4415b;
+  --color-rose-700: #8f3248;
+  --color-secondary: #115e59;
+  --color-surface: #f4f8f7;
+  --color-ink: #1d2523;
+  --color-muted: #5d6563;
+
+  /* Readable foregrounds — computed to clear WCAG AA against their pair.
+     Use `text-on-brand` / `text-on-accent` over a filled surface. NEVER a
+     hardcoded `text-white`: a light brand (amber, lime, coral) fails AA under
+     white, which is how 6/6 apps shipped unreadable buttons on 2026-08-17. */
+  --color-on-brand: #ffffff;
+  --color-on-brand-500: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-surface: #1d2523;
+
+  /* state palette — these are FILL colours. As *text* on a light surface they
+     all fail WCAG AA (error 4.23:1, warning 1.63:1, success 2.78:1, info
+     3.12:1), so use the `-ink` variants below for any error/success message. */
+  --color-state-error: #e53935;
+  --color-state-warning: #ffc107;
+  --color-state-success: #4caf50;
+  --color-state-info: #2196f3;
+
+  /* AA-safe text variants of the state palette (≈6.5:1 on white). */
+  --color-state-error-ink: #bb171c;
+  --color-state-warning-ink: #785900;
+  --color-state-success-ink: #006e1c;
+  --color-state-info-ink: #0061a4;
+
+  /* Spacing rhythm — agent overrides --space-section via Personality density. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-section: 5rem;
+
+  /* Border radius — agent overrides via Personality corner policy. */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+  --radius-2xl: 32px;
+  --radius-button: 12px;
+
+  /* Elevation — at most two levels. Flat personality sets both to none. */
+  --shadow-sm: 0 1px 2px rgb(29 37 35 / 0.06);
+  --shadow-md: 0 12px 32px rgb(15 118 110 / 0.10);
+
+  /* Persian font-family tokens (self-hosted, see @font-face above).
+     System fallbacks (Tahoma) keep Persian readable if a woff2 fails. */
+  --font-vazirmatn: "Vazirmatn", system-ui, Tahoma, sans-serif;
+  --font-estedad: "Estedad", system-ui, Tahoma, sans-serif;
+  --font-sahel: "Sahel", system-ui, Tahoma, sans-serif;
+
+  /* English/Latin font tokens (self-hosted @font-face above) */
+  --font-inter: "Inter", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-roboto: "Roboto", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-open-sans: "Open Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-montserrat: "Montserrat", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-poppins: "Poppins", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-lato: "Lato", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-nunito: "Nunito", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-dm-sans: "DM Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-space-grotesk: "Space Grotesk", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-plus-jakarta-sans: "Plus Jakarta Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-work-sans: "Work Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-playfair: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-lora: "Lora", Georgia, "Times New Roman", serif;
+  --font-merriweather: "Merriweather", Georgia, "Times New Roman", serif;
+  --font-jetbrains-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Semantic tokens the AGENT overrides per app. Default = Vazirmatn.
+     To use another family the agent only changes these two lines, e.g.
+       --font-heading: var(--font-vazirmatn);
+       --font-body: var(--font-vazirmatn);
+     Then it can use `font-[var(--font-heading)]` or the `font-heading`/
+     `font-body` utilities below on elements. */
+  --font-heading: var(--font-vazirmatn);
+  --font-body: var(--font-vazirmatn);
+}
+
+/* OFL Arabic-script catalog; subset glyphs are checked at build time. */
+@font-face { font-family: "Markazi Text"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/markazi-text-400.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/amiri-400.woff2") format("woff2"); }
+@font-face { font-family: "Noto Naskh Arabic"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/noto-naskh-arabic-400.woff2") format("woff2"); }
+@font-face { font-family: "Noto Kufi Arabic"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/noto-kufi-arabic-400.woff2") format("woff2"); }
+@font-face { font-family: "Lalezar"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/lalezar-400.woff2") format("woff2"); }
+@font-face { font-family: "Reem Kufi"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/reem-kufi-400.woff2") format("woff2"); }
+@font-face { font-family: "Aref Ruqaa"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/aref-ruqaa-400.woff2") format("woff2"); }
+@font-face { font-family: "Mirza"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/mirza-400.woff2") format("woff2"); }
+@font-face { font-family: "El Messiri"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/el-messiri-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans Arabic"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/ibm-plex-sans-arabic-400.woff2") format("woff2"); }
+@font-face { font-family: "Cairo"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/cairo-400.woff2") format("woff2"); }
+@font-face { font-family: "Almarai"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/almarai-400.woff2") format("woff2"); }
+@font-face { font-family: "Changa"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/changa-400.woff2") format("woff2"); }
+@font-face { font-family: "Lateef"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/lateef-400.woff2") format("woff2"); }
+@font-face { font-family: "Noto Sans Arabic"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/noto-sans-arabic-400.woff2") format("woff2"); }
+@font-face { font-family: "Scheherazade New"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/scheherazade-new-400.woff2") format("woff2"); }
+
+/* OFL English catalog: real variable weight ranges, self-hosted. */
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/fraunces-variable.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 300 700; font-display: swap; src: url("/fonts/cormorant-garamond-variable.woff2") format("woff2"); }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 200 800; font-display: swap; src: url("/fonts/manrope-variable.woff2") format("woff2"); }
+@font-face { font-family: "Sora"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("/fonts/sora-variable.woff2") format("woff2"); }
+@font-face { font-family: "Outfit"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/outfit-variable.woff2") format("woff2"); }

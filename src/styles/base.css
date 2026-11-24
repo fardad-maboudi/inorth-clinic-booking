@@ -1,0 +1,66 @@
+/* Surface and ink come from the theme (components.css aliases them onto
+   tokens.css roles). A hardcoded #ffffff here ignored every tinted-surface
+   palette and dark mode. */
+/* Tailwind v4 made a bare `border` currentColor; shadcn primitives (Card,
+   Dialog) and agent pages written against v3/shadcn expect the theme border.
+   In the base layer: this file is imported unlayered, and an unlayered rule
+   would beat every layered `border-*` utility. */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: var(--font-body, "Vazirmatn", system-ui, Tahoma, sans-serif);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--background);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500, #163737);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brand-500, #163737) 28%, transparent);
+}
+
+input,
+textarea,
+select {
+  text-align: inherit;
+}
+
+/* iOS Safari zooms into any focused field under 16px and keeps the page
+   zoomed/panned afterwards. Touch devices only; pinch-zoom stays allowed. */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";
+@import "./styles/site.css";
+
+@source "../index.html";
+@source "./**/*.{js,jsx}";
+/* @joorchin/site-ui ships JSX source; Tailwind skips node_modules unless told. */
+@source "../node_modules/@joorchin/site-ui/src";

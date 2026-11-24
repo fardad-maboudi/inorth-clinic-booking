@@ -1,0 +1,26 @@
+@utility font-heading {
+  font-family: var(--font-heading);
+}
+
+@utility font-body {
+  font-family: var(--font-body);
+}
+
+@utility section-padding {
+  padding-block: var(--space-section, 5rem);
+  padding-inline: 1rem;
+
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility container-max {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}

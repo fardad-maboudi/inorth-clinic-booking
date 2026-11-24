@@ -1,0 +1,104 @@
+/*
+ * shadcn bridge. Maps the shadcn variable vocabulary onto the platform tokens
+ * in tokens.css — it ALIASES, it never redefines a role tokens.css owns.
+ *
+ * It used to redefine `--color-muted`, `--color-accent` and `--color-secondary`
+ * here. Because this file loads after tokens.css, those won: `text-muted` (the
+ * platform's muted-text role, used by ~755 generated files) compiled to
+ * neutral-100 — near-invisible on the surface — and so did every
+ * `text-muted-foreground`, since that aliased the clobbered role. The accent and
+ * secondary colours chosen by set_theme never reached `bg-accent`/`text-accent-ink`
+ * either. See docs/GENERATED_SITE_ARCHITECTURE.md S3.3.
+ *
+ * Role utilities (`text-muted`, `bg-accent`, `bg-secondary`) therefore mean the
+ * theme role. The light hover/track surface shadcn calls `muted`/`accent` is
+ * `subtle` here (`bg-subtle`, `text-subtle-foreground`).
+ */
+/*
+ * Semantic component tokens read by the shared primitives. `@theme default`
+ * only fills a token the theme did not set: set_theme's personality block in
+ * tokens.css (be/core design-system/personality.ts) wins whatever the load
+ * order, and themes written before these tokens existed still get sane sizes.
+ */
+@theme default {
+  --radius-control: var(--radius-button, 0.5rem);
+  --radius-surface: var(--radius-lg, 1rem);
+  --radius-pill: 9999px;
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.12);
+  --spacing-control: 2.5rem;
+  --spacing-control-sm: 2.25rem;
+  --spacing-control-lg: 2.75rem;
+  --spacing-surface: 1.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-subtle: var(--subtle);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: var(--color-surface);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-brand-600);
+  --primary-foreground: var(--color-on-brand);
+  --secondary-foreground: var(--color-on-secondary);
+  --muted-foreground: var(--color-muted);
+  --accent-foreground: var(--color-on-accent);
+  --subtle: var(--color-neutral-100);
+  --subtle-foreground: var(--color-ink);
+  --destructive: var(--color-state-error);
+  --destructive-foreground: var(--color-on-brand);
+  --border: var(--color-neutral-200);
+  --input: var(--color-neutral-300);
+  --ring: var(--color-brand-600);
+}
+
+/* Legacy convenience buttons, now token-driven (they hardcoded #dc2626/#1f2937,
+   so every site that used them shipped the same red button). */
+@utility btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-button);
+  transition: all 0.3s;
+  box-shadow: var(--shadow-md);
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+}
+
+@utility btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-foreground);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-button);
+  border: 2px solid var(--color-secondary);
+  transition: all 0.3s;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+}

@@ -1,0 +1,120 @@
+[
+  {
+    "family": "Markazi Text",
+    "slug": "markazi-text",
+    "file": "markazi-text-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/markazitext/MarkaziText%5Bwght%5D.ttf"
+  },
+  {
+    "family": "Amiri",
+    "slug": "amiri",
+    "file": "amiri-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/amiri/Amiri-Regular.ttf"
+  },
+  {
+    "family": "Noto Naskh Arabic",
+    "slug": "noto-naskh-arabic",
+    "file": "noto-naskh-arabic-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notonaskharabic/NotoNaskhArabic%5Bwght%5D.ttf"
+  },
+  {
+    "family": "Noto Kufi Arabic",
+    "slug": "noto-kufi-arabic",
+    "file": "noto-kufi-arabic-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notokufiarabic/NotoKufiArabic%5Bwght%5D.ttf"
+  },
+  {
+    "family": "Lalezar",
+    "slug": "lalezar",
+    "file": "lalezar-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/lalezar/Lalezar-Regular.ttf"
+  },
+  {
+    "family": "Reem Kufi",
+    "slug": "reem-kufi",
+    "file": "reem-kufi-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/reemkufi/ReemKufi%5Bwght%5D.ttf"
+  },
+  {
+    "family": "Aref Ruqaa",
+    "slug": "aref-ruqaa",
+    "file": "aref-ruqaa-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/arefruqaa/ArefRuqaa-Regular.ttf"
+  },
+  {
+    "family": "Mirza",
+    "slug": "mirza",
+    "file": "mirza-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/mirza/Mirza-Regular.ttf"
+  },
+  {
+    "family": "El Messiri",
+    "slug": "el-messiri",
+    "file": "el-messiri-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/elmessiri/ElMessiri%5Bwght%5D.ttf"
+  },
+  {
+    "family": "IBM Plex Sans Arabic",
+    "slug": "ibm-plex-sans-arabic",
+    "file": "ibm-plex-sans-arabic-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexsansarabic/IBMPlexSansArabic-Regular.ttf"
+  },
+  {
+    "family": "Cairo",
+    "slug": "cairo",
+    "file": "cairo-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/cairo/Cairo%5Bslnt%2Cwght%5D.ttf",
+    "intent": "Geometric, confident headings and storefronts"
+  },
+  {
+    "family": "Almarai",
+    "slug": "almarai",
+    "file": "almarai-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/almarai/Almarai-Regular.ttf",
+    "intent": "Compact, clear body copy and operational interfaces"
+  },
+  {
+    "family": "Changa",
+    "slug": "changa",
+    "file": "changa-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/changa/Changa%5Bwght%5D.ttf",
+    "intent": "Squared, expressive headings for technology and sport"
+  },
+  {
+    "family": "Lateef",
+    "slug": "lateef",
+    "file": "lateef-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/lateef/Lateef-Regular.ttf",
+    "intent": "Flowing calligraphic display for cultural and literary pages"
+  },
+  {
+    "family": "Noto Sans Arabic",
+    "slug": "noto-sans-arabic",
+    "file": "noto-sans-arabic-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosansarabic/NotoSansArabic%5Bwdth%2Cwght%5D.ttf",
+    "intent": "Neutral, versatile body copy and multilingual interfaces"
+  },
+  {
+    "family": "Scheherazade New",
+    "slug": "scheherazade-new",
+    "file": "scheherazade-new-400.woff2",
+    "weight": 400,
+    "source": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/scheherazadenew/ScheherazadeNew-Regular.ttf",
+    "intent": "Traditional Naskh for editorial, heritage and long prose"
+  }
+]

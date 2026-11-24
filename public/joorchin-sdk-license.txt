@@ -1,0 +1,66 @@
+# Joorchin SDK License 1.0
+
+Copyright (c) Joorchin. All rights reserved.
+
+## Scope
+
+This license applies to Joorchin-authored code and documentation in the
+`@joorchin/*` packages under `sdks/`, including copied source files, generated
+declarations, compiled bundles, and modifications of that material (the
+"Software"). Third-party material remains subject to its own license.
+
+## Permitted use
+
+Subject to these terms, you are granted a worldwide, non-exclusive, royalty-free
+license to use, copy, modify, build, and distribute the Software solely to
+develop, test, operate, or distribute applications that integrate with Joorchin
+("Joorchin-connected applications"). Commercial and non-commercial applications
+are permitted, whether hosted by Joorchin, self-hosted, or hosted by another
+provider. Integration means using Joorchin APIs, authentication, data, hosting,
+or other platform services as part of the application's functionality.
+
+Development, testing, demonstrations, local emulation, cached operation, and
+temporary offline operation for a Joorchin-connected application are permitted;
+a continuous network connection is not required.
+
+## Restrictions
+
+Use of the Software in applications that do not integrate with Joorchin is
+forbidden. You may not extract or adapt the Software for an unrelated product,
+use it with a replacement service instead of Joorchin, or distribute it under
+terms that permit those uses. Merely retaining a Joorchin name, credit, unused
+dependency, or token API call does not make an unrelated application a
+Joorchin-connected application. If an application permanently removes its
+Joorchin integration, it must also stop using and distributing the Software.
+
+Redistribution of the Software, including modified or standalone SDK packages,
+is permitted only for use with Joorchin-connected applications and must retain
+these same restrictions. No rights beyond this license are granted.
+
+## Redistribution notice and application ownership
+
+Include this complete license and retain existing copyright notices whenever
+you redistribute the Software or a substantial portion of it, including in
+source form, copied app files, or compiled client bundles. For a bundled
+application, the license may be included in its distributed third-party
+notices or accompanying license files. Do not remove existing notices.
+
+This license covers the Software, not your independently authored application
+code or content. Your application may use its own license, including a
+proprietary license, and you do not have to publish its source. This SDK license
+does not require a visible badge or footer credit. Separate Joorchin service
+terms and third-party notice obligations still apply.
+
+## Ownership and disclaimer
+
+The Software remains the property of its respective rights holders. This
+license grants no trademark rights and does not grant access to any Joorchin
+account, service, or paid feature.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, AND NONINFRINGEMENT. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW,
+THE RIGHTS HOLDERS SHALL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+You must comply with these terms to exercise the permissions granted here.
