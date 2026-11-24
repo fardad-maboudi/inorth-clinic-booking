@@ -32,13 +32,19 @@ export function createJoorchinNetworkError(cause: unknown): Error;
  * @returns {string | null}
  */
 export function sdkClientIdentity(name?: "site-sdk" | "backoffice-sdk"): string | null;
+/** API URL against the configured Joorchin origin in live mode; left relative for demo mode. */
+export function joorchinApiUrl(input: string | URL | Request): string;
+/** True when the site's current caller header belongs to the SDK-owned session. */
+export function sdkSessionMatchesCaller(): boolean;
+/** Run an SDK operation and translate Joorchin transport errors to the site's safe error shape. */
+export function joorchinSdkCall<T>(operation: () => Promise<T>): Promise<T>;
 /**
  * `fetch` with the network failure mapped to Persian copy. Aborts are
  * rethrown untouched so callers can still ignore their own cancellations.
- * @param {string} url
+ * @param {string|URL|Request} url
  * @param {RequestInit=} init
  */
-export function joorchinFetch(url: string, init?: RequestInit | undefined): Promise<Response>;
+export function joorchinFetch(url: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
 /**
  * Inspect a failed response body and surface owner-actionable backend errors as
  * a toast (today: plugin-not-installed). Returns a DISPLAYABLE message string

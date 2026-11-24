@@ -11,10 +11,16 @@
  * customer-account page. Platform-owned: re-synced from the template.
  */
 import { getAuthHeaders as getSessionHeaders } from "../auth.js";
+import { demoMode } from "../../demo/install.js";
+import {
+  joorchin,
+  joorchinSessionMatchesAuthorization,
+} from "../../lib/joorchinClient.js";
 import {
   APP_ID,
   asRowList,
   joorchinFetch,
+  joorchinSdkCall,
   sdkClientIdentity,
   parseJoorchinResponse,
 } from "../joorchin.js";
@@ -35,6 +41,89 @@ export function backofficeAuthHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : getSessionHeaders();
 }
 
+function canUseBackofficeSdk() {
+  return !demoMode && joorchinSessionMatchesAuthorization(
+    backofficeAuthHeaders().Authorization,
+  );
+}
+
+function decodedPathPart(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Use the SDK for its app-scoped staff routes. Preview/runtime identities that
+ * are not owned by the shared SDK session retain the fetch adapter below.
+ */
+function sdkBackofficeRequest(path, { method = "GET", body, query } = {}) {
+  if (!canUseBackofficeSdk()) return null;
+  const rawPath = String(path ?? "").replace(/^\/+/, "");
+  if (!rawPath || /[?#]/.test(rawPath)) return null;
+
+  const parts = rawPath.split("/");
+  const verb = String(method).toUpperCase();
+  const hasQuery = Object.keys(query ?? {}).length > 0;
+
+  if (parts[0] === "members" && !hasQuery) {
+    if (parts.length === 2 && parts[1] === "me" && verb === "GET") {
+      return joorchinSdkCall(() => joorchin.backoffice.team.myMembership());
+    }
+    if (parts.length === 1 && verb === "GET") {
+      return joorchinSdkCall(() => joorchin.backoffice.team.listMembers());
+    }
+    if (parts.length === 2 && parts[1] === "invite" && verb === "POST" && body !== undefined) {
+      return joorchinSdkCall(() => joorchin.backoffice.team.inviteMember(
+        /** @type {{phone:string,roleIds:string[]}} */ (body),
+      ));
+    }
+  }
+  if (parts.length === 1 && parts[0] === "roles" && verb === "GET" && !hasQuery) {
+    return joorchinSdkCall(() => joorchin.backoffice.team.listRoles());
+  }
+
+  if (parts[0] !== "plugins" || parts.length < 3) return null;
+  const pluginId = decodedPathPart(parts[1]);
+  if (!pluginId || pluginId === "." || pluginId === "..") return null;
+
+  if (parts[2] === "data" && parts.length >= 4) {
+    const entity = decodedPathPart(parts[3]);
+    if (!entity || entity.includes("/") || entity === "." || entity === "..") return null;
+    const recordId = parts.length === 5 ? decodedPathPart(parts[4]) : undefined;
+    if (parts.length > 5 || (parts.length === 5 && (!recordId || recordId === "." || recordId === ".."))) return null;
+    const records = joorchin.backoffice.plugin(pluginId).records(entity);
+    if (parts.length === 4 && verb === "GET") {
+      return joorchinSdkCall(() => records.list(query ?? {}));
+    }
+    if (parts.length === 4 && verb === "POST" && body !== undefined) {
+      return joorchinSdkCall(() => records.create(body));
+    }
+    if (parts.length === 5 && verb === "GET") {
+      return joorchinSdkCall(() => records.get(recordId));
+    }
+    if (parts.length === 5 && verb === "PUT" && body !== undefined) {
+      return joorchinSdkCall(() => records.update(recordId, body));
+    }
+    if (parts.length === 5 && verb === "DELETE") {
+      return joorchinSdkCall(() => records.remove(recordId));
+    }
+    return null;
+  }
+
+  if (!["GET", "POST", "PUT", "PATCH", "DELETE"].includes(verb)) return null;
+  const actionParts = parts.slice(2).map(decodedPathPart);
+  if (actionParts.some((part) => !part || part.includes("/") || part === "." || part === "..")) return null;
+  const action = actionParts.join("/");
+  return joorchinSdkCall(() => joorchin.backoffice.plugin(pluginId).action(action, {
+    method: verb,
+    body,
+    query,
+  }));
+}
+
 function withQuery(path, query) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query || {})) {
@@ -49,7 +138,10 @@ function withQuery(path, query) {
  * One back-office request, relative to this app: `backofficeRequest('/members')`.
  * Throws the shared Joorchin error (`status` preserved) on any non-2xx.
  */
-export async function backofficeRequest(path, /** @type {{method?: string, body?: unknown, query?: unknown}} */ { method = "GET", body, query } = {}) {
+export async function backofficeRequest(path, /** @type {{method?: string, body?: unknown, query?: Record<string, unknown>}} */ { method = "GET", body, query } = {}) {
+  const sdkResult = sdkBackofficeRequest(path, { method, body, query });
+  if (sdkResult !== null) return sdkResult;
+
   const identity = sdkClientIdentity("backoffice-sdk");
   const headers = { ...backofficeAuthHeaders(), ...(identity ? { "X-Joorchin-Client": identity } : {}) };
   if (body !== undefined) headers["Content-Type"] = "application/json";
@@ -107,6 +199,10 @@ export function pluginRecords(pluginId, entity) {
 
 /** An integration endpoint of an installable package (WhatsApp, Instagram…). */
 export async function installableIntegration(pkg, endpoint, payload = {}) {
+  if (canUseBackofficeSdk() && pkg !== "Core" && !/[/?#]/.test(`${pkg}${endpoint}`)) {
+    const result = await joorchinSdkCall(() => joorchin.integrations[pkg][endpoint](payload));
+    return result?.data ?? result;
+  }
   const result = await backofficeRequest(
     `/integration-endpoints/installable/${pkg}/integration-endpoints/${endpoint}`,
     { method: "POST", body: payload },
@@ -116,6 +212,9 @@ export async function installableIntegration(pkg, endpoint, payload = {}) {
 
 /** A core integration endpoint (`Core/SendSms`). */
 export function coreIntegration(pkg, endpoint, payload = {}) {
+  if (canUseBackofficeSdk() && pkg === "Core" && !/[/?#]/.test(endpoint)) {
+    return joorchinSdkCall(() => joorchin.integrations.Core[endpoint](payload));
+  }
   return backofficeRequest(
     `/integration-endpoints/${encodeURIComponent(pkg)}/${encodeURIComponent(endpoint)}`,
     { method: "POST", body: payload },

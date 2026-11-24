@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion as Motion, useReducedMotion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 
 /**
  * Typed slide configuration data.
@@ -79,10 +80,12 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isInteracting, setIsInteracting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const prefersReduced = useReducedMotion();
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const sliderRef = useRef(null);
+  const pointerInteraction = useRef(false);
 
   const slideCount = slides.length;
 
@@ -103,14 +106,14 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
     [current],
   );
 
-  // Autoplay loop with pause on hover/focus and reduced-motion-safe transitions
+  // Autoplay pauses while the user interacts, requests a pause, or prefers reduced motion.
   useEffect(() => {
-    if (isInteracting) return undefined;
+    if (isInteracting || isPaused || prefersReduced || slideCount < 2) return undefined;
     const timer = setInterval(() => {
       paginate(1);
     }, MOTION_CONFIG.autoplayIntervalMs);
     return () => clearInterval(timer);
-  }, [paginate, isInteracting]);
+  }, [paginate, isInteracting, isPaused, prefersReduced, slideCount]);
 
   // Touch / Swipe handlers for mobile & tablet (RTL-aware)
   function handleTouchStart(e) {
@@ -142,11 +145,18 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   }
 
   function handleFocus() {
-    setIsInteracting(true);
+    // Stop rotation as soon as keyboard or assistive-technology focus enters.
+    if (!pointerInteraction.current) setIsPaused(true);
+  }
+
+  function toggleAutoPlay() {
+    // Explicit play/pause takes precedence over the hover pause.
+    setIsInteracting(false);
+    setIsPaused((paused) => !paused);
   }
 
   function handleBlur(e) {
-    // Only unpause if focus has completely left the slider component
+    // Pointer interaction can still be active after focus leaves the carousel.
     if (!sliderRef.current || !sliderRef.current.contains(e.relatedTarget)) {
       setIsInteracting(false);
     }
@@ -237,13 +247,16 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
       aria-label="بنر معرفی و خدمات کلینیک"
       onMouseEnter={() => setIsInteracting(true)}
       onMouseLeave={() => setIsInteracting(false)}
+      onPointerDownCapture={() => { pointerInteraction.current = true; }}
+      onPointerUp={() => { pointerInteraction.current = false; }}
+      onPointerCancel={() => { pointerInteraction.current = false; }}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
     >
-      <div className="cl-hero-slider-track" aria-live={isInteracting ? 'polite' : 'off'}>
+      <div className="cl-hero-slider-track" aria-live={isInteracting || isPaused ? 'polite' : 'off'}>
         <AnimatePresence initial={false} custom={direction}>
           <div
             key={slide.id}
@@ -311,30 +324,55 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
       {/* NextSlot Booking Card overlaid directly on the slider banner */}
       {slotCard}
 
-      {/* Floating Controls Toolbar: Centered Indicator Dots */}
-      <div className="cl-hero-controls" aria-label="کنترل‌های اسلایدر">
-        
+      <div className="cl-hero-controls">
+        <div className="cl-hero-control-bar" role="group" aria-label="کنترل‌های اسلایدر">
+          <button
+            type="button"
+            className="cl-hero-control-btn"
+            aria-label="اسلاید قبلی"
+            onClick={() => paginate(-1)}
+          >
+            <ChevronRight size={20} aria-hidden="true" />
+          </button>
 
-        {/* Indicator Dots */}
-        <div className="cl-hero-dots" role="tablist" aria-label="انتخاب مستقیم اسلاید">
-          {slides.map((s, index) => {
-            const isActive = index === current;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                role="tab"
-                id={`slide-tab-${index}`}
-                aria-selected={isActive}
-                aria-controls={`slide-${s.id}`}
-                aria-label={`رفتن به اسلاید ${index + 1}: ${s.title}`}
-                className={`cl-hero-dot${isActive ? ' on' : ''}`}
-                onClick={() => goToSlide(index)}
-              >
-                <span className="cl-hero-dot-pill" aria-hidden="true" />
-              </button>
-            );
-          })}
+          <div className="cl-hero-dots" role="group" aria-label="انتخاب مستقیم اسلاید">
+            {slides.map((s, index) => {
+              const isActive = index === current;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-label={`رفتن به اسلاید ${index + 1}: ${s.title}`}
+                  className={`cl-hero-dot${isActive ? ' on' : ''}`}
+                  onClick={() => goToSlide(index)}
+                >
+                  <span className="cl-hero-dot-pill" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            className="cl-hero-control-btn"
+            aria-label="اسلاید بعدی"
+            onClick={() => paginate(1)}
+          >
+            <ChevronLeft size={20} aria-hidden="true" />
+          </button>
+
+          <span className="cl-hero-control-divider" aria-hidden="true" />
+
+          <button
+            type="button"
+            className="cl-hero-control-btn cl-hero-autoplay"
+            disabled={Boolean(prefersReduced)}
+            aria-label={prefersReduced ? 'پخش خودکار با تنظیم کاهش حرکت خاموش است' : isPaused ? 'ادامهٔ پخش خودکار اسلایدها' : 'توقف پخش خودکار اسلایدها'}
+            onClick={toggleAutoPlay}
+          >
+            {isPaused || prefersReduced ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+          </button>
         </div>
       </div>
     </section>

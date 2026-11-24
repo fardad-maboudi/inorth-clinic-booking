@@ -10,7 +10,7 @@ import {
 import {
   APP_ID,
   getUserAuthHeaders,
-  setAuthToken,
+  storeSession,
 } from './auth';
 import { joorchinResponseError } from '@/api/joorchin';
 
@@ -52,7 +52,7 @@ export async function signInWithPasskey() {
     headers: headers(),
     body: JSON.stringify({ ceremonyId: ceremony.ceremonyId, response }),
   }));
-  if (result?.token) setAuthToken(result.token);
+  if (result?.token || result?.access_token) storeSession(result);
   return result;
 }
 

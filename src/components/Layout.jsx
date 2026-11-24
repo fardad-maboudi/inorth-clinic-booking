@@ -21,6 +21,7 @@ export default function Layout({ children }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const root = useRef(null);
+  const burgerRef = useRef(null);
 
   // Scroll reveals: transform/opacity only, one observer, never blocks interaction.
   useEffect(() => {
@@ -60,6 +61,17 @@ export default function Layout({ children }) {
     window.scrollTo({ top: 0 });
   }, [pathname]);
 
+  useEffect(() => {
+    if (!open) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key !== 'Escape') return;
+      setOpen(false);
+      burgerRef.current?.focus();
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [open]);
+
   async function signOut() {
     try {
       await logout();
@@ -68,6 +80,7 @@ export default function Layout({ children }) {
     }
     clearAuthToken();
     announceAuthChange();
+    setOpen(false);
     navigate('/');
   }
 
@@ -91,10 +104,13 @@ export default function Layout({ children }) {
         <div className="cl-wrap cl-header-in">
           <Link to="/" className="cl-brand" aria-label={`${siteConfig.name} – صفحهٔ اصلی`}>
             <Logo size={34} />
-            <span>{siteConfig.name}</span>
+            <span className="cl-brand-copy">
+              <span>{siteConfig.name}</span>
+              <span className="cl-brand-caption">{siteConfig.tagline}</span>
+            </span>
           </Link>
 
-          <button type="button" className="cl-burger" aria-expanded={open} aria-controls="cl-nav" onClick={() => setOpen((o) => !o)}>
+          <button ref={burgerRef} type="button" className="cl-burger" aria-expanded={open} aria-controls="cl-nav" onClick={() => setOpen((o) => !o)}>
             <span className="cl-sr">{open ? 'بستن منو' : 'باز کردن منو'}</span>
             <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
               {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}

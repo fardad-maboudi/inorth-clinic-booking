@@ -13,16 +13,26 @@ function NextSlot() {
       listSlots().then((r) => {
         const rows = rowsOf(r).filter((s) => s.available !== false).sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
         const k = rows[0] ? dayKey(rows[0].startsAt) : null;
-        return { first: rows[0], count: rows.length, today: rows.filter((r) => dayKey(r.startsAt) === k).slice(0, 6) };
+        return { first: rows[0], today: rows.filter((r) => dayKey(r.startsAt) === k).slice(0, 6) };
       }),
     [],
   );
   const s = q.data?.first;
   return (
-    <aside id="quick-booking" className="cl-hero-card cl-hero-slot-card" aria-label="نزدیک‌ترین نوبت خالی کلینیک" aria-live="polite">
+    <aside
+      id="quick-booking"
+      className="cl-hero-card cl-hero-slot-card"
+      aria-label="نزدیک‌ترین نوبت خالی کلینیک"
+      aria-live="polite"
+      aria-busy={q.loading}
+    >
       <p className="cl-hero-card-k">نزدیک‌ترین نوبت خالی</p>
       {q.loading ? <p className="cl-hero-card-v">در حال بررسی…</p> : q.error ? (
-        <p className="cl-hero-card-v">فعلاً در دسترس نیست</p>
+        <>
+          <p className="cl-hero-card-v">فعلاً نوبت‌ها بارگذاری نشد</p>
+          <p className="cl-hero-card-s">برای دیدن زمان‌های دیگر، نوبت‌دهی را باز کنید.</p>
+          <Link className="cl-btn cl-btn-outline" to="/book">مشاهدهٔ زمان‌های نوبت</Link>
+        </>
       ) : s ? (
         <>
           <p className="cl-hero-card-v">{fmtFullDate(s.startsAt)}</p>
@@ -40,10 +50,13 @@ function NextSlot() {
             ))}
           </div>
           <Link className="cl-btn cl-btn-rose" to="/book">انتخاب زمان دلخواه</Link>
-          {/* <p className="cl-hero-card-f">{nf(q.data.count)} نوبت خالی در سه هفتهٔ آینده</p> */}
         </>
       ) : (
-        <p className="cl-hero-card-v">فعلاً نوبت خالی نداریم</p>
+        <>
+          <p className="cl-hero-card-v">فعلاً نوبت خالی نداریم</p>
+          <p className="cl-hero-card-s">روز دیگری را در تقویم نوبت‌دهی بررسی کنید.</p>
+          <Link className="cl-btn cl-btn-outline" to="/book">مشاهدهٔ تقویم نوبت‌ها</Link>
+        </>
       )}
     </aside>
   );
@@ -61,7 +74,7 @@ export default function Home() {
     <>
       <HeroSlider slotCard={<NextSlot />} />
 
-      {/* <section className="cl-trust-strip" aria-label="ویژگی‌های کلینیک نیلوفر">
+      <section className="cl-trust-strip" aria-label="مزیت‌های رزرو در کلینیک نیلوفر">
         <div className="cl-wrap">
           <ul className="cl-trust-list">
             <li>
@@ -69,9 +82,7 @@ export default function Home() {
               <span>
                 {catalog.loading ? (
                   <span className="cl-trust-skel" aria-label="در حال بارگذاری تعداد خدمات" />
-                ) : (
-                  `${nf(services.length || 3)} خدمت تخصصی`
-                )}
+                ) : catalog.error ? 'خدمات تخصصی' : `${nf(services.length)} خدمت تخصصی`}
               </span>
             </li>
             <li>
@@ -79,18 +90,20 @@ export default function Home() {
               <span>
                 {catalog.loading ? (
                   <span className="cl-trust-skel" aria-label="در حال بارگذاری تعداد متخصصان" />
-                ) : (
-                  `${nf(staff.length || 4)} متخصص مجرب`
-                )}
+                ) : catalog.error ? 'تیم متخصصان' : `${nf(staff.length)} متخصص`}
               </span>
             </li>
             <li>
               <span className="cl-trust-icon" aria-hidden="true">✓</span>
-              <span>لغو رایگان تا ۲۴ ساعت قبل</span>
+              <span>رزرو آنلاین در هر ساعت</span>
+            </li>
+            <li>
+              <span className="cl-trust-icon" aria-hidden="true">✓</span>
+              <span>پیگیری نوبت‌ها از حساب کاربری</span>
             </li>
           </ul>
         </div>
-      </section> */}
+      </section>
 
       <section className="cl-section cl-wrap">
         <SectionHead
@@ -108,8 +121,28 @@ export default function Home() {
         ) : <StateBox kind="empty" title="به‌زودی خدمات جدید اضافه می‌شود" />}
       </section>
 
+      <section className="cl-band">
+        <div className="cl-wrap cl-section">
+          <SectionHead
+            eyebrow="تیم ما"
+            title="متخصصانی که به آن‌ها اعتماد می‌کنید"
+            moreTo="/team"
+            moreLabel="آشنایی با تیم"
+          />
+          {catalog.loading ? <SkeletonGrid n={4} cols={4} /> : catalog.error ? (
+            <StateBox kind="error" title="فهرست تیم دریافت نشد" onRetry={catalog.reload} />
+          ) : staff.length ? (
+            <div className="cl-staffrow">
+              {staff.map((p) => (
+                <StaffCard key={idOf(p)} person={p} services={services.filter((s) => s.resourceIds?.includes(idOf(p)))} />
+              ))}
+            </div>
+          ) : <StateBox kind="empty" title="اطلاعات تیم به‌زودی تکمیل می‌شود" />}
+        </div>
+      </section>
+
       {packaged.length ? (
-        <section className="cl-section cl-wrap cl-band-reviews">
+        <section className="cl-section cl-wrap">
           <SectionHead
             eyebrow="بسته‌های چندجلسه‌ای"
             title="مطمئن‌تر و مقرون‌به‌صرفه‌تر"
@@ -157,28 +190,6 @@ export default function Home() {
         </section>
       ) : null}
 
-      <section className="cl-band">
-        <div className="cl-wrap cl-section">
-          <SectionHead
-            eyebrow="تیم ما"
-            title="متخصصانی که به آن‌ها اعتماد می‌کنید"
-            moreTo="/team"
-            moreLabel="آشنایی با تیم"
-          />
-          {catalog.loading ? <SkeletonGrid n={4} cols={4} /> : catalog.error ? (
-            <StateBox kind="error" title="فهرست تیم دریافت نشد" onRetry={catalog.reload} />
-          ) : staff.length ? (
-            <div className="cl-staffrow">
-              {staff.map((p) => (
-                <StaffCard key={idOf(p)} person={p} services={services.filter((s) => s.resourceIds?.includes(idOf(p)))} />
-              ))}
-            </div>
-          ) : <StateBox kind="empty" title="اطلاعات تیم به‌زودی تکمیل می‌شود" />}
-        </div>
-      </section>
-
-      
-
       <section className="cl-band cl-band-reviews">
         <div className="cl-wrap cl-section">
           <SectionHead
@@ -189,7 +200,6 @@ export default function Home() {
           {catalog.loading ? <StateBox /> : <Reviews targetIds={['clinic', ...services.map(idOf)]} limit={3} />}
         </div>
       </section>
-      
 
       <section className="cl-section cl-wrap">
         <SectionHead
@@ -213,14 +223,18 @@ export default function Home() {
           </div>
         ) : <StateBox kind="empty" title="هنوز پرسشی ثبت نشده است" />}
       </section>
-        {/* <section className="cl-cta">
+
+      <section className="cl-cta">
         <div className="cl-wrap cl-rv">
+          <p className="cl-eyebrow cl-eyebrow-light">قدم بعدی، با خیال راحت</p>
           <h2>آمادهٔ مراقبت از خودتان هستید؟</h2>
-          <p>نوبت‌ها به‌صورت زنده به‌روز می‌شوند؛ همین حالا زمان مناسب را بردارید.</p>
-          <Link className="cl-btn cl-btn-rose cl-btn-lg" to="/book">رزرو نوبت</Link>
+          <p>زمان‌های خالی را به‌روز ببینید و نوبت مناسب خودتان را آنلاین انتخاب کنید.</p>
+          <div className="cl-actions cl-home-cta-actions">
+            <Link className="cl-btn cl-btn-rose cl-btn-lg" to="/book">رزرو نوبت</Link>
+            <Link className="cl-btn cl-btn-glass cl-btn-lg" to="/services">مشاهدهٔ خدمات</Link>
+          </div>
         </div>
-      </section> */}
-      
+      </section>
     </>
   );
 }

@@ -34,6 +34,12 @@ COPY . .
 
 ARG VITE_BASE=/
 ARG VITE_APP_ID=
+# Direct Joorchin API origin for customer-hosted builds; override when the app
+# uses a different Joorchin environment.
+ARG VITE_JOORCHIN_SERVER_URL=https://api.joorchin.site
+# Production must use the real Joorchin API unless a demo image is explicitly
+# requested with --build-arg VITE_API_MODE=demo.
+ARG VITE_API_MODE=live
 # Public origin of the published site, e.g. https://acme.joorchin.site. The
 # sitemap generator (generated-site/vite-plugin/sitemap-plugin.js) needs it
 # because the sitemaps protocol requires absolute <loc> URLs; unset, the build
@@ -41,6 +47,8 @@ ARG VITE_APP_ID=
 ARG VITE_SITE_URL=
 ENV VITE_BASE=$VITE_BASE
 ENV VITE_APP_ID=$VITE_APP_ID
+ENV VITE_JOORCHIN_SERVER_URL=$VITE_JOORCHIN_SERVER_URL
+ENV VITE_API_MODE=$VITE_API_MODE
 ENV VITE_SITE_URL=$VITE_SITE_URL
 
 RUN pnpm run build

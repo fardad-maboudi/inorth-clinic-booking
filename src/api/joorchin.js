@@ -4,6 +4,15 @@
  */
 
 import { getAuthHeaders } from "./auth.js";
+import { JoorchinError } from "@joorchin/client-sdk";
+import { demoMode } from "../demo/install.js";
+import {
+  JOORCHIN_SERVER_URL,
+  joorchin,
+  joorchinSessionMatchesAuthorization,
+  persistJoorchinSessionStorage,
+  refreshJoorchinSession,
+} from "../lib/joorchinClient.js";
 
 /** @template T @typedef {T[] & {items:T[],data:T[],results:T[],rows:T[],records:T[],list:T[],total:number} & Record<string,any>} RowList */
 /** @typedef {{filter?:Record<string,unknown>,sort?:string,limit?:number,skip?:number,envelope?:boolean}} EntityListOptions */
@@ -59,6 +68,22 @@ function fetchOptions() {
       ...getAuthHeaders(),
     },
   };
+}
+
+/**
+ * SDK client calls normally use its saved bearer session. These checks keep a
+ * Mini App/runtime or preview identity from accidentally inheriting a separate
+ * website user's token already held by the shared client.
+ */
+export function sdkSessionMatchesCaller() {
+  return joorchinSessionMatchesAuthorization(getAuthHeaders().Authorization);
+}
+
+function sdkAuthHeaders() {
+  const authorization = getAuthHeaders().Authorization;
+  // An explicit blank value suppresses Axios' default header when the current
+  // app surface is signed out but another surface has a stored user session.
+  return { Authorization: authorization ?? "" };
 }
 
 /**
@@ -257,27 +282,126 @@ export function sdkClientIdentity(name = "site-sdk") {
   }
 }
 
-/** @param {RequestInit=} init */
-function withClientHeader(init) {
+/**
+ * Point relative API routes at the configured Joorchin origin for customer-
+ * hosted builds. Preserve relative URLs in demo mode so install.js can
+ * intercept them. `serverUrl` is an origin; `/api/v1` is appended once.
+ * @param {string|URL|Request} input
+ * @returns {string}
+ */
+export function joorchinApiUrl(input) {
+  const raw = input instanceof URL
+    ? input.toString()
+    : typeof Request !== "undefined" && input instanceof Request
+      ? input.url
+      : String(input);
+  if (demoMode || !raw) return raw;
+  if (raw.startsWith("/api/v1")) return `${JOORCHIN_SERVER_URL}${raw}`;
+  try {
+    const pageOrigin = typeof window !== "undefined" ? window.location.origin : JOORCHIN_SERVER_URL;
+    const parsed = new URL(raw, pageOrigin);
+    if (parsed.origin === pageOrigin && parsed.pathname.startsWith("/api/v1")) {
+      return `${JOORCHIN_SERVER_URL}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+  } catch {
+    // Leave non-URL inputs unchanged; fetch will report the useful failure.
+  }
+  return raw;
+}
+
+/** @param {RequestInit=} init @param {string|URL|Request=} input */
+function withClientHeader(init, input) {
+  const headers = new Headers(
+    typeof Request !== "undefined" && input instanceof Request ? input.headers : undefined,
+  );
+  new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
   const identity = sdkClientIdentity();
-  if (!identity) return init;
-  const headers = new Headers(init?.headers);
-  if (!headers.has(CLIENT_HEADER)) headers.set(CLIENT_HEADER, identity);
+  if (identity && !headers.has(CLIENT_HEADER)) headers.set(CLIENT_HEADER, identity);
   return { ...init, headers };
 }
 
+/** A bounded fetch refresh applies only to app/user bearer sessions. */
+function isPublicAuthEndpoint(target) {
+  let pathname = String(target).split(/[?#]/, 1)[0];
+  try {
+    pathname = new URL(target, typeof window === "undefined" ? JOORCHIN_SERVER_URL : window.location.origin).pathname;
+  } catch {
+    // The fallback path is still enough to recognize a relative auth route.
+  }
+  return /\/auth\/(?:refresh|logout|initiate|verify-otp|login(?:\/|$)|forgot-password|reset-password|admin\/(?:initiate|verify-otp|login(?:\/|$)|forgot-password|reset-password)|passkeys\/login\/)/i.test(pathname);
+}
+
+function canReplayFetchBody(body) {
+  if (body == null || typeof body === "string") return true;
+  if (typeof ReadableStream !== "undefined" && body instanceof ReadableStream) return false;
+  return true;
+}
+
 /**
- * `fetch` with the network failure mapped to Persian copy. Aborts are
- * rethrown untouched so callers can still ignore their own cancellations.
- * @param {string} url
+ * `fetch` with safe errors, direct-origin routing, and one SDK-managed refresh
+ * retry for requests authenticated by the SDK-owned app session. Custom
+ * preview/runtime identities are never refreshed with another user's pair.
+ * Aborts are rethrown untouched.
+ * @param {string|URL|Request} url
  * @param {RequestInit=} init
  */
 export async function joorchinFetch(url, init) {
   try {
-    return await globalThis.fetch(url, withClientHeader(init));
+    const target = joorchinApiUrl(url);
+    const isRequest = typeof Request !== "undefined" && url instanceof Request;
+    const input = isRequest
+      ? target === url.url ? url : new Request(target, url)
+      : target;
+    const requestInit = withClientHeader(init, url);
+    const retryInput = isRequest && !demoMode ? input.clone() : null;
+    const response = await globalThis.fetch(input, requestInit);
+    if (demoMode || response.status !== 401 || isPublicAuthEndpoint(target)) return response;
+
+    const headers = new Headers(requestInit.headers);
+    const authorization = headers.get("Authorization");
+    const session = joorchin.auth.getSession();
+    const failedToken = session.access_token;
+    const canReplay = canReplayFetchBody(init?.body) && (!isRequest || Boolean(retryInput));
+    if (
+      !failedToken || !session.refreshToken ||
+      !joorchinSessionMatchesAuthorization(authorization) || !canReplay
+    ) return response;
+
+    try {
+      let current = joorchin.auth.getSession();
+      if (current.access_token === failedToken) {
+        await refreshJoorchinSession();
+        current = joorchin.auth.getSession();
+      }
+      if (!current.access_token || current.access_token === failedToken) return response;
+      headers.set("Authorization", `Bearer ${current.access_token}`);
+      return await globalThis.fetch(retryInput ?? input, { ...requestInit, headers });
+    } catch (cause) {
+      if (cause?.name === "AbortError") throw cause;
+      // Keep the original 401 response if refresh itself fails; its caller still
+      // gets the normal API error while transient refresh errors do not erase it.
+      return response;
+    }
   } catch (cause) {
     if (cause?.name === "AbortError") throw cause;
     throw createJoorchinNetworkError(cause);
+  }
+}
+
+/** Convert SDK transport errors to the site's safe, localized error shape. */
+export async function joorchinSdkCall(operation) {
+  try {
+    const result = await operation();
+    persistJoorchinSessionStorage();
+    return result;
+  } catch (error) {
+    persistJoorchinSessionStorage();
+    if (!(error instanceof JoorchinError) && error?.name !== "JoorchinError") throw error;
+    if (error.status == null || error.status === 0) throw createJoorchinNetworkError(error);
+    const text = typeof error.data === "string"
+      ? error.data
+      : JSON.stringify(error.data ?? { message: error.message });
+    throw createJoorchinError(error.status, text, { cause: error });
   }
 }
 
@@ -432,6 +556,15 @@ export function asRowList(value, total) {
  */
 export async function listEntities(entity, params = {}) {
   const args = normalizeEntityArgs(entity, params);
+  if (!demoMode && sdkSessionMatchesCaller() && !args.envelope) {
+    const rows = await joorchinSdkCall(() => {
+      const handler = joorchin.entities[args.entity];
+      return args.filter
+        ? handler.filter(args.filter, args.sort, args.limit, args.skip)
+        : handler.list(args.sort, args.limit, args.skip);
+    });
+    return asRowList(rows);
+  }
   const search = new URLSearchParams();
   if (args.filter) search.set("filter", JSON.stringify(args.filter));
   if (args.sort) search.set("sort", args.sort);
@@ -449,6 +582,9 @@ export async function listEntities(entity, params = {}) {
  */
 export async function getEntity(entity, id) {
   const args = normalizeEntityArgs(entity, { id });
+  if (!demoMode && sdkSessionMatchesCaller()) {
+    return joorchinSdkCall(() => joorchin.entities[args.entity].get(args.id));
+  }
   return parseResponse(
     await joorchinFetch(entitiesUrl(args.entity, args.id), fetchOptions()),
   );
@@ -460,6 +596,9 @@ export async function getEntity(entity, id) {
  */
 export async function createEntity(entity, data) {
   const args = normalizeEntityArgs(entity, { data });
+  if (!demoMode && sdkSessionMatchesCaller()) {
+    return joorchinSdkCall(() => joorchin.entities[args.entity].create(args.data));
+  }
   return parseResponse(
     await joorchinFetch(entitiesUrl(args.entity), {
       ...fetchOptions(),
@@ -476,6 +615,9 @@ export async function createEntity(entity, data) {
  */
 export async function updateEntity(entity, id, data) {
   const args = normalizeEntityArgs(entity, { id, data });
+  if (!demoMode && sdkSessionMatchesCaller()) {
+    return joorchinSdkCall(() => joorchin.entities[args.entity].update(args.id, args.data));
+  }
   return parseResponse(
     await joorchinFetch(entitiesUrl(args.entity, args.id), {
       ...fetchOptions(),
@@ -491,6 +633,9 @@ export async function updateEntity(entity, id, data) {
  */
 export async function deleteEntity(entity, id) {
   const args = normalizeEntityArgs(entity, { id });
+  if (!demoMode && sdkSessionMatchesCaller()) {
+    return joorchinSdkCall(() => joorchin.entities[args.entity].delete(args.id));
+  }
   return parseResponse(
     await joorchinFetch(entitiesUrl(args.entity, args.id), {
       ...fetchOptions(),
@@ -520,6 +665,23 @@ export function pluginDataUrl(pluginId, entity, id) {
  *   `.results` / `.rows`, with `.total` — see `asRowList`.
  */
 export async function listPluginRecords(pluginId, entity, params = {}) {
+  if (!demoMode) {
+    const visitorPlugin = joorchin.site.plugin(pluginId);
+    const options = {
+      filter: params.filter,
+      sort: params.sort,
+      limit: params.limit,
+      skip: params.skip,
+    };
+    const rows = await joorchinSdkCall(() => sdkSessionMatchesCaller()
+      ? visitorPlugin.records(entity).list(options)
+      : visitorPlugin.action(`data/${entity}`, {
+          method: "GET",
+          query: options,
+          headers: sdkAuthHeaders(),
+        }));
+    return asRowList(rows);
+  }
   const search = new URLSearchParams();
   if (params.filter) search.set("filter", JSON.stringify(params.filter));
   if (params.sort) search.set("sort", params.sort);
@@ -537,6 +699,15 @@ export async function listPluginRecords(pluginId, entity, params = {}) {
  * @returns {Promise<PluginRow<P, E> & EntityMeta>}
  */
 export async function getPluginRecord(pluginId, entity, id) {
+  if (!demoMode) {
+    const visitorPlugin = joorchin.site.plugin(pluginId);
+    return joorchinSdkCall(() => sdkSessionMatchesCaller()
+      ? visitorPlugin.records(entity).get(id)
+      : visitorPlugin.action(`data/${entity}/${id}`, {
+          method: "GET",
+          headers: sdkAuthHeaders(),
+        }));
+  }
   return parseResponse(
     await joorchinFetch(pluginDataUrl(pluginId, entity, id), fetchOptions()),
   );
@@ -645,6 +816,31 @@ export async function getPluginAction(pluginId, action = "", query = {}) {
   return requestPluginAction(pluginId, action, { query });
 }
 
+/** SDK actions encode raw path segments themselves; preserve legacy URLs when
+ * an encoded segment would change the route or query serialization. */
+function sdkPluginActionPath(action) {
+  if (!action || action.startsWith("/") || /[?#]/.test(action)) return null;
+  const segments = action.split("/");
+  const decoded = [];
+  for (const segment of segments) {
+    let value;
+    try {
+      value = decodeURIComponent(segment);
+    } catch {
+      return null;
+    }
+    if (!value || value === "." || value === ".." || /[/?#]/.test(value)) return null;
+    decoded.push(value);
+  }
+  return decoded.join("/");
+}
+
+function sdkPluginQuery(query) {
+  return Object.values(query ?? {}).every((value) =>
+    value == null || (value !== "" && ["string", "number", "boolean"].includes(typeof value)),
+  );
+}
+
 /**
  * General authenticated plugin action transport for generated plugin clients.
  * URL construction, tenant scoping, auth and error handling stay platform-owned.
@@ -666,6 +862,16 @@ export async function requestPluginAction(
   }
   if (typeof action !== "string") {
     throw new Error("[joorchin] plugin action must be a string");
+  }
+  const sdkAction = sdkPluginActionPath(action);
+  const sdkMethod = ["GET", "POST", "PUT", "PATCH", "DELETE"].includes(String(method).toUpperCase());
+  if (!demoMode && sdkAction && sdkMethod && sdkPluginQuery(query)) {
+    return joorchinSdkCall(() => joorchin.site.plugin(pluginId).action(sdkAction, {
+      method: String(method).toUpperCase(),
+      body: data,
+      query,
+      headers: { ...sdkAuthHeaders(), ...headers },
+    }));
   }
   const path = action
     .split("/")
@@ -715,6 +921,9 @@ export async function postIntegrationAction(packageName, endpoint, data) {
       "[joorchin] integration endpoint must be a non-empty string",
     );
   }
+  // This adapter targets the app's legacy integration-endpoint route. SDK
+  // integration methods use a distinct installable/Core route shape, so keep
+  // this API contract on the direct transport until callers are remapped.
   const url = `/api/v1/apps/${APP_ID}/integration-endpoints/${encodeURIComponent(packageName)}/${encodeURIComponent(endpoint)}`;
   return parseResponse(
     await joorchinFetch(url, {
@@ -750,7 +959,9 @@ export function getPublicSettings(pluginId = "ecommerce") {
   const url = `/api/v1/apps/${APP_ID}/plugins/${pluginId}/setup/public`;
   const request = (async () => {
     try {
-      return await parseResponse(await joorchinFetch(url));
+      return !demoMode
+        ? await joorchinSdkCall(() => joorchin.site.plugin(pluginId).action("setup/public", { headers: sdkAuthHeaders() }))
+        : await parseResponse(await joorchinFetch(url));
     } catch {
       // Evict so a transient failure does not poison the page: the next mount
       // (or a later navigation) retries instead of caching `{}` forever.

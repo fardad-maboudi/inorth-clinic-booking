@@ -2765,6 +2765,600 @@ html {
   }
 }
 
+/* =====================================================================
+   Public-site refinement: calmer navigation, clearer booking, and
+   consistent responsive spacing. Kept outside the admin application.
+   ===================================================================== */
+.cl-app:not(.cl-app-admin) {
+  --cl-header-h: 72px;
+  scroll-padding-top: calc(var(--cl-header-h) + 1rem);
+}
+
+.cl-app:not(.cl-app-admin) .cl-header {
+  background: rgb(248 251 250 / .94);
+  border-bottom-color: rgb(15 76 71 / .12);
+  box-shadow: 0 4px 18px rgb(4 47 46 / .045);
+}
+
+.cl-app:not(.cl-app-admin) .cl-header-in {
+  min-height: var(--cl-header-h);
+  gap: 1.1rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-header .cl-brand {
+  flex: none;
+  gap: .7rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.cl-app:not(.cl-app-admin) .cl-header .cl-brand-logo {
+  height: 36px;
+  width: auto;
+}
+
+.cl-brand-copy {
+  display: grid;
+  gap: .08rem;
+  min-width: 0;
+}
+
+.cl-brand-caption {
+  color: var(--cl-muted);
+  font-size: .68rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.cl-app:not(.cl-app-admin) .cl-nav {
+  gap: .65rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-nav ul {
+  gap: .2rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-nav li a {
+  transition: color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+.cl-app:not(.cl-app-admin) .cl-nav li a.on {
+  color: var(--color-brand-900);
+  background: var(--color-brand-50);
+  box-shadow: inset 0 0 0 1px var(--color-brand-100);
+}
+
+.cl-app:not(.cl-app-admin) .cl-burger {
+  border-color: var(--color-brand-100);
+  box-shadow: 0 2px 8px rgb(4 47 46 / .05);
+}
+
+@media (min-width: 960px) and (max-width: 1119px) {
+  .cl-app:not(.cl-app-admin) .cl-header-in {
+    gap: .5rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-header .cl-brand {
+    gap: .5rem;
+    font-size: .92rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-brand-caption {
+    display: none;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav {
+    gap: .35rem;
+    margin-inline-start: .4rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav li a {
+    padding-inline: .55rem;
+    font-size: .88rem;
+  }
+}
+
+@media (max-width: 959px) {
+  .cl-app:not(.cl-app-admin) {
+    --cl-header-h: 68px;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-header-in {
+    gap: .65rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-header .cl-brand {
+    gap: .55rem;
+    font-size: .96rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-header .cl-brand-logo {
+    height: 32px;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-brand-caption {
+    display: none;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav {
+    border: 1px solid var(--color-brand-100);
+    border-top: 0;
+    border-radius: 0 0 20px 20px;
+    background: rgb(250 252 251 / .98);
+    box-shadow: 0 18px 34px rgb(4 47 46 / .14);
+    padding-block: .75rem 1rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav ul {
+    gap: .15rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav li a {
+    padding-inline: .85rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-nav-actions {
+    border-top: 1px solid var(--color-brand-100);
+    padding-top: .85rem;
+    margin-top: .35rem;
+  }
+}
+
+/* Keep the hero cinematic without asking every screen to scroll through it. */
+.cl-hero-slider {
+  height: clamp(600px, 76svh, 760px);
+  min-height: 600px;
+  isolation: isolate;
+}
+
+@supports (height: 100dvh) {
+  .cl-hero-slider {
+    height: clamp(600px, 76dvh, 760px);
+  }
+}
+
+.cl-hero-slide-overlay {
+  background:
+    linear-gradient(90deg, rgb(4 21 20 / .52) 0%, rgb(4 21 20 / .2) 46%, rgb(4 21 20 / .5) 100%),
+    linear-gradient(180deg, rgb(4 21 20 / .16) 0%, rgb(4 21 20 / .42) 54%, rgb(4 21 20 / .84) 100%);
+}
+
+.cl-hero-slide-body {
+  max-width: min(100%, 38rem);
+}
+
+.cl-hero-slide-title {
+  max-width: 17ch;
+  text-wrap: balance;
+}
+
+.cl-hero-slide-subtitle {
+  max-width: 36rem;
+}
+
+.cl-hero-control-bar {
+  display: flex;
+  align-items: center;
+  gap: .12rem;
+  padding: .2rem;
+  border: 1px solid rgb(255 255 255 / .2);
+  border-radius: 999px;
+  background: rgb(4 27 26 / .58);
+  box-shadow: 0 8px 26px rgb(0 0 0 / .2);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  direction: rtl;
+  pointer-events: auto;
+}
+
+.cl-hero-control-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.cl-hero-control-btn:hover {
+  background: rgb(255 255 255 / .14);
+  border-color: rgb(255 255 255 / .22);
+}
+
+.cl-hero-control-btn:active {
+  transform: scale(.94);
+}
+
+.cl-hero-control-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.cl-hero-control-btn:focus-visible,
+.cl-hero-dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.cl-hero-control-divider {
+  width: 1px;
+  height: 22px;
+  margin-inline: .18rem;
+  background: rgb(255 255 255 / .24);
+}
+
+.cl-hero-dots {
+  gap: .1rem;
+  margin-inline: 0;
+}
+
+.cl-hero-dot {
+  min-width: 40px;
+  min-height: 44px;
+}
+
+.cl-hero-dot-pill {
+  width: 8px;
+  height: 8px;
+}
+
+.cl-hero-dot.on .cl-hero-dot-pill {
+  width: 24px;
+  background: var(--color-rose-200);
+  box-shadow: 0 0 12px rgb(246 199 209 / .55);
+}
+
+.cl-hero-slider .cl-hero-slot-card {
+  border-color: rgb(255 255 255 / .78);
+  box-shadow: 0 24px 56px rgb(0 0 0 / .3), 0 4px 14px rgb(0 0 0 / .12);
+}
+
+.cl-hero-slot-card > .cl-btn {
+  width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .cl-hero-slider {
+    height: clamp(620px, 88svh, 740px);
+    min-height: 620px;
+  }
+
+  @supports (height: 100dvh) {
+    .cl-hero-slider {
+      height: clamp(620px, 88dvh, 740px);
+    }
+  }
+
+  .cl-hero-slide {
+    align-items: flex-start;
+  }
+
+  .cl-hero-slide-content-wrap {
+    padding-block-start: clamp(1.5rem, 4.5vh, 2.75rem);
+  }
+
+  .cl-hero-slide-body {
+    max-width: 100%;
+    padding-block: 0;
+  }
+
+  .cl-hero-slide-title {
+    max-width: 22ch;
+    font-size: clamp(1.65rem, 4.8vw, 2.4rem);
+    margin-block: .25rem .5rem;
+  }
+
+  .cl-hero-slide-subtitle {
+    display: -webkit-box;
+    max-width: 42rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    font-size: .95rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .cl-hero-slide-actions {
+    display: none;
+  }
+
+  .cl-hero-slider .cl-hero-slot-card {
+    top: auto;
+    right: 1rem;
+    bottom: 4.55rem;
+    left: 1rem;
+    width: auto;
+    max-width: 28rem;
+    margin: 0 auto;
+    padding: 1rem 1.1rem;
+    border-radius: 20px;
+    transform: none;
+  }
+
+  .cl-hero-controls {
+    bottom: .45rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cl-hero-slide-body {
+    padding-block: 3.25rem 5rem;
+  }
+}
+
+@media (min-width: 560px) and (max-height: 600px) {
+  .cl-hero-slider {
+    height: 440px;
+    min-height: 380px;
+  }
+
+  .cl-hero-slide {
+    align-items: center;
+  }
+
+  .cl-hero-slide-content-wrap {
+    padding-block-start: 0;
+  }
+
+  .cl-hero-slide-body {
+    max-width: 46%;
+    padding-block: 1rem;
+  }
+
+  .cl-hero-slide-title {
+    font-size: 1.55rem;
+  }
+
+  .cl-hero-slide-subtitle {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: .84rem;
+    line-height: 1.55;
+  }
+
+  .cl-hero-slider .cl-hero-slot-card {
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: 1.25rem;
+    width: clamp(18rem, 40vw, 22rem);
+    max-width: none;
+    margin: 0;
+    padding: .9rem 1.1rem;
+    transform: translateY(-50%);
+  }
+
+  .cl-hero-controls {
+    bottom: .5rem;
+  }
+}
+
+/* A compact proof strip makes the online-booking benefits visible immediately. */
+.cl-trust-strip {
+  padding-block: .75rem;
+  background: linear-gradient(90deg, var(--cl-teal-soft), #f8fbfa 52%, var(--cl-teal-soft));
+  border-block-color: var(--color-brand-100);
+}
+
+.cl-trust-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem 1rem;
+  justify-content: stretch;
+  color: var(--color-brand-900);
+  font-size: .86rem;
+}
+
+.cl-trust-list li {
+  min-width: 0;
+  justify-content: flex-start;
+  gap: .6rem;
+  line-height: 1.55;
+}
+
+.cl-trust-list .cl-trust-icon {
+  width: 25px;
+  height: 25px;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--color-brand-200);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cl-teal-d);
+  font-size: .8rem;
+}
+
+.cl-trust-skel {
+  width: 4.5rem;
+  height: .95rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-brand-100), #fff, var(--color-brand-100));
+  background-size: 200% 100%;
+}
+
+.cl-app:not(.cl-app-admin) .cl-section {
+  padding-block: clamp(2.5rem, 5vw, 3.75rem);
+}
+
+.cl-app:not(.cl-app-admin) .cl-sechead {
+  align-items: end;
+  margin-bottom: 1.75rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-sechead h2 {
+  text-wrap: balance;
+}
+
+.cl-app:not(.cl-app-admin) .cl-service,
+.cl-app:not(.cl-app-admin) .cl-person,
+.cl-app:not(.cl-app-admin) .cl-pkg-teaser,
+.cl-app:not(.cl-app-admin) .cl-contact-card {
+  border-radius: 20px;
+  box-shadow: 0 5px 18px rgb(4 47 46 / .055);
+}
+
+.cl-app:not(.cl-app-admin) .cl-service:hover,
+.cl-app:not(.cl-app-admin) .cl-person:hover,
+.cl-app:not(.cl-app-admin) .cl-pkg-teaser:hover,
+.cl-app:not(.cl-app-admin) .cl-contact-card:hover {
+  box-shadow: 0 14px 32px rgb(4 47 46 / .12);
+}
+
+.cl-app:not(.cl-app-admin) .cl-service:focus-within,
+.cl-app:not(.cl-app-admin) .cl-person:focus-within {
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgb(13 148 136 / .14), var(--shadow-md);
+}
+
+.cl-app:not(.cl-app-admin) .cl-service .cl-meta {
+  justify-content: flex-start;
+}
+
+.cl-app:not(.cl-app-admin) .cl-faq details {
+  border-radius: 16px;
+  background: #fff;
+}
+
+.cl-app:not(.cl-app-admin) .cl-faq summary {
+  line-height: 1.8;
+}
+
+.cl-app:not(.cl-app-admin) .cl-band:not(.cl-band-reviews) {
+  background: linear-gradient(120deg, var(--cl-teal-soft), #f8fbfa 58%, var(--cl-teal-soft));
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: clamp(3rem, 7vw, 5rem);
+  background: var(--cl-gradient-dark);
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta::before,
+.cl-app:not(.cl-app-admin) .cl-cta::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta::before {
+  inset-block-start: -12rem;
+  inset-inline-end: -5rem;
+  background: radial-gradient(circle, rgb(45 212 191 / .22), transparent 70%);
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta::after {
+  inset-block-end: -13rem;
+  inset-inline-start: -4rem;
+  background: radial-gradient(circle, rgb(208 90 117 / .18), transparent 70%);
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta .cl-wrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  max-width: 54rem;
+  text-align: center;
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta .cl-eyebrow {
+  margin-bottom: .7rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta h2 {
+  color: #fff;
+  text-wrap: balance;
+}
+
+.cl-app:not(.cl-app-admin) .cl-cta p:not(.cl-eyebrow) {
+  max-width: 42rem;
+  margin-block: .65rem 0;
+  color: #cfe9e5;
+  line-height: 1.85;
+}
+
+.cl-home-cta-actions {
+  justify-content: center;
+  margin-top: 1.35rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-footer {
+  padding-top: 3.5rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-footer h2 {
+  margin-bottom: 1rem;
+}
+
+.cl-app:not(.cl-app-admin) .cl-copy {
+  margin-top: 2.25rem !important;
+}
+
+@media (max-width: 767px) {
+  .cl-trust-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .7rem .85rem;
+    font-size: .82rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-sechead {
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+  }
+
+  .cl-app:not(.cl-app-admin) .cl-section {
+    padding-block: 2.35rem;
+  }
+
+  .cl-home-cta-actions {
+    width: 100%;
+  }
+
+  .cl-home-cta-actions .cl-btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .cl-trust-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-app:not(.cl-app-admin) {
+    scroll-behavior: auto;
+  }
+
+  .cl-app:not(.cl-app-admin) *,
+  .cl-app:not(.cl-app-admin) *::before,
+  .cl-app:not(.cl-app-admin) *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
 
 
 

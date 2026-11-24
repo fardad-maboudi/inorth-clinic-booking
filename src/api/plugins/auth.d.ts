@@ -3,6 +3,7 @@
  */
 export function setAuthToken(token: string): void;
 export function clearAuthToken(): void;
+export function storeSession(data: Record<string, unknown>): Record<string, unknown>;
 /**
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
@@ -10,11 +11,11 @@ export function refreshSession(): Promise<import("../joorchin.js").ApiResult>;
 /**
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
-export function hasAuthToken(): Promise<import("../joorchin.js").ApiResult>;
+export function hasAuthToken(): boolean;
 /**
- * @returns {Promise<import('../joorchin.js').ApiResult>}
+ * @returns {Record<string, string>}
  */
-export function getUserAuthHeaders(): Promise<import("../joorchin.js").ApiResult>;
+export function getUserAuthHeaders(): Record<string, string>;
 /** Customer OTP request for this site (site_user); dashboard staff use requestAdminOtp.
  * @param {string} phoneNumber  * @returns {Promise<import('../joorchin.js').ApiResult>}
  * @example

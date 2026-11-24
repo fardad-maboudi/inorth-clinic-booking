@@ -6,7 +6,12 @@
  */
 import { ApiError, ensureLoaded, handle, resetDemo } from './engine.js';
 
-const MODE = import.meta.env?.VITE_API_MODE ?? 'demo';
+// Keep interactive local previews self-contained, but never ship the demo API
+// in a production build unless a demo artifact was explicitly requested.
+const MODE = import.meta.env?.VITE_API_MODE ?? (import.meta.env?.PROD ? 'live' : 'demo');
+if (MODE !== 'demo' && MODE !== 'live') {
+  throw new Error(`[clinic] Unsupported VITE_API_MODE "${MODE}"; use "demo" or "live".`);
+}
 const APP_ID = String(import.meta.env?.VITE_APP_ID ?? 'test-id');
 const g = globalThis;
 

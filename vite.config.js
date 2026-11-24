@@ -145,6 +145,9 @@ export default defineConfig(async ({ command, mode }) => {
           ],
         },
         workbox: {
+          // The browser SDK is a shared runtime dependency and currently exceeds
+          // Workbox's 2 MiB default; keep it available for offline app startup.
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           navigateFallback: "/index.html",
           navigateFallbackDenylist: [/^\/api\//, /^\/miniapp(?:\/|$)/],
           globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,webmanifest}"],
