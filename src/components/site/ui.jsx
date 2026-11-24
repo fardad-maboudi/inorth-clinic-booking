@@ -193,6 +193,17 @@ export function SkeletonGrid({ n = 3, cols = 3 }) {
   );
 }
 
+export function FaqToggleIcon() {
+  return (
+    <span className="cl-faq-toggle-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" focusable="false">
+        <path className="cl-faq-toggle-vertical" d="M12 5v14" />
+        <path d="M5 12h14" />
+      </svg>
+    </span>
+  );
+}
+
 export function FaqSkeleton({ n = 4, className = "" }) {
   const widths = ["68%", "82%", "56%", "74%", "62%"];
   return (

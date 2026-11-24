@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { listFaqs } from '@/api/plugins/faq-kb';
-import { FaqSkeleton, PageHead, StateBox } from '@/components/site/ui';
+import { FaqSkeleton, FaqToggleIcon, PageHead, StateBox } from '@/components/site/ui';
 import { errText, idOf, rowsOf } from '@/components/site/format';
 import { useAsync, useTitle } from '@/components/site/hooks';
 
@@ -59,7 +59,7 @@ export default function FaqPage() {
           <div className="cl-faq">
             {rows.map((f) => (
               <details key={idOf(f)} className="cl-card">
-                <summary>{f.question}</summary>
+                <summary>{f.question}<FaqToggleIcon /></summary>
                 <p>{f.answer}</p>
               </details>
             ))}
