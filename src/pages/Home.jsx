@@ -74,7 +74,7 @@ export default function Home() {
     <>
       <HeroSlider slotCard={<NextSlot />} />
 
-      <section className="cl-trust-strip" aria-label="مزیت‌های رزرو در کلینیک نیلوفر">
+      {/* <section className="cl-trust-strip" aria-label="مزیت‌های رزرو در کلینیک نیلوفر">
         <div className="cl-wrap">
           <ul className="cl-trust-list">
             <li>
@@ -103,7 +103,7 @@ export default function Home() {
             </li>
           </ul>
         </div>
-      </section>
+      </section> */}
 
       <section className="cl-section cl-wrap">
         <SectionHead
