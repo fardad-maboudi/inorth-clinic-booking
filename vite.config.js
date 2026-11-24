@@ -12,6 +12,11 @@ const packageDependencies = Object.keys(
 ).filter((name) => !name.startsWith("@babel/") && !name.startsWith("@joorchin/"));
 const optimizedDependencies = [
   ...packageDependencies,
+  // The client SDK is intentionally left unbundled, but it imports these
+  // js-tiktoken subpaths. Pre-bundle them explicitly so their CommonJS
+  // base64-js dependency is converted before the browser loads the SDK.
+  "js-tiktoken/lite",
+  "js-tiktoken/ranks/o200k_base",
   "react-dom/client",
   "react/jsx-runtime",
 ];
