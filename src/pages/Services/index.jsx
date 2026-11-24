@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FilterBar, ServiceCard, SkeletonGrid, StateBox } from '@/components/site/ui';
+import { FaqToggleIcon, FilterBar, ServiceCard, SkeletonGrid, StateBox } from '@/components/site/ui';
 import { errText, idOf, nf } from '@/components/site/format';
 import { useCatalog, useTitle } from '@/components/site/hooks';
 
@@ -143,22 +143,22 @@ export default function ServicesPage() {
 
         <div className="cl-faq">
           <details className="cl-card cl-rv">
-            <summary>آیا پیش از خدمات لیزر یا پوست نیاز به جلسهٔ مشاوره است؟</summary>
+            <summary>آیا پیش از خدمات لیزر یا پوست نیاز به جلسهٔ مشاوره است؟<FaqToggleIcon /></summary>
             <p>بله، در اولین مراجعه به کلینیک نیلوفر، پروندهٔ سلامت شما تکمیل و نوع پوست توسط پزشک بررسی می‌شود تا مناسب‌ترین تنظیمات دستگاه یا پروتکل درمانی تعیین گردد.</p>
           </details>
 
           <details className="cl-card cl-rv">
-            <summary>فاصلهٔ زمانی بین جلسات درمانی چقدر است؟</summary>
+            <summary>فاصلهٔ زمانی بین جلسات درمانی چقدر است؟<FaqToggleIcon /></summary>
             <p>بسته به نوع خدمت (لیزر، مزوتراپی یا پاکسازی عمیق)، فواصل جلسات معمولاً بین ۳ تا ۶ هفته متغیر است. متخصص در پایان جلسه زمان بهینه را به شما اعلام می‌کند.</p>
           </details>
 
           <details className="cl-card cl-rv">
-            <summary>آیا امکان لغو یا تغییر زمان نوبت وجود دارد؟</summary>
+            <summary>آیا امکان لغو یا تغییر زمان نوبت وجود دارد؟<FaqToggleIcon /></summary>
             <p>بله، تا ۲۴ ساعت پیش از شروع نوبت می‌توانید از بخش «حساب من» یا تماس با کلینیک، زمان نوبت خود را بدون هیچ هزینه‌ای تغییر دهید یا لغو کنید.</p>
           </details>
 
           <details className="cl-card cl-rv">
-            <summary>تفاوت جلسات تکی با بسته‌های چندجلسه‌ای چیست؟</summary>
+            <summary>تفاوت جلسات تکی با بسته‌های چندجلسه‌ای چیست؟<FaqToggleIcon /></summary>
             <p>بسته‌های چندجلسه‌ای شامل تا ۳۰٪ صرفه‌جویی اقتصادی نسبت به جلسهٔ تکی هستند و اعتبار زمانی طولانی برای رزرو آزادانهٔ جلسات در اختیارتان می‌گذارند.</p>
           </details>
         </div>

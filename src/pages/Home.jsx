@@ -3,7 +3,7 @@ import HeroSlider from '@/components/site/HeroSlider';
 import { listFaqs } from '@/api/plugins/faq-kb';
 import { listSlots } from '@/api/plugins/bookings';
 import Reviews from '@/components/site/Reviews';
-import { FaqSkeleton, SectionHead, ServiceCard, SkeletonGrid, StaffCard, StateBox } from '@/components/site/ui';
+import { FaqSkeleton, FaqToggleIcon, SectionHead, ServiceCard, SkeletonGrid, StaffCard, StateBox } from '@/components/site/ui';
 import { dayKey, errText, fmtFullDate, fmtTime, idOf, money, nf, rowsOf } from '@/components/site/format';
 import { useAsync, useCatalog, useTitle } from '@/components/site/hooks';
 
@@ -216,7 +216,7 @@ export default function Home() {
           <div className="cl-faq">
             {faqs.data.map((f) => (
               <details key={idOf(f)} className="cl-card cl-rv">
-                <summary>{f.question}</summary>
+                <summary>{f.question}<FaqToggleIcon /></summary>
                 <p>{f.answer}</p>
               </details>
             ))}
