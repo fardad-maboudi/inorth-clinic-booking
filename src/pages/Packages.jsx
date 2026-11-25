@@ -112,26 +112,44 @@ export default function PackagesPage() {
   return (
     <>
       <header className="cl-pkg-hero">
-        <div className="cl-wrap cl-rv">
-          <p className="cl-eyebrow">بسته‌ها و کارت هدیه</p>
-          <h1>سرمایه‌گذاری روی زیبایی و تندرستی، با تضمین قیمت</h1>
-          <p className="cl-lead">
-            جلسات درمانی را در قالب بسته‌های چندجلسه‌ای تهیه کنید و از صرفه‌جویی چشمگیر قیمت نسبت به جلسات تکی بهره‌مند شوید. زمان هر جلسه را با آزادی کامل در طول دوره رزرو کنید.
-          </p>
-          <div className="cl-pkg-value-strip" role="list" aria-label="مزایای بسته‌های چندجلسه‌ای کلینیک">
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>تا ۳۰٪ صرفه‌جویی در هر جلسه نسبت به تعرفهٔ آزاد</span>
-            </div>
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>رزرو آزاد روز و ساعت هر جلسه از حساب کاربری</span>
-            </div>
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>اعتبار زمانی طولانی و امکان تغییر زمان بدون جریمه</span>
+        <div className="cl-wrap cl-pkg-hero-grid">
+          <div className="cl-pkg-hero-copy cl-rv">
+            <p className="cl-eyebrow cl-eyebrow-light">بسته‌های چندجلسه‌ای و کارت هدیه</p>
+            <h1>برای مراقبت، یک مسیر پیوسته بچینید</h1>
+            <p className="cl-lead cl-pkg-hero-lead">
+              جلسات درمانی را در قالب بسته تهیه کنید، هزینهٔ هر جلسه را با تعرفهٔ آزاد مقایسه کنید و زمان مراجعه را با توجه به برنامهٔ خود رزرو کنید.
+            </p>
+            <div className="cl-pkg-value-strip" role="list" aria-label="مزایای بسته‌های چندجلسه‌ای کلینیک">
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>تا ۳۰٪ صرفه‌جویی در هر جلسه نسبت به تعرفهٔ آزاد</span>
+              </div>
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>رزرو روز و ساعت هر جلسه از حساب کاربری</span>
+              </div>
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>اعتبار مشخص برای استفاده از جلسات بسته</span>
+              </div>
             </div>
           </div>
+
+          <aside className="cl-pkg-hero-art cl-rv" aria-label="راهنمای استفاده از بسته‌های درمانی">
+            <div className="cl-pkg-art-orbit" aria-hidden="true" />
+            <div className="cl-pkg-pass">
+              <div className="cl-pkg-pass-top">
+                <span>کلینیک نیلوفر</span>
+                <span aria-hidden="true">✦</span>
+              </div>
+              <div className="cl-pkg-pass-icon" aria-hidden="true">N</div>
+              <p className="cl-pkg-pass-kicker">برنامهٔ مراقبت شما</p>
+              <h2>جلسه به جلسه، با آرامش</h2>
+              <p>جزئیات هر بسته، تعداد جلسات و بازهٔ استفاده را پیش از خرید ببینید.</p>
+              <div className="cl-pkg-pass-foot"><span>قابل رزرو آنلاین</span><span>۰۱ — ۰۲ — ۰۳</span></div>
+            </div>
+            <div className="cl-pkg-art-note"><span aria-hidden="true">✓</span> انتخاب متناسب با برنامهٔ شما</div>
+          </aside>
         </div>
       </header>
 
@@ -148,8 +166,8 @@ export default function PackagesPage() {
           <div className="cl-pkg-step">
             <span className="cl-pkg-step-num" aria-hidden="true">۲</span>
             <div className="cl-pkg-step-text">
-              <strong>شارژ فوری جلسات</strong>
-              <span>افزایش اعتبار جلسات در «حساب من»</span>
+                <strong>فعال‌سازی پس از تأیید سفارش</strong>
+                <span>کلینیک اعتبار جلسات را در حساب شما فعال می‌کند</span>
             </div>
           </div>
           <div className="cl-pkg-step">

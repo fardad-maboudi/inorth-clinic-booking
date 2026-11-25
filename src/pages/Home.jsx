@@ -116,7 +116,7 @@ export default function Home() {
           <StateBox kind="error" title="خدمات دریافت نشد" text={errText(catalog.error)} onRetry={catalog.reload} />
         ) : services.length ? (
           <div className="cl-services-flex">
-            {services.slice(0, 3).map((s) => <ServiceCard key={idOf(s)} service={s} staffCount={s.resourceIds?.length} />)}
+            {services.slice(0, 3).map((s) => <ServiceCard key={idOf(s)} service={s} staffCount={s.resourceIds?.length} compact />)}
           </div>
         ) : <StateBox kind="empty" title="به‌زودی خدمات جدید اضافه می‌شود" />}
       </section>
