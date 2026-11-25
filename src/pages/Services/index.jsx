@@ -18,7 +18,7 @@ export default function ServicesPage() {
       <header className="cl-services-hero">
         <div className="cl-wrap">
           <div className="cl-services-hero-grid">
-            <div className="cl-services-hero-content cl-rv">
+            <div className="cl-services-hero-content">
               <p className="cl-eyebrow">راهنمای خدمات نیلوفر</p>
               <h1>مراقبتی که با نیاز پوست شما شروع می‌شود</h1>
               <p className="cl-lead">
@@ -31,7 +31,7 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            <div className="cl-services-mosaic cl-rv" role="img" aria-label="تصاویر مراقبت پوست و لیزر در محیط کلینیک">
+            <div className="cl-services-mosaic" role="img" aria-label="تصاویر مراقبت پوست و لیزر در محیط کلینیک">
               <div className="cl-services-photo cl-services-photo-main">
                 <img src="/images/skincare-facial-care.jpg" alt="" fetchPriority="high" />
               </div>
@@ -125,7 +125,7 @@ export default function ServicesPage() {
       </section>
 
       <section className="cl-services-consult" aria-label="مشاوره برای انتخاب درمان">
-        <div className="cl-wrap cl-services-consult-inner cl-rv">
+        <div className="cl-wrap cl-services-consult-inner">
           <div>
             <p className="cl-eyebrow cl-eyebrow-light">پیش از انتخاب درمان</p>
             <h2>برای پوست شما، کدام مسیر مناسب‌تر است؟</h2>
@@ -150,19 +150,19 @@ export default function ServicesPage() {
         </div>
 
         <div className="cl-faq cl-services-faq">
-          <details className="cl-card cl-rv">
+          <details className="cl-card">
             <summary>آیا پیش از خدمات لیزر یا پوست نیاز به جلسهٔ مشاوره است؟<FaqToggleIcon /></summary>
             <p>بله، در اولین مراجعه پروندهٔ سلامت شما تکمیل و نوع پوست توسط پزشک بررسی می‌شود تا مناسب‌ترین تنظیمات دستگاه یا پروتکل درمانی تعیین شود.</p>
           </details>
-          <details className="cl-card cl-rv">
+          <details className="cl-card">
             <summary>فاصلهٔ زمانی بین جلسات درمانی چقدر است؟<FaqToggleIcon /></summary>
             <p>بسته به نوع خدمت، فاصلهٔ جلسات متفاوت است. متخصص در پایان جلسه زمان مناسب مراجعهٔ بعدی را به شما اعلام می‌کند.</p>
           </details>
-          <details className="cl-card cl-rv">
+          <details className="cl-card">
             <summary>آیا امکان لغو یا تغییر زمان نوبت وجود دارد؟<FaqToggleIcon /></summary>
             <p>بله، تا ۲۴ ساعت پیش از شروع نوبت می‌توانید از بخش «حساب من» یا با تماس با کلینیک، زمان نوبت خود را تغییر دهید یا لغو کنید.</p>
           </details>
-          <details className="cl-card cl-rv">
+          <details className="cl-card">
             <summary>تفاوت جلسات تکی با بسته‌های چندجلسه‌ای چیست؟<FaqToggleIcon /></summary>
             <p>بسته‌های چندجلسه‌ای با توجه به خدمت، تعداد جلسات و اعتبار زمانی مشخصی دارند. جزئیات هر بسته را در بخش بسته‌ها ببینید.</p>
           </details>

@@ -22,7 +22,7 @@ export default function MiniappStaff() {
         <Failure message={error ? "اطلاعات بارگذاری نشد." : "این خدمت پیدا نشد."} onRetry={error ? reload : () => navigate("/services", { replace: true })} />
       ) : (
         <>
-          <Card className="ma-rise mb-4 flex items-center justify-between gap-3 !p-3.5">
+          <Card className="mb-4 flex items-center justify-between gap-3 !p-3.5">
             <p className="min-w-0 truncate font-bold">{service.name}</p>
             <p className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1"><Clock size={13} strokeWidth={1.75} aria-hidden />{digits.format(service.durationMinutes)} دقیقه</span>
@@ -31,7 +31,7 @@ export default function MiniappStaff() {
           </Card>
           <div className="space-y-3">
             {team.length > 1 ? (
-              <RowLink to={`/book/${serviceId}/slots?staff=any`} i={1}>
+              <RowLink to={`/book/${serviceId}/slots?staff=any`}>
                 <IconChip icon={Shuffle} size={48} className="!rounded-full" />
                 <span className="min-w-0 flex-1">
                   <span className="block text-base font-bold">هر متخصصی</span>
@@ -39,8 +39,8 @@ export default function MiniappStaff() {
                 </span>
               </RowLink>
             ) : null}
-            {team.map((member, index) => (
-              <RowLink key={member._id} to={`/book/${serviceId}/slots?staff=${member._id}`} i={index + 2}>
+            {team.map((member) => (
+              <RowLink key={member._id} to={`/book/${serviceId}/slots?staff=${member._id}`}>
                 <StaffAvatar member={member} size={48} />
                 <span className="min-w-0 flex-1">
                   <span className="block text-base font-bold">{member.name}</span>

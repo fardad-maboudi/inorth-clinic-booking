@@ -42,7 +42,7 @@ export default function TeamPage() {
     <>
       <header className="cl-team-hero">
         <div className="cl-wrap cl-team-hero-grid">
-          <div className="cl-team-hero-info cl-rv">
+          <div className="cl-team-hero-info">
             <p className="cl-eyebrow">کادر پزشکی و درمانی</p>
             <h1>متخصصانی که با دقت، کنار شما هستند</h1>
             <p className="cl-lead">
@@ -58,8 +58,8 @@ export default function TeamPage() {
             </div>
           </div>
 
-          <div className="cl-team-hero-media cl-rv">
-            <img src="/images/clinic-team-consultation.jpg" alt="مشاورهٔ پوست در فضای کلینیک" fetchPriority="high" />
+          <div className="cl-team-hero-media">
+            <img src="/images/clinic-team-hero.jpg" alt="دو عضو تیم درمانی در حال بررسی پروندهٔ مراجع" fetchPriority="high" />
             <div className="cl-team-image-caption">
               <span>رویکرد نیلوفر</span>
               <strong>تخصص، دقت و همراهی در هر مرحله</strong>
@@ -130,7 +130,7 @@ export default function TeamPage() {
 
       {/* Signature Medical Board & Care Standards Band (Deep Dark) */}
       <section className="cl-standards-band" aria-label="منشور اخلاقی و استانداردهای بالینی کلینیک">
-        <div className="cl-wrap cl-rv">
+        <div className="cl-wrap">
           <div className="cl-sechead cl-sechead-light">
             <div>
               <p className="cl-eyebrow cl-eyebrow-light">منشور اخلاقی و تعهدات بالینی</p>
@@ -171,7 +171,7 @@ export default function TeamPage() {
 
       {/* Light Guidance & Consultation Band */}
       <section className="cl-band" aria-label="مشاوره برای انتخاب پزشک">
-        <div className="cl-wrap cl-section cl-rv">
+        <div className="cl-wrap cl-section">
           <div className="cl-sechead">
             <div>
               <p className="cl-eyebrow">مشاورهٔ انتخاب درمان</p>

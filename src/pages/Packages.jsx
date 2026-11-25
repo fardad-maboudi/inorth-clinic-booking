@@ -113,7 +113,7 @@ export default function PackagesPage() {
     <>
       <header className="cl-pkg-hero">
         <div className="cl-wrap cl-pkg-hero-grid">
-          <div className="cl-pkg-hero-copy cl-rv">
+          <div className="cl-pkg-hero-copy">
             <p className="cl-eyebrow cl-eyebrow-light">بسته‌های چندجلسه‌ای و کارت هدیه</p>
             <h1>برای مراقبت، یک مسیر پیوسته بچینید</h1>
             <p className="cl-lead cl-pkg-hero-lead">
@@ -135,7 +135,7 @@ export default function PackagesPage() {
             </div>
           </div>
 
-          <aside className="cl-pkg-hero-art cl-rv" aria-label="راهنمای استفاده از بسته‌های درمانی">
+          <aside className="cl-pkg-hero-art" aria-label="راهنمای استفاده از بسته‌های درمانی">
             <div className="cl-pkg-art-orbit" aria-hidden="true" />
             <div className="cl-pkg-pass">
               <div className="cl-pkg-pass-top">
@@ -193,7 +193,7 @@ export default function PackagesPage() {
               const singleSessionPrice = toToman(s.price, s.currency);
               const diffPerSession = singleSessionPrice - perSession;
               return (
-                <article key={idOf(s)} className="cl-pkg-card cl-rv">
+                <article key={idOf(s)} className="cl-pkg-card">
                   <div className="cl-pkg-top">
                     <span className="cl-chip">{s.name}</span>
                     <span className="cl-muted cl-small">{nf(s.durationMinutes || 45)} دقیقه هر جلسه</span>
@@ -255,7 +255,7 @@ export default function PackagesPage() {
       </section>
         {/* Dark Closing CTA Band for Custom Combinations */}
       <section className="cl-cta" aria-label="مشاوره پکیج‌های ترکیبی">
-        <div className="cl-wrap cl-rv">
+        <div className="cl-wrap">
           <p className="cl-eyebrow cl-eyebrow-light">پکیج‌های درمانی اختصاصی</p>
           <h2>نیاز به بستهٔ ترکیبی یا مشاوره دارید؟</h2>
           <p className="cl-lead-cl-lead-package">
@@ -277,7 +277,7 @@ export default function PackagesPage() {
             <div className="cl-sechead"><div><p className="cl-eyebrow">کارت هدیه</p><h2>مراقبت را هدیه بدهید</h2></div></div>
             <div className="cl-grid cl-grid-2">
               {gifts.map((g) => (
-                <article key={idOf(g)} className="cl-gift-card cl-rv">
+                <article key={idOf(g)} className="cl-gift-card">
                   <div className="cl-pkg-top">
                     <span className="cl-badge">کارت هدیه اختصاصی</span>
                   </div>

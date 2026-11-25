@@ -147,7 +147,7 @@ export default function PanelPos() {
         <Card>
           <SectionTitle title="مراجعه‌های حضوری امروز" hint={todays.length ? `${fa(todays.length)} مورد · جمع ${fa(total)} تومان` : undefined} />
           {bookings.isLoading ? (
-            <div className="pn-shimmer h-24 rounded-lg" />
+            <div className="pn-skeleton h-24 rounded-lg" />
           ) : todays.length ? (
             <ul className={cn(card, 'divide-y divide-border border-0')}>
               {todays.map((b) => (

@@ -229,7 +229,7 @@ export function FaqSkeleton({ n = 4, className = "" }) {
 export function PageHead({ eyebrow, title, lead, children }) {
   return (
     <header className="cl-pagehead">
-      <div className="cl-wrap cl-rv">
+      <div className="cl-wrap">
         {eyebrow ? <p className="cl-eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
         {lead ? <p className="cl-lead">{lead}</p> : null}
@@ -247,7 +247,7 @@ export function SectionHead({
   light = false,
 }) {
   return (
-    <div className="cl-sechead cl-rv">
+    <div className="cl-sechead">
       <div>
         {eyebrow ? (
           <p className={`cl-eyebrow${light ? " cl-eyebrow-light" : ""}`}>
@@ -273,7 +273,7 @@ export function ServiceCard({ service, staffCount, compact = false }) {
   const pkg = service.package?.enabled ? service.package : null;
   return (
     <article
-      className={`cl-card cl-service cl-rv${compact ? " cl-service-compact" : ""}`}
+      className={`cl-card cl-service${compact ? " cl-service-compact" : ""}`}
       style={{ "--tile": service.color || "var(--color-brand-600)" }}
     >
       <div className="cl-service-visual" aria-hidden="true">
@@ -343,7 +343,7 @@ export function StaffCard({ person, services = [] }) {
 
   return (
     <article
-      className="cl-card cl-person cl-rv"
+      className="cl-card cl-person"
       style={{ "--tile": person.color || "var(--color-brand-600)" }}
     >
       <div className={`cl-person-art${image.isPortrait ? " has-portrait" : ""}`}>

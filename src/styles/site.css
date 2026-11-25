@@ -175,32 +175,13 @@
 .cl-hero-arrows { display: flex; gap: .5rem; pointer-events: auto; }
 .cl-hero-arrow { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.35); background: rgba(14, 30, 28, 0.6); backdrop-filter: blur(8px); color: #fff; font-size: 1.4rem; display: inline-grid; place-items: center; cursor: pointer; transition: background .15s, border-color .15s, transform .12s; }
 .cl-hero-arrow:hover { background: var(--cl-teal, #0f766e); border-color: #fff; }
-.cl-hero-arrow:active { transform: scale(0.94); }
+.cl-hero-arrow:active { transform: scale(0.97); }
 .cl-hero-arrow:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .cl-hero-dots { display: flex; align-items: center; justify-content: center; gap: .35rem; pointer-events: auto; margin-inline: auto; width: fit-content; }
 .cl-hero-dot { min-width: 44px; min-height: 44px; display: inline-grid; place-items: center; background: transparent; border: 0; cursor: pointer; padding: 0; }
 .cl-hero-dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 999px; }
 .cl-hero-dot-pill { width: 10px; height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.4); transition: width .3s var(--ease), background-color .2s; }
 .cl-hero-dot.on .cl-hero-dot-pill { width: 30px; background: var(--color-rose-400, #f6829d); box-shadow: 0 0 10px rgba(246, 130, 157, 0.6); }
-/* Scroll Cue */
-.cl-hero-scroll-cue { display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .9rem; border-radius: 999px; background: rgba(14, 30, 28, 0.55); border: 1.5px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(8px); color: #e6f3f0; font-size: .84rem; font-weight: 500; text-decoration: none; pointer-events: auto; transition: background-color .18s, border-color .18s, color .18s, transform .15s; }
-.cl-hero-scroll-cue:hover { background: rgba(15, 118, 110, 0.7); border-color: rgba(255, 255, 255, 0.5); color: #fff; }
-.cl-hero-scroll-cue:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.cl-hero-scroll-cue-icon { display: block; flex-shrink: 0; will-change: transform; animation: cl-scroll-cue-bob 2.4s ease-in-out infinite; }
-
-@keyframes cl-scroll-cue-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cl-hero-scroll-cue-icon {
-    animation: none;
-  }
-}
-
-
-
 /* ---------- hero slot card overlay (always on the slider) ---------- */
 .cl-hero-slider .cl-hero-slot-card,
 .cl-hero-card.cl-hero-slot-card {
@@ -216,7 +197,7 @@
   display: grid;
   gap: .55rem;
   margin: 0;
-  animation: cl-fade .35s var(--ease) both;
+  animation: cl-fade .25s var(--ease) both;
 }
 
 /* Desktop & wide tablet (>= 860px): positioned on the physical left */
@@ -404,7 +385,7 @@
 .cl-eyebrow a { color: inherit; text-decoration: none; }
 .cl-eyebrow-light { color: var(--color-rose-200); }
 .cl-trust { display: flex; flex-wrap: wrap; gap: .6rem 1.25rem; margin-top: 1.75rem; color: #bfe6df; font-size: .9rem; }
-.cl-trust-skel { display: inline-block; width: 4.5rem; height: .9em; vertical-align: middle; border-radius: 4px; background: rgb(255 255 255 / .25); animation: cl-shimmer 1.4s linear infinite; background-size: 200% 100%; }
+.cl-trust-skel { display: inline-block; width: 4.5rem; height: .9em; vertical-align: middle; border-radius: 4px; background: rgb(255 255 255 / .25); }
 .cl-trust li::before { content: '✓'; margin-inline-end: .4rem; color: var(--color-rose-200); font-weight: 700; }
 .cl-hero-art { position: relative; min-height: 15rem; display: grid; place-items: center; }
 .cl-blob { position: absolute; border-radius: 50%; filter: blur(2px); }
@@ -533,9 +514,16 @@
 .cl-state-text { color: var(--color-neutral-600, #475569); margin: 0; font-size: .95rem; line-height: 1.65; max-width: 32rem; }
 .cl-spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--color-brand-100); border-top-color: var(--cl-teal); animation: cl-spin .8s linear infinite; }
 @keyframes cl-spin { to { transform: rotate(360deg); } }
-.cl-skel { background: linear-gradient(100deg, #efeae6 30%, #f8f5f2 50%, #efeae6 70%); background-size: 200% 100%; animation: cl-shimmer 1.4s linear infinite; border: 0; }
-@keyframes cl-shimmer { to { background-position: -200% 0; } }
-@media (prefers-reduced-motion: reduce) { .cl-spinner, .cl-skel { animation: none; } .cl-app * { scroll-behavior: auto !important; transition: none !important; } }
+.cl-skel { background: linear-gradient(100deg, #efeae6 30%, #f8f5f2 50%, #efeae6 70%); border: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .cl-app *, .cl-app *::before, .cl-app *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cl-app .cl-faq details::details-content { transition-duration: 0.01ms !important; }
+}
 
 /* ---------- misc content ---------- */
 .cl-stars { display: inline-flex; gap: 2px; direction: ltr; unicode-bidi: isolate; }
@@ -698,7 +686,7 @@ html {
   padding: 0;
   border-radius: var(--cl-r);
   overflow: hidden;
-  transition: border-color .25s ease, box-shadow .25s ease, background-color .25s ease;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
 .cl-faq details[open] {
   border-color: var(--color-brand-200);
@@ -742,7 +730,7 @@ html {
   border-radius: 50%;
   background-color: var(--cl-teal-soft);
   color: var(--cl-teal);
-  transition: background-color .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease, transform .2s ease;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
 }
 .cl-faq-toggle-icon svg {
   display: block;
@@ -753,13 +741,12 @@ html {
 .cl-faq-toggle-vertical {
   transform-box: fill-box;
   transform-origin: center;
-  transition: transform .22s ease;
+  transition: transform .18s ease;
 }
 .cl-faq summary:hover .cl-faq-toggle-icon {
   border-color: var(--color-brand-200);
   background-color: color-mix(in srgb, var(--cl-teal) 16%, transparent);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--cl-teal) 20%, transparent);
-  transform: scale(1.06);
 }
 .cl-faq details[open] .cl-faq-toggle-icon {
   border-color: var(--cl-teal);
@@ -780,29 +767,18 @@ html {
   line-height: 1.9;
   font-size: .95rem;
 }
-.cl-faq details[open] p {
-  animation: cl-accordion-content-in .28s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes cl-accordion-content-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Native CSS details-content animation for modern browsers */
 @supports (interpolate-size: allow-keywords) and (selector(::details-content)) {
   .cl-faq details::details-content {
-    transition: block-size .3s cubic-bezier(0.25, 1, 0.5, 1), content-visibility .3s allow-discrete;
+    transition: block-size .22s cubic-bezier(0.25, 1, 0.5, 1), content-visibility .22s allow-discrete;
     block-size: 0;
     overflow: clip;
   }
   .cl-faq details[open]::details-content {
     block-size: auto;
+  }
+  .cl-faq details[data-instant-toggle]::details-content {
+    transition: none !important;
   }
 }
 
@@ -1191,47 +1167,18 @@ html {
 }
 
 /* =====================================================================
-   Art direction pass: motion system, bento, portrait staff, auth split.
-   Motion rules: transform/opacity only, <= 400ms, never gates an action,
-   everything collapses under prefers-reduced-motion.
+   Motion: preserve purposeful feedback; remove repeated page and scroll choreography.
    ===================================================================== */
 .cl-app { --ease: cubic-bezier(.16, 1, .3, 1); }
 @media (prefers-reduced-motion: no-preference) {
-  .cl-app[data-js] .cl-rv:not(.in) { opacity: 0; transform: translateY(18px); }
-  .cl-rv { transition: opacity .55s var(--ease), transform .55s var(--ease); }
-  .cl-grid > .cl-rv:nth-child(2), .cl-services-flex > .cl-rv:nth-child(2) { transition-delay: 70ms; }
-  .cl-grid > .cl-rv:nth-child(3), .cl-services-flex > .cl-rv:nth-child(3) { transition-delay: 140ms; }
-  .cl-grid > .cl-rv:nth-child(4) { transition-delay: 210ms; }
-  .cl-page { animation: cl-pagein .32s var(--ease) both; }
-  .cl-hero-in > div:first-child > * { animation: cl-rise .7s var(--ease) both; }
-  .cl-hero-in > div:first-child > :nth-child(2) { animation-delay: 60ms; }
-  .cl-hero-in > div:first-child > :nth-child(3) { animation-delay: 120ms; }
-  .cl-hero-in > div:first-child > :nth-child(4) { animation-delay: 180ms; }
-  .cl-hero-in > div:first-child > :nth-child(5) { animation-delay: 240ms; }
-  .cl-hero-card:not(.cl-hero-slot-card) { animation: cl-rise .8s .15s var(--ease) both; }
-  .cl-blob-a { animation: cl-float 14s ease-in-out infinite alternate; }
-  .cl-blob-b { animation: cl-float 17s ease-in-out infinite alternate-reverse; }
-  .cl-book-main > * { animation: cl-stepin .32s var(--ease) both; }
-  .cl-time, .cl-day, .cl-opt, .cl-pill, .cl-tabs button { transition: transform .15s var(--ease), background-color .15s, border-color .15s, color .15s, box-shadow .2s; }
-  .cl-time:hover, .cl-day:hover { transform: translateY(-2px); }
-  .cl-time.on { animation: cl-pop .28s var(--ease); }
-  .cl-opt:hover { transform: translateX(-3px); }
-  .cl-check { animation: cl-pop .5s var(--ease) both; }
-  .cl-confirm .cl-summary > div { animation: cl-rise .5s var(--ease) both; }
-  .cl-confirm .cl-summary > div:nth-child(2) { animation-delay: 60ms; }
-  .cl-confirm .cl-summary > div:nth-child(3) { animation-delay: 120ms; }
-  .cl-confirm .cl-summary > div:nth-child(4) { animation-delay: 180ms; }
-  .cl-confirm .cl-summary > div:nth-child(5) { animation-delay: 240ms; }
-  .cl-dialog[open] { animation: cl-pop .28s var(--ease); }
+  .cl-time, .cl-day, .cl-opt, .cl-pill, .cl-tabs button {
+    transition: background-color .15s, border-color .15s, color .15s, box-shadow .2s;
+  }
+  .cl-dialog[open] { animation: cl-fade .22s var(--ease) both; }
   .cl-dialog[open]::backdrop { animation: cl-fade .25s ease both; }
   .cl-card { transition: transform .25s var(--ease), box-shadow .25s, border-color .25s; }
 }
-@keyframes cl-pagein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes cl-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-@keyframes cl-stepin { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
-@keyframes cl-pop { 0% { transform: scale(.92); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
 @keyframes cl-fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes cl-float { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-18px, 14px, 0) scale(1.08); } }
 
 /* surfaces: cool tint instead of paper */
 .cl-pagehead { background: radial-gradient(90% 140% at 100% 0%, var(--color-brand-100) 0%, transparent 60%), linear-gradient(180deg, var(--cl-teal-soft), var(--cl-bg)); }
@@ -1355,7 +1302,6 @@ html {
 .cl-ledger strong.pos { color: var(--color-state-success-ink); }
 .cl-ledger strong.neg { color: var(--color-state-error-ink); }
 @media (min-width: 860px) { .cl-loyalty { grid-template-columns: .9fr 1.1fr; } }
-@media (prefers-reduced-motion: no-preference) { .cl-meter span { transition: width .9s var(--ease); } }
 .cl-dialog { margin: auto; inset: 0; }
 .cl-fields { align-items: start; }
 
@@ -1885,13 +1831,6 @@ html {
   font-size: .82rem;
   color: var(--cl-muted);
 }
-.cl-services-grid {
-  animation: cl-fade .12s ease-out;
-}
-@keyframes cl-fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 .cl-services-faq {
   margin-top: 2rem;
   display: flex;
@@ -1970,11 +1909,6 @@ html {
   background: var(--cl-teal-soft);
   color: var(--cl-teal-d);
   border: 1px solid var(--color-brand-100);
-  transition: transform .2s ease;
-}
-
-.cl-contact-card:hover .cl-contact-card-icon {
-  transform: scale(1.05);
 }
 
 .cl-contact-card-icon-telegram {
@@ -2157,7 +2091,6 @@ html {
   display: grid;
   place-items: center;
   box-shadow: 0 8px 20px rgb(15 118 110 / .35);
-  animation: cl-float 3s ease-in-out infinite;
 }
 
 .cl-contact-map-actions {
@@ -2580,20 +2513,11 @@ html {
   height: 64px;
   border-radius: 50%;
   background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: cl-shimmer 1.5s infinite;
 }
 
 .cl-order-skeleton-bar {
   border-radius: 8px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: cl-shimmer 1.5s infinite;
-}
-
-@keyframes cl-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 
 /* ---------- admin & backoffice ---------- */
@@ -3441,7 +3365,7 @@ html {
   height: 100%;
   object-fit: cover;
   object-position: center 48%;
-  transition: transform .36s var(--ease);
+  transition: transform .2s var(--ease);
 }
 .cl-service-group {
   position: absolute;
@@ -3505,7 +3429,7 @@ html {
   height: 100%;
   object-fit: cover;
   object-position: center 42%;
-  transition: transform .36s var(--ease);
+  transition: transform .2s var(--ease);
 }
 .cl-person-art-note {
   position: absolute;
@@ -3682,7 +3606,6 @@ html {
 .cl-services-group-head .cl-eyebrow { margin: 0; font-size: .72rem; }
 .cl-services-group-head h2 { font-size: 1.35rem; }
 .cl-services-group-count { padding: .3rem .65rem; border-radius: 999px; background: #fff; color: var(--cl-muted); font-weight: 600; }
-.cl-services-grid { animation: none; }
 .cl-services-consult {
   position: relative;
   isolation: isolate;
@@ -4024,7 +3947,6 @@ html {
 .cl-contact-card { border: 1px solid var(--cl-line); border-radius: 20px; box-shadow: 0 8px 22px rgb(29 37 35 / .04); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease); }
 .cl-contact-card-featured { border-color: var(--color-brand-200); }
 .cl-contact-card-icon-featured { background: var(--cl-teal) !important; color: #fff !important; }
-.cl-contact-map-pin { animation: none; }
 .cl-contact-map-preview::before {
   position: absolute;
   inset: 0;
@@ -4041,29 +3963,8 @@ html {
 .cl-contact-faq-band h4 { color: var(--color-brand-950); font-size: .95rem; }
 .cl-contact-faq-band p { color: var(--color-brand-800); font-size: .82rem; line-height: 1.7; }
 
-/* Motion: one restrained reveal for each visual group; card stagger is short and non-blocking. */
 @media (prefers-reduced-motion: no-preference) {
-  .cl-services-hero .cl-rv,
-  .cl-team-hero .cl-rv,
-  .cl-pkg-hero .cl-rv,
-  .cl-faq-hero .cl-rv,
-  .cl-contact-hero .cl-rv {
-    transition: opacity .42s var(--ease), transform .42s var(--ease);
-  }
-  .cl-team-hero-grid .cl-rv:nth-child(2),
-  .cl-faq-hero-inner .cl-rv:nth-child(2),
-  .cl-pkg-hero-grid .cl-rv:nth-child(2),
-  .cl-contact-hero-grid .cl-rv:nth-child(2) { transition-delay: 60ms; }
-  .cl-services-grid > .cl-rv,
-  .cl-team-directory .cl-grid > .cl-rv,
-  .cl-contact-grid > .cl-rv {
-    transition: opacity .36s var(--ease), transform .36s var(--ease);
-  }
-  .cl-services-grid > .cl-rv:nth-child(2), .cl-team-directory .cl-grid > .cl-rv:nth-child(2), .cl-contact-grid > .cl-rv:nth-child(2) { transition-delay: 40ms; }
-  .cl-services-grid > .cl-rv:nth-child(3), .cl-team-directory .cl-grid > .cl-rv:nth-child(3), .cl-contact-grid > .cl-rv:nth-child(3) { transition-delay: 72ms; }
-  .cl-services-grid > .cl-rv:nth-child(4), .cl-team-directory .cl-grid > .cl-rv:nth-child(4), .cl-contact-grid > .cl-rv:nth-child(4) { transition-delay: 94ms; }
-  .cl-services-grid > .cl-rv:nth-child(n + 5), .cl-team-directory .cl-grid > .cl-rv:nth-child(n + 5), .cl-contact-grid > .cl-rv:nth-child(n + 5) { transition-delay: 0ms; }
-  .cl-team-hero-media > img { transition: transform .4s var(--ease); }
+  .cl-team-hero-media > img { transition: transform .2s var(--ease); }
 }
 @media (hover: hover) and (pointer: fine) {
   .cl-service:hover .cl-service-visual img,
@@ -4192,7 +4093,6 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   .cl-service-visual img, .cl-person-photo, .cl-team-hero-media > img { transform: none !important; }
-  .cl-faq details p { animation: none !important; }
 }
 
 /* Touch devices get press feedback, not a latched hover state. */
@@ -4202,7 +4102,6 @@ html {
   box-shadow: var(--shadow-sm);
 }
 .cl-standard-card:hover { transform: none; background: rgb(255 255 255 / .06); }
-.cl-contact-card:hover .cl-contact-card-icon { transform: none; }
 .cl-faq summary:hover .cl-faq-toggle-icon {
   border-color: var(--color-brand-100);
   background-color: var(--cl-teal-soft);
@@ -4219,12 +4118,10 @@ html {
   .cl-contact-card:hover { transform: translateY(-3px); border-color: var(--color-brand-200); box-shadow: var(--shadow-md); }
   .cl-pkg-card:hover { transform: translateY(-3px); border-color: var(--color-brand-300); box-shadow: var(--shadow-md); }
   .cl-standard-card:hover { transform: translateY(-2px); background: rgb(255 255 255 / .1); }
-  .cl-contact-card:hover .cl-contact-card-icon { transform: scale(1.03); }
   .cl-faq summary:hover .cl-faq-toggle-icon {
     border-color: var(--color-brand-200);
     background-color: color-mix(in srgb, var(--cl-teal) 16%, transparent);
     box-shadow: 0 2px 8px color-mix(in srgb, var(--cl-teal) 20%, transparent);
-    transform: scale(1.04);
   }
   .cl-faq details[open] summary:hover .cl-faq-toggle-icon { border-color: var(--cl-teal-d); background-color: var(--cl-teal-d); }
 }

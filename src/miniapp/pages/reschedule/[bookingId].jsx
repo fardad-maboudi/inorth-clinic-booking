@@ -53,7 +53,7 @@ export default function MiniappReschedule() {
         <Failure message={errorText(error, "نوبت پیدا نشد.")} onRetry={reload} />
       ) : (
         <>
-          <Card className="ma-rise mb-5 !p-3.5">
+          <Card className="mb-5 !p-3.5">
             <p className="text-xs text-muted-foreground">نوبت فعلی</p>
             <p className="mt-0.5 flex items-center gap-2 font-bold">
               {service?.name}

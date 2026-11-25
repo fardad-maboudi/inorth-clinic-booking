@@ -71,7 +71,7 @@ export const MOTION_CONFIG = {
   textExitDurationSec: 0.22, // Fast exit to prevent overlap
   imageExitDurationSec: 0.65,
   easeEnter: [0.16, 1, 0.3, 1], // Smooth calm ease-out (no bounce or overshoot)
-  easeExit: [0.36, 0, 0.66, 0], // Clean exit
+  easeExit: [0.23, 1, 0.32, 1], // Strong ease-out for responsive exits
   textDistancePx: 90, // Text travels 90px in transition direction for layered parallax
   textExitDistancePx: -40,
 };
@@ -86,11 +86,13 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   const touchStartY = useRef(null);
   const sliderRef = useRef(null);
   const pointerInteraction = useRef(false);
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false);
 
   const slideCount = slides.length;
 
   const paginate = useCallback(
-    (newDirection) => {
+    (newDirection, instant = false) => {
+      setKeyboardNavigation(instant);
       setDirection(newDirection);
       setCurrent((prev) => (prev + newDirection + slideCount) % slideCount);
     },
@@ -98,8 +100,9 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   );
 
   const goToSlide = useCallback(
-    (index) => {
+    (index, instant = false) => {
       if (index === current) return;
+      setKeyboardNavigation(instant);
       setDirection(index > current ? 1 : -1);
       setCurrent(index);
     },
@@ -161,74 +164,101 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
     if (e.key === 'ArrowLeft') {
       // In RTL, left arrow goes forward (next)
       e.preventDefault();
-      paginate(1);
+      paginate(1, true);
     } else if (e.key === 'ArrowRight') {
       // In RTL, right arrow goes backward (prev)
       e.preventDefault();
-      paginate(-1);
+      paginate(-1, true);
     } else if (e.key === 'Home') {
       e.preventDefault();
-      goToSlide(0);
+      goToSlide(0, true);
     } else if (e.key === 'End') {
       e.preventDefault();
-      goToSlide(slideCount - 1);
+      goToSlide(slideCount - 1, true);
     }
   }
 
   const slide = slides[current] || slides[0];
+  const reduceMotion = Boolean(prefersReduced);
 
-  // Motion variants for Image layer (transform & opacity only)
+  // Full transform strings keep the layered hero transition compositor-friendly.
   const imageVariants = {
     enter: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? '100%' : '-100%',
-      opacity: prefersReduced ? 0 : 0.85,
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : dir > 0 ? 'translateX(100%)' : 'translateX(-100%)',
+      opacity: keyboardNavigation ? 1 : reduceMotion ? 0 : 0.85,
     }),
     center: {
-      x: 0,
+      transform: 'translateX(0)',
       opacity: 1,
       transition: {
-        x: { duration: prefersReduced ? 0 : MOTION_CONFIG.transitionDurationSec, ease: MOTION_CONFIG.easeEnter },
-        opacity: { duration: prefersReduced ? 0.2 : MOTION_CONFIG.transitionDurationSec, ease: 'linear' },
-      },
-    },
-    exit: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? '-100%' : '100%',
-      opacity: prefersReduced ? 0 : 0.4,
-      transition: {
-        x: { duration: prefersReduced ? 0 : MOTION_CONFIG.imageExitDurationSec, ease: MOTION_CONFIG.easeExit },
-        opacity: { duration: prefersReduced ? 0.2 : MOTION_CONFIG.imageExitDurationSec },
-      },
-    }),
-  };
-
-  // Motion variants for Text block layer (delayed, layered travel in same direction)
-  const textVariants = {
-    enter: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? MOTION_CONFIG.textDistancePx : -MOTION_CONFIG.textDistancePx,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        x: {
-          delay: prefersReduced ? 0 : MOTION_CONFIG.textDelaySec,
-          duration: prefersReduced ? 0 : MOTION_CONFIG.textDurationSec,
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.transitionDurationSec,
           ease: MOTION_CONFIG.easeEnter,
         },
         opacity: {
-          delay: prefersReduced ? 0 : MOTION_CONFIG.textDelaySec,
-          duration: prefersReduced ? 0.2 : MOTION_CONFIG.textDurationSec,
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.transitionDurationSec,
           ease: 'linear',
         },
       },
     },
     exit: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? -MOTION_CONFIG.textExitDistancePx : MOTION_CONFIG.textExitDistancePx,
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : dir > 0 ? 'translateX(-100%)' : 'translateX(100%)',
+      opacity: reduceMotion || keyboardNavigation ? 0 : 0.4,
+      transition: {
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.imageExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
+        opacity: {
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.imageExitDurationSec,
+          ease: 'linear',
+        },
+      },
+    }),
+  };
+
+  // The text follows the image on pointer/touch navigation; keyboard changes are immediate.
+  const textVariants = {
+    enter: (dir) => ({
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : `translateX(${dir > 0 ? MOTION_CONFIG.textDistancePx : -MOTION_CONFIG.textDistancePx}px)`,
+      opacity: keyboardNavigation ? 1 : 0,
+    }),
+    center: {
+      transform: 'translateX(0)',
+      opacity: 1,
+      transition: {
+        transform: {
+          delay: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDelaySec,
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDurationSec,
+          ease: MOTION_CONFIG.easeEnter,
+        },
+        opacity: {
+          delay: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDelaySec,
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.textDurationSec,
+          ease: 'linear',
+        },
+      },
+    },
+    exit: (dir) => ({
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : `translateX(${dir > 0 ? -MOTION_CONFIG.textExitDistancePx : MOTION_CONFIG.textExitDistancePx}px)`,
       opacity: 0,
       transition: {
-        duration: prefersReduced ? 0.15 : MOTION_CONFIG.textExitDurationSec,
-        ease: 'easeIn',
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
+        opacity: {
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.15 : MOTION_CONFIG.textExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
       },
     }),
   };

@@ -155,7 +155,7 @@ export default function Home() {
               const full = Number(s.price) * Number(p.sessionCount);
               const save = full > 0 ? Math.round((1 - Number(p.price) / full) * 100) : 0;
               return (
-                <article key={idOf(s)} className="cl-card cl-pkg-teaser cl-rv">
+                <article key={idOf(s)} className="cl-card cl-pkg-teaser">
                   <div className="cl-pkg-teaser-top">
                     <span className="cl-chip">{s.name}</span>
                     {save > 0 ? (
@@ -215,7 +215,7 @@ export default function Home() {
         ) : faqs.data.length ? (
           <div className="cl-faq">
             {faqs.data.map((f) => (
-              <details key={idOf(f)} className="cl-card cl-rv">
+              <details key={idOf(f)} className="cl-card">
                 <summary>{f.question}<FaqToggleIcon /></summary>
                 <p>{f.answer}</p>
               </details>
@@ -225,7 +225,7 @@ export default function Home() {
       </section>
 
       <section className="cl-cta">
-        <div className="cl-wrap cl-rv">
+        <div className="cl-wrap">
           <p className="cl-eyebrow cl-eyebrow-light">قدم بعدی، با خیال راحت</p>
           <h2>آمادهٔ مراقبت از خودتان هستید؟</h2>
           <p>زمان‌های خالی را به‌روز ببینید و نوبت مناسب خودتان را آنلاین انتخاب کنید.</p>

@@ -32,8 +32,7 @@ function PunchCard({ total, left }) {
         return (
           <li
             key={index}
-            style={{ "--i": index }}
-            className={`ma-pop grid size-9 place-items-center rounded-full ${used ? "bg-foreground/[.06] text-muted-foreground ring-1 ring-foreground/15" : "bg-primary text-primary-foreground"}`}
+            className={`grid size-9 place-items-center rounded-full ${used ? "bg-foreground/[.06] text-muted-foreground ring-1 ring-foreground/15" : "bg-primary text-primary-foreground"}`}
           >
             {used ? <Check size={15} strokeWidth={2} aria-hidden /> : <span className="text-xs font-bold">{digits.format(index + 1)}</span>}
           </li>
@@ -43,12 +42,12 @@ function PunchCard({ total, left }) {
   );
 }
 
-function CreditCard({ credit, services, index }) {
+function CreditCard({ credit, services }) {
   const names = (credit.serviceIds ?? []).map((id) => services.get(String(id))?.name).filter(Boolean);
   const total = Number(credit.totalSessions) || 0;
   const left = credit.unlimited ? total : Number(credit.remainingSessions) || 0;
   return (
-    <Card className="ma-rise" style={{ "--i": index }}>
+    <Card>
       <div className="flex items-start justify-between gap-3">
         <p className="text-base font-bold leading-7">{names.join("، ") || "بستهٔ جلسات"}</p>
         <p className="shrink-0 text-end leading-none">
@@ -79,7 +78,7 @@ export default function MiniappCredits() {
       ) : (
         <>
           {active.length ? (
-            <div className="space-y-3">{active.map((c, index) => <CreditCard key={c._id} index={index} credit={c} services={data.services} />)}</div>
+            <div className="space-y-3">{active.map((c) => <CreditCard key={c._id} credit={c} services={data.services} />)}</div>
           ) : (
             <Empty icon={Ticket} title="جلسهٔ فعالی ندارید" hint="با خرید بسته، هر جلسه ارزان‌تر تمام می‌شود." />
           )}
@@ -88,8 +87,8 @@ export default function MiniappCredits() {
             <section className="mt-8">
               <h2 className="mb-2.5 px-1 text-sm font-bold text-muted-foreground">بسته‌های کلینیک</h2>
               <div className="space-y-3">
-                {data.packages.map((service, index) => (
-                  <Card key={service._id} className="ma-rise flex items-center gap-3.5 !p-3.5" style={{ "--i": index }}>
+                {data.packages.map((service) => (
+                  <Card key={service._id} className="flex items-center gap-3.5 !p-3.5">
                     <IconChip icon={Ticket} size={44} />
                     <span className="min-w-0 flex-1">
                       <span className="block font-bold">{service.package.name}</span>

@@ -45,7 +45,7 @@ export default function MiniappReminders() {
         <Failure message="وضعیت یادآوری بارگذاری نشد." onRetry={reload} />
       ) : (
         <>
-          <Card className="ma-rise !py-1">
+          <Card className="!py-1">
             <ul className="divide-y divide-foreground/10">
               <StatusRow ok={data.botReady} label={data.botReady ? "ربات کلینیک فعال است" : "ربات هنوز متصل نشده"} hint="پیام‌ها از ربات رسمی کلینیک ارسال می‌شود." />
               <StatusRow
@@ -61,15 +61,15 @@ export default function MiniappReminders() {
             {offsets.length ? (
               <ol className="relative space-y-3 ps-1">
                 <span aria-hidden className="absolute bottom-6 start-[25px] top-6 w-px bg-foreground/15" />
-                {offsets.map((minutes, index) => (
-                  <li key={minutes} style={{ "--i": index + 1 }} className="ma-rise relative flex items-center gap-3.5">
+                {offsets.map((minutes) => (
+                  <li key={minutes} className="relative flex items-center gap-3.5">
                     <span className="relative z-[1] grid size-12 shrink-0 place-items-center rounded-full bg-primary/12 text-brand ring-4 ring-background">
                       <BellRing size={20} strokeWidth={1.75} aria-hidden />
                     </span>
                     <span className="text-[15px] font-semibold">{offsetLabel(minutes)} قبل از نوبت</span>
                   </li>
                 ))}
-                <li style={{ "--i": offsets.length + 1 }} className="ma-rise relative flex items-center gap-3.5">
+                <li className="relative flex items-center gap-3.5">
                   <span className="relative z-[1] grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground ring-4 ring-background">
                     <CircleCheck size={20} strokeWidth={1.75} aria-hidden />
                   </span>

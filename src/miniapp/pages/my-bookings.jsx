@@ -10,7 +10,7 @@ import { byId, loadCatalog, loadSettings } from "@/miniapp/components/data";
 import { ACTIVE_STATUSES, digits, errorText, faDateRelative, faTime, withinWindow } from "@/miniapp/components/format";
 import { Card, Empty, Failure, MainAction, Notice, Screen, SkeletonRows, StaffAvatar, StatusBadge } from "@/miniapp/components/ui";
 
-function BookingCard({ booking, now, service, member, settings, onChanged, index }) {
+function BookingCard({ booking, now, service, member, settings, onChanged }) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState(null);
@@ -35,7 +35,7 @@ function BookingCard({ booking, now, service, member, settings, onChanged, index
   }
 
   return (
-    <Card className={`ma-rise ${active ? "" : "opacity-75"}`} style={{ "--i": index }}>
+    <Card className={active ? "" : "opacity-75"}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-base font-bold leading-7">{service?.name ?? "نوبت"}</p>
@@ -77,7 +77,7 @@ function BookingCard({ booking, now, service, member, settings, onChanged, index
       ) : null}
 
       {confirming ? (
-        <div className="ma-rise mt-4 space-y-3 border-t border-foreground/10 pt-4">
+        <div className="mt-4 space-y-3 border-t border-foreground/10 pt-4">
           <p className="text-sm font-bold">این نوبت لغو شود؟</p>
           {failure ? <Notice tone="error">{failure}</Notice> : null}
           <div className="grid grid-cols-2 gap-2.5">
@@ -105,9 +105,8 @@ export default function MiniappMyBookings() {
   const now = data?.now ?? 0;
   const upcoming = (data?.mine ?? []).filter((b) => ACTIVE_STATUSES.has(b.status) && new Date(b.startsAt).getTime() > now).sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
   const history = (data?.mine ?? []).filter((b) => !upcoming.includes(b)).sort((a, b) => new Date(b.startsAt) - new Date(a.startsAt));
-  let row = 0;
   const render = (b) => (
-    <BookingCard key={b._id} index={row++} booking={b} now={data.now} service={data.services.get(String(b.service))} member={data.staff.get(String(b.resource))} settings={data.settings} onChanged={reload} />
+    <BookingCard key={b._id} booking={b} now={data.now} service={data.services.get(String(b.service))} member={data.staff.get(String(b.resource))} settings={data.settings} onChanged={reload} />
   );
 
   return (

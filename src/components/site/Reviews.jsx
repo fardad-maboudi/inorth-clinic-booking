@@ -21,7 +21,7 @@ export function ReviewCard({ review }) {
   const date = review.created_at || review.createdAt;
 
   return (
-    <figure className="cl-card cl-review cl-rv">
+    <figure className="cl-card cl-review">
       <div className="cl-review-top">
         <Stars value={review.rating} />
         <span className="cl-review-quote-mark" aria-hidden="true">“</span>

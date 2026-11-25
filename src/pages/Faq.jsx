@@ -21,7 +21,7 @@ export default function FaqPage() {
     <>
       <header className="cl-faq-hero">
         <div className="cl-wrap cl-faq-hero-inner">
-          <div className="cl-faq-hero-copy cl-rv">
+          <div className="cl-faq-hero-copy">
             <p className="cl-eyebrow">مرکز راهنمای نیلوفر</p>
             <h1>پاسخ روشن، پیش از اولین قدم</h1>
             <p className="cl-lead">
@@ -33,7 +33,7 @@ export default function FaqPage() {
             </div>
           </div>
 
-          <div className="cl-faq-search-panel cl-rv">
+          <div className="cl-faq-search-panel">
             <div className="cl-faq-search-heading">
               <span className="cl-faq-search-symbol" aria-hidden="true"><Search size={20} /></span>
               <div>

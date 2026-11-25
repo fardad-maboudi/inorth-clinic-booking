@@ -47,7 +47,7 @@ export default function MiniappSlots() {
         <Failure message="نوبت‌های آزاد بارگذاری نشد." onRetry={reload} />
       ) : (
         <>
-          <Card className="ma-rise mb-5 flex items-center gap-3 !p-3">
+          <Card className="mb-5 flex items-center gap-3 !p-3">
             {member ? (
               <StaffAvatar member={member} size={40} />
             ) : (

@@ -32,7 +32,7 @@ function Appointment({ booking, service, member, onChanged }) {
     }
   }
   return (
-    <Card className="ma-rise !p-3.5">
+    <Card className="!p-3.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-bold">

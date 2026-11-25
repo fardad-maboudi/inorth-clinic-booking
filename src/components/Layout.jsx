@@ -21,44 +21,9 @@ export default function Layout({ children }) {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const root = useRef(null);
   const burgerRef = useRef(null);
   const accountMenuRef = useRef(null);
   const profileTriggerRef = useRef(null);
-
-  // Scroll reveals: transform/opacity only, one observer, never blocks interaction.
-  useEffect(() => {
-    const el = root.current;
-    if (!el || !('IntersectionObserver' in window)) return undefined;
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-      }),
-      { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
-    );
-    let timer = 0;
-    const scan = () => {
-      el.querySelectorAll('.cl-rv:not(.in)').forEach((n) => io.observe(n));
-      // failsafe for throttled/background tabs: whatever is on screen shows up
-      clearTimeout(timer);
-      timer = setTimeout(() => el.querySelectorAll('.cl-rv:not(.in)').forEach((n) => {
-        const r = n.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0) n.classList.add('in');
-      }), 700);
-    };
-    el.setAttribute('data-js', '');
-    scan();
-    const mo = new MutationObserver(scan);
-    mo.observe(el, { childList: true, subtree: true });
-    return () => {
-      io.disconnect();
-      mo.disconnect();
-      clearTimeout(timer);
-    };
-  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -130,7 +95,7 @@ export default function Layout({ children }) {
 
   if (isAdminRoute) {
     return (
-      <div className="cl-app cl-app-admin" dir="rtl" lang="fa" ref={root}>
+      <div className="cl-app cl-app-admin" dir="rtl" lang="fa">
         <a className="cl-skip" href="#main">رفتن به محتوای اصلی</a>
         {children}
       </div>
@@ -138,7 +103,7 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="cl-app" dir="rtl" lang="fa" ref={root}>
+    <div className="cl-app" dir="rtl" lang="fa">
       <a className="cl-skip" href="#main">رفتن به محتوای اصلی</a>
       <header className="cl-header">
         <div className="cl-wrap cl-header-in">
@@ -246,7 +211,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main id="main" key={pathname} className="cl-main cl-page" tabIndex={-1}>{children}</main>
+      <main id="main" key={pathname} className="cl-main" tabIndex={-1}>{children}</main>
 
       {/^\/(book|auth)/.test(pathname) ? null : (
         <div className="cl-mcta"><Link className="cl-btn cl-btn-primary" to="/book">رزرو نوبت</Link></div>

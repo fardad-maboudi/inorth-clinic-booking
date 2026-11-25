@@ -23,7 +23,7 @@ export default function ContactPage() {
     <>
       <header className="cl-contact-hero">
         <div className="cl-wrap cl-contact-hero-grid">
-          <div className="cl-contact-hero-copy cl-rv">
+          <div className="cl-contact-hero-copy">
             <p className="cl-eyebrow cl-eyebrow-light">تماس و دسترسی</p>
             <h1>برای راهنمایی، کنار شما هستیم</h1>
             <p className="cl-lead cl-contact-hero-lead">
@@ -35,7 +35,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <aside className="cl-contact-hero-card cl-rv" aria-label="نشانی و ساعت پذیرش کلینیک">
+          <aside className="cl-contact-hero-card" aria-label="نشانی و ساعت پذیرش کلینیک">
             <div className="cl-contact-hero-card-heading">
               <span className="cl-contact-card-icon"><MapPin className="w-5 h-5" /></span>
               <div><span>مراجعهٔ حضوری</span><strong>کلینیک نیلوفر</strong></div>
@@ -67,7 +67,7 @@ export default function ContactPage() {
         </div>
         <div className="cl-contact-grid">
           {/* Card 1: Address */}
-          <article className="cl-contact-card cl-rv">
+          <article className="cl-contact-card">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon" aria-hidden="true">
@@ -101,7 +101,7 @@ export default function ContactPage() {
           </article>
 
           {/* Card 2: Phone */}
-          <article className="cl-contact-card cl-rv">
+          <article className="cl-contact-card">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon" aria-hidden="true">
@@ -134,7 +134,7 @@ export default function ContactPage() {
           </article>
 
           {/* Card 3: Working Hours */}
-          <article className="cl-contact-card cl-rv">
+          <article className="cl-contact-card">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon" aria-hidden="true">
@@ -165,7 +165,7 @@ export default function ContactPage() {
           </article>
 
           {/* Card 4: Telegram Reminder */}
-          <article className="cl-contact-card cl-rv">
+          <article className="cl-contact-card">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon cl-contact-card-icon-telegram" aria-hidden="true">
@@ -189,7 +189,7 @@ export default function ContactPage() {
           </article>
 
           {/* Card 5: Online Support */}
-          <article className="cl-contact-card cl-rv">
+          <article className="cl-contact-card">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon" aria-hidden="true">
@@ -213,7 +213,7 @@ export default function ContactPage() {
           </article>
 
           {/* Card 6: Online Booking (Featured) */}
-          <article className="cl-contact-card cl-contact-card-featured cl-rv">
+          <article className="cl-contact-card cl-contact-card-featured">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
                 <span className="cl-contact-card-icon cl-contact-card-icon-featured" aria-hidden="true">
