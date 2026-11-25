@@ -8,20 +8,35 @@ import { errText, idOf, money, nf, normalizePhone, rowsOf, toToman } from '@/com
 import { useAsync, useCatalog, useSession, useTitle } from '@/components/site/hooks';
 
 /**
- * Resolves the public callback URL for banking gateway returns.
- * - Localhost uses the registered Joorchin preview domain because gateways
- *   reject http://localhost. Temporary tunnels must not become payment callbacks.
- * - Published and preview deployments use their own app URL.
+ * Resolves the public frontend URL that the payment provider returns to.
+ * For localhost checkout, this must be an HTTPS tunnel or a deployed site URL;
+ * the API origin is separate and must never be used as the callback host.
  */
 function getCallbackUrl(routePath = '/order-success') {
   const isLocalhost =
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const publicOrigin = String(
+    import.meta.env?.VITE_PUBLIC_URL || import.meta.env?.VITE_APP_URL || import.meta.env?.VITE_SITE_URL || '',
+  ).trim();
+
+  if (publicOrigin) {
+    let publicUrl;
+    try {
+      publicUrl = new URL(publicOrigin);
+    } catch {
+      throw new Error('آدرس بازگشت پرداخت معتبر نیست؛ یک آدرس عمومی HTTPS وارد کنید.');
+    }
+    if (publicUrl.protocol !== 'https:' || publicUrl.hostname === 'api.joorchin.site') {
+      throw new Error('آدرس بازگشت پرداخت باید HTTPS و مربوط به سایت باشد، نه API.');
+    }
+    const base = `${publicUrl.origin}${publicUrl.pathname.replace(/\/+$/, '')}`;
+    const clean = routePath.replace(/^\/+/, '');
+    return `${base}/${clean}`;
+  }
 
   if (isLocalhost) {
-    const appId = String(import.meta.env?.VITE_APP_ID || '6ae869523c5af491ed8a859b');
-    const clean = routePath.replace(/^\/+/, '');
-    return `https://preview.joorchin.site/app/${appId}/${clean}`;
+    throw new Error('برای پرداخت محلی، VITE_PUBLIC_URL را روی آدرس HTTPS تونل سایت یا دامنهٔ منتشرشده تنظیم کنید.');
   }
 
   return appUrl(routePath);
@@ -76,9 +91,9 @@ export default function PackagesPage() {
     setBusy(true);
     setFail('');
     try {
+      const callbackUrl = getCallbackUrl('/order-success');
       await clearCart().catch(() => null);
       await addToCart(idOf(buying.product), 1);
-      const callbackUrl = getCallbackUrl('/order-success');
       const order = await checkout({
         customer: { name: form.name.trim(), phone },
         paymentMethod: 'online',
