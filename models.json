@@ -1630,8 +1630,7 @@
           "type": "string",
           "label": "شناسه (لاتین)",
           "description": "شناسه (لاتین)",
-          "maxLength": 160,
-          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          "maxLength": 160
         },
         "sku": {
           "type": "string",
