@@ -9,19 +9,11 @@ import { useAsync, useCatalog, useSession, useTitle } from '@/components/site/ho
 
 /**
  * Resolves the public callback URL for banking gateway returns.
- * - Prioritizes VITE_PUBLIC_URL if a tunnel (e.g. ngrok/cloudflare/pinggy) is configured.
- * - When running on localhost, falls back to the registered Joorchin preview domain
- *   (banking gateways reject http://localhost).
- * - On production/preview deployments, uses appUrl(routePath).
+ * - Localhost uses the registered Joorchin preview domain because gateways
+ *   reject http://localhost. Temporary tunnels must not become payment callbacks.
+ * - Published and preview deployments use their own app URL.
  */
 function getCallbackUrl(routePath = '/order-success') {
-  const envPublic = (import.meta.env?.VITE_PUBLIC_URL || import.meta.env?.VITE_APP_URL || '').trim();
-  if (envPublic) {
-    const base = envPublic.replace(/\/+$/, '');
-    const clean = routePath.replace(/^\/+/, '');
-    return `${base}/${clean}`;
-  }
-
   const isLocalhost =
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');

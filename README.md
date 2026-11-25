@@ -36,12 +36,16 @@ shared fetch transport. Auth and refresh use app-scoped routes
 `/apps/:appId/users/me`. Both transports share the delivered app's access token;
 the SDK owns refresh rotation and mirrors the pair back to the site's auth store.
 
-Set `VITE_JOORCHIN_SERVER_URL` to the Joorchin API origin (without `/api/v1`).
-Vite dev proxies `/api` to that origin, while the production SDK and shared fetch
-transport call the origin directly. Demo mode remains the default in development
-and is intercepted in-browser. Production builds default to `VITE_API_MODE=live`,
-and `Dockerfile.prod` explicitly sets it to `live`. To produce an intentional
-demo artifact, opt in with `VITE_API_MODE=demo` (or Docker's
+Set `VITE_JOORCHIN_SERVER_URL` to the Joorchin API origin (without `/api/v1`);
+this clinic defaults to `https://api.joorchin.site`. A stale Pinggy value in
+`VITE_JOORCHIN_SERVER_URL` is treated as a temporary tunnel and resolves to the
+official API instead. Local checkout callbacks ignore `VITE_PUBLIC_URL` and
+`VITE_APP_URL`, using the registered `preview.joorchin.site` app URL rather than
+a tunnel URL. Vite dev proxies `/api` to the API origin, while the production
+SDK and shared fetch transport call the origin directly. Demo mode remains the
+default in development and is intercepted in-browser. Production builds default to
+`VITE_API_MODE=live`, and `Dockerfile.prod` explicitly sets it to `live`. To produce
+an intentional demo artifact, opt in with `VITE_API_MODE=demo` (or Docker's
 `--build-arg VITE_API_MODE=demo`). For a customer-hosted production image, pass
 `--build-arg VITE_JOORCHIN_SERVER_URL=https://<your-joorchin-api-origin>` as well
 as `VITE_APP_ID`.

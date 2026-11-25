@@ -1567,14 +1567,19 @@ html {
 .cl-gift-card {
   display: flex;
   flex-direction: column;
-  gap: .85rem;
+  gap: .75rem;
   background: #fff;
   border: 1.5px solid var(--color-brand-100);
   border-radius: 20px;
-  padding: 1.6rem;
+  padding: 1.35rem;
   box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
+}
+.cl-grid-2 > .cl-gift-card:only-child {
+  width: 96%;
+  max-width: 36rem;
+  justify-self: center;
 }
 .cl-gift-card::before {
   content: '';

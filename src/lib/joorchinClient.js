@@ -1,12 +1,8 @@
 import { createClient } from "@joorchin/client-sdk";
+import { resolveJoorchinApiOrigin } from "../config/joorchin-api-origin.js";
 
 const appId = String(import.meta.env.VITE_APP_ID || "6ae869523c5af491ed8a859b");
-const serverUrl = String(
-  import.meta.env.VITE_JOORCHIN_SERVER_URL || "https://api.joorchin.site",
-)
-  .trim()
-  .replace(/\/+$/, "")
-  .replace(/\/api\/v1$/i, "");
+const serverUrl = resolveJoorchinApiOrigin(import.meta.env.VITE_JOORCHIN_SERVER_URL);
 const apiBaseUrl = `${serverUrl}/api/v1`;
 
 // The site's auth UI and the SDK share one app-scoped access-token key. The
