@@ -76,7 +76,7 @@ function DayGrid({ day, bookings, slots, resources, services, onOpen }) {
                   <div className="pointer-events-none absolute inset-x-0 border-t border-dashed border-border/60" style={{ top: (m + 30 - start) * PX_PER_MIN }} />
                 </div>
               ))}
-              {mine.map((b, bi) => {
+              {mine.map((b) => {
                 const top = (minutesOfDay(b.startsAt) - start) * PX_PER_MIN;
                 const h = Math.max(30, ((minutesOfDay(b.endsAt) || 1440) - minutesOfDay(b.startsAt)) * PX_PER_MIN - 2);
                 const svc = services.get(String(b.service));
@@ -87,13 +87,13 @@ function DayGrid({ day, bookings, slots, resources, services, onOpen }) {
                     type="button"
                     onClick={() => onOpen(b)}
                     className={cn(
-                      'pn-block pn-press absolute inset-x-1 overflow-hidden rounded-lg border border-s-4 px-2 py-1 text-start shadow-sm transition hover:z-10 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                      'pn-press absolute inset-x-1 overflow-hidden rounded-lg border border-s-4 px-2 py-1 text-start shadow-sm transition hover:z-10 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                       BLOCK_TONES[b.status] || BLOCK_TONES.confirmed,
                       b.status === 'pending' && 'border-dashed',
                       b.status === 'no_show' && 'opacity-70',
                       b.status === 'completed' && 'opacity-80',
                     )}
-                    style={{ top, height: h, '--i': bi, borderInlineStartColor: svc?.color || r.color || undefined }}
+                    style={{ top, height: h, borderInlineStartColor: svc?.color || r.color || undefined }}
                     title={`${b.customerName} - ${timeLabel(b.startsAt)} تا ${timeLabel(b.endsAt)}`}
                   >
                     <span className="flex items-center justify-between gap-1">

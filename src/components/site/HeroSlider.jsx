@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion as Motion, useReducedMotion } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
  * Typed slide configuration data.
@@ -70,7 +71,7 @@ export const MOTION_CONFIG = {
   textExitDurationSec: 0.22, // Fast exit to prevent overlap
   imageExitDurationSec: 0.65,
   easeEnter: [0.16, 1, 0.3, 1], // Smooth calm ease-out (no bounce or overshoot)
-  easeExit: [0.36, 0, 0.66, 0], // Clean exit
+  easeExit: [0.23, 1, 0.32, 1], // Strong ease-out for responsive exits
   textDistancePx: 90, // Text travels 90px in transition direction for layered parallax
   textExitDistancePx: -40,
 };
@@ -79,15 +80,19 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isInteracting, setIsInteracting] = useState(false);
+  const [isFocusPaused, setIsFocusPaused] = useState(false);
   const prefersReduced = useReducedMotion();
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const sliderRef = useRef(null);
+  const pointerInteraction = useRef(false);
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false);
 
   const slideCount = slides.length;
 
   const paginate = useCallback(
-    (newDirection) => {
+    (newDirection, instant = false) => {
+      setKeyboardNavigation(instant);
       setDirection(newDirection);
       setCurrent((prev) => (prev + newDirection + slideCount) % slideCount);
     },
@@ -95,22 +100,23 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   );
 
   const goToSlide = useCallback(
-    (index) => {
+    (index, instant = false) => {
       if (index === current) return;
+      setKeyboardNavigation(instant);
       setDirection(index > current ? 1 : -1);
       setCurrent(index);
     },
     [current],
   );
 
-  // Autoplay loop with pause on hover/focus and reduced-motion-safe transitions
+  // Autoplay pauses during interaction, when keyboard focus enters, or when reduced motion is preferred.
   useEffect(() => {
-    if (isInteracting) return undefined;
+    if (isInteracting || isFocusPaused || prefersReduced || slideCount < 2) return undefined;
     const timer = setInterval(() => {
       paginate(1);
     }, MOTION_CONFIG.autoplayIntervalMs);
     return () => clearInterval(timer);
-  }, [paginate, isInteracting]);
+  }, [paginate, isInteracting, isFocusPaused, prefersReduced, slideCount]);
 
   // Touch / Swipe handlers for mobile & tablet (RTL-aware)
   function handleTouchStart(e) {
@@ -142,11 +148,12 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   }
 
   function handleFocus() {
-    setIsInteracting(true);
+    // Stop rotation as soon as keyboard or assistive-technology focus enters.
+    if (!pointerInteraction.current) setIsFocusPaused(true);
   }
 
   function handleBlur(e) {
-    // Only unpause if focus has completely left the slider component
+    // Pointer interaction can still be active after focus leaves the carousel.
     if (!sliderRef.current || !sliderRef.current.contains(e.relatedTarget)) {
       setIsInteracting(false);
     }
@@ -157,74 +164,101 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
     if (e.key === 'ArrowLeft') {
       // In RTL, left arrow goes forward (next)
       e.preventDefault();
-      paginate(1);
+      paginate(1, true);
     } else if (e.key === 'ArrowRight') {
       // In RTL, right arrow goes backward (prev)
       e.preventDefault();
-      paginate(-1);
+      paginate(-1, true);
     } else if (e.key === 'Home') {
       e.preventDefault();
-      goToSlide(0);
+      goToSlide(0, true);
     } else if (e.key === 'End') {
       e.preventDefault();
-      goToSlide(slideCount - 1);
+      goToSlide(slideCount - 1, true);
     }
   }
 
   const slide = slides[current] || slides[0];
+  const reduceMotion = Boolean(prefersReduced);
 
-  // Motion variants for Image layer (transform & opacity only)
+  // Full transform strings keep the layered hero transition compositor-friendly.
   const imageVariants = {
     enter: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? '100%' : '-100%',
-      opacity: prefersReduced ? 0 : 0.85,
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : dir > 0 ? 'translateX(100%)' : 'translateX(-100%)',
+      opacity: keyboardNavigation ? 1 : reduceMotion ? 0 : 0.85,
     }),
     center: {
-      x: 0,
+      transform: 'translateX(0)',
       opacity: 1,
       transition: {
-        x: { duration: prefersReduced ? 0 : MOTION_CONFIG.transitionDurationSec, ease: MOTION_CONFIG.easeEnter },
-        opacity: { duration: prefersReduced ? 0.2 : MOTION_CONFIG.transitionDurationSec, ease: 'linear' },
-      },
-    },
-    exit: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? '-100%' : '100%',
-      opacity: prefersReduced ? 0 : 0.4,
-      transition: {
-        x: { duration: prefersReduced ? 0 : MOTION_CONFIG.imageExitDurationSec, ease: MOTION_CONFIG.easeExit },
-        opacity: { duration: prefersReduced ? 0.2 : MOTION_CONFIG.imageExitDurationSec },
-      },
-    }),
-  };
-
-  // Motion variants for Text block layer (delayed, layered travel in same direction)
-  const textVariants = {
-    enter: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? MOTION_CONFIG.textDistancePx : -MOTION_CONFIG.textDistancePx,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        x: {
-          delay: prefersReduced ? 0 : MOTION_CONFIG.textDelaySec,
-          duration: prefersReduced ? 0 : MOTION_CONFIG.textDurationSec,
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.transitionDurationSec,
           ease: MOTION_CONFIG.easeEnter,
         },
         opacity: {
-          delay: prefersReduced ? 0 : MOTION_CONFIG.textDelaySec,
-          duration: prefersReduced ? 0.2 : MOTION_CONFIG.textDurationSec,
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.transitionDurationSec,
           ease: 'linear',
         },
       },
     },
     exit: (dir) => ({
-      x: prefersReduced ? 0 : dir > 0 ? -MOTION_CONFIG.textExitDistancePx : MOTION_CONFIG.textExitDistancePx,
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : dir > 0 ? 'translateX(-100%)' : 'translateX(100%)',
+      opacity: reduceMotion || keyboardNavigation ? 0 : 0.4,
+      transition: {
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.imageExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
+        opacity: {
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.imageExitDurationSec,
+          ease: 'linear',
+        },
+      },
+    }),
+  };
+
+  // The text follows the image on pointer/touch navigation; keyboard changes are immediate.
+  const textVariants = {
+    enter: (dir) => ({
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : `translateX(${dir > 0 ? MOTION_CONFIG.textDistancePx : -MOTION_CONFIG.textDistancePx}px)`,
+      opacity: keyboardNavigation ? 1 : 0,
+    }),
+    center: {
+      transform: 'translateX(0)',
+      opacity: 1,
+      transition: {
+        transform: {
+          delay: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDelaySec,
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDurationSec,
+          ease: MOTION_CONFIG.easeEnter,
+        },
+        opacity: {
+          delay: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textDelaySec,
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.2 : MOTION_CONFIG.textDurationSec,
+          ease: 'linear',
+        },
+      },
+    },
+    exit: (dir) => ({
+      transform: reduceMotion || keyboardNavigation
+        ? 'translateX(0)'
+        : `translateX(${dir > 0 ? -MOTION_CONFIG.textExitDistancePx : MOTION_CONFIG.textExitDistancePx}px)`,
       opacity: 0,
       transition: {
-        duration: prefersReduced ? 0.15 : MOTION_CONFIG.textExitDurationSec,
-        ease: 'easeIn',
+        transform: {
+          duration: reduceMotion || keyboardNavigation ? 0 : MOTION_CONFIG.textExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
+        opacity: {
+          duration: keyboardNavigation ? 0 : reduceMotion ? 0.15 : MOTION_CONFIG.textExitDurationSec,
+          ease: MOTION_CONFIG.easeExit,
+        },
       },
     }),
   };
@@ -237,13 +271,16 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
       aria-label="بنر معرفی و خدمات کلینیک"
       onMouseEnter={() => setIsInteracting(true)}
       onMouseLeave={() => setIsInteracting(false)}
+      onPointerDownCapture={() => { pointerInteraction.current = true; }}
+      onPointerUp={() => { pointerInteraction.current = false; }}
+      onPointerCancel={() => { pointerInteraction.current = false; }}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
     >
-      <div className="cl-hero-slider-track" aria-live={isInteracting ? 'polite' : 'off'}>
+      <div className="cl-hero-slider-track" aria-live={isInteracting || isFocusPaused ? 'polite' : 'off'}>
         <AnimatePresence initial={false} custom={direction}>
           <div
             key={slide.id}
@@ -311,30 +348,43 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
       {/* NextSlot Booking Card overlaid directly on the slider banner */}
       {slotCard}
 
-      {/* Floating Controls Toolbar: Centered Indicator Dots */}
-      <div className="cl-hero-controls" aria-label="کنترل‌های اسلایدر">
-        
+      <div className="cl-hero-controls">
+        <div className="cl-hero-control-bar" role="group" aria-label="کنترل‌های اسلایدر">
+          <button
+            type="button"
+            className="cl-hero-control-btn"
+            aria-label="اسلاید قبلی"
+            onClick={() => paginate(-1)}
+          >
+            <ChevronRight size={20} aria-hidden="true" />
+          </button>
 
-        {/* Indicator Dots */}
-        <div className="cl-hero-dots" role="tablist" aria-label="انتخاب مستقیم اسلاید">
-          {slides.map((s, index) => {
-            const isActive = index === current;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                role="tab"
-                id={`slide-tab-${index}`}
-                aria-selected={isActive}
-                aria-controls={`slide-${s.id}`}
-                aria-label={`رفتن به اسلاید ${index + 1}: ${s.title}`}
-                className={`cl-hero-dot${isActive ? ' on' : ''}`}
-                onClick={() => goToSlide(index)}
-              >
-                <span className="cl-hero-dot-pill" aria-hidden="true" />
-              </button>
-            );
-          })}
+          <div className="cl-hero-dots" role="group" aria-label="انتخاب مستقیم اسلاید">
+            {slides.map((s, index) => {
+              const isActive = index === current;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-label={`رفتن به اسلاید ${index + 1}: ${s.title}`}
+                  className={`cl-hero-dot${isActive ? ' on' : ''}`}
+                  onClick={() => goToSlide(index)}
+                >
+                  <span className="cl-hero-dot-pill" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            className="cl-hero-control-btn"
+            aria-label="اسلاید بعدی"
+            onClick={() => paginate(1)}
+          >
+            <ChevronLeft size={20} aria-hidden="true" />
+          </button>
         </div>
       </div>
     </section>

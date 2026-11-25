@@ -11,24 +11,60 @@ import {
   Car,
   Train,
 } from 'lucide-react';
-import { PageHead } from '@/components/site/ui';
+import { latinDigits } from '@/components/site/format';
 import { useTitle } from '@/components/site/hooks';
 import { siteConfig } from '@/config/site';
 
 export default function ContactPage() {
   useTitle('تماس با ما');
-  const cleanPhone = siteConfig.phone.replace(/[^\d+]/g, '');
+  const cleanPhone = latinDigits(siteConfig.phone).replace(/[^\d+]/g, '');
 
   return (
     <>
-      <PageHead
-        eyebrow="تماس و دسترسی"
-        title="با ما در ارتباط باشید"
-        lead="برای رزرو سریع‌تر از سیستم نوبت‌دهی آنلاین استفاده کنید؛ برای هر پرسش، مشاوره یا مراجعه حضوری، راه‌های ارتباطی زیر در دسترس شماست."
-      />
+      <header className="cl-contact-hero">
+        <div className="cl-wrap cl-contact-hero-grid">
+          <div className="cl-contact-hero-copy">
+            <p className="cl-eyebrow cl-eyebrow-light">تماس و دسترسی</p>
+            <h1>برای راهنمایی، کنار شما هستیم</h1>
+            <p className="cl-lead cl-contact-hero-lead">
+              برای انتخاب خدمت، رزرو نوبت یا مراجعهٔ حضوری از راه‌های ارتباطی کلینیک استفاده کنید؛ مشاوران پذیرش پاسخگوی شما هستند.
+            </p>
+            <div className="cl-contact-hero-actions">
+              <Link className="cl-btn cl-btn-rose" to="/book"><CalendarCheck className="w-4 h-4" />رزرو نوبت آنلاین</Link>
+              <a className="cl-btn cl-btn-glass" href={`tel:${cleanPhone}`}><Phone className="w-4 h-4" />تماس با پذیرش</a>
+            </div>
+          </div>
 
-      <section className="cl-wrap cl-section">
-        {/* Main 6 Contact Cards Grid */}
+          <aside className="cl-contact-hero-card" aria-label="نشانی و ساعت پذیرش کلینیک">
+            <div className="cl-contact-hero-card-heading">
+              <span className="cl-contact-card-icon"><MapPin className="w-5 h-5" /></span>
+              <div><span>مراجعهٔ حضوری</span><strong>کلینیک نیلوفر</strong></div>
+            </div>
+            <p className="cl-contact-hero-address">{siteConfig.address}</p>
+            <div className="cl-contact-hero-hours">
+              <span className="cl-contact-hero-label">ساعات پذیرش</span>
+              {siteConfig.hours.slice(0, 2).map(([day, hours]) => (
+                <div key={day}><span>{day}</span><strong>{hours}</strong></div>
+              ))}
+            </div>
+            <a className="cl-contact-hero-route" href="#map-section" onClick={(event) => {
+              event.preventDefault();
+              document.getElementById('map-section')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+            }}>
+              مشاهدهٔ مسیر و راه‌های دسترسی <Navigation size={17} aria-hidden="true" />
+            </a>
+          </aside>
+        </div>
+      </header>
+
+      <section className="cl-wrap cl-section cl-contact-section">
+        <div className="cl-contact-section-head">
+          <div>
+            <p className="cl-eyebrow">راه ارتباطی دلخواه شما</p>
+            <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
+          </div>
+          <p className="cl-muted">از تماس مستقیم تا پشتیبانی آنلاین، مسیر مناسب را انتخاب کنید.</p>
+        </div>
         <div className="cl-contact-grid">
           {/* Card 1: Address */}
           <article className="cl-contact-card">
@@ -55,7 +91,7 @@ export default function ContactPage() {
                 href="#map-section"
                 onClick={(e) => {
                   e.preventDefault();
-                  document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('map-section')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
                 }}
               >
                 <Navigation className="w-4 h-4 ml-1.5" />
@@ -180,7 +216,7 @@ export default function ContactPage() {
           <article className="cl-contact-card cl-contact-card-featured">
             <div className="cl-contact-card-head">
               <div className="cl-contact-card-title-wrap">
-                <span className="cl-contact-card-icon" style={{ background: 'var(--cl-teal)', color: '#fff' }} aria-hidden="true">
+                <span className="cl-contact-card-icon cl-contact-card-icon-featured" aria-hidden="true">
                   <CalendarCheck className="w-5 h-5" />
                 </span>
                 <h2>رزرو آنلاین نوبت</h2>
@@ -278,7 +314,7 @@ export default function ContactPage() {
         </div>
 
         {/* Quick FAQ / Guidance Strip */}
-        <div className="mt-8 p-6 rounded-2xl bg-teal-50/70 border border-teal-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="cl-contact-faq-band">
           <div>
             <h4 className="font-bold text-teal-950 text-base mb-1">پرسشی درباره خدمات، تعرفه‌ها یا آمادگی پیش از درمان دارید؟</h4>
             <p className="text-sm text-teal-800/80 m-0">

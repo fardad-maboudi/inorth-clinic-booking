@@ -182,7 +182,7 @@ export default function PanelShell({ title, description, actions, children }) {
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
         <main className="min-h-0 flex-1 overflow-y-auto p-3 pb-24 sm:p-4 md:p-6 md:pb-6">
-          <div key={pathname} className="pn-view mx-auto w-full max-w-7xl space-y-4">{children}</div>
+          <div key={pathname} className="mx-auto w-full max-w-7xl space-y-4">{children}</div>
         </main>
         <nav aria-label="منوی سریع" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden">
           {bottom.map(({ to, label, icon, end }) => {

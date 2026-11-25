@@ -61,14 +61,14 @@ export default function PanelDashboard() {
       }
     >
       <QueryBoundary query={bookings} rows={6}>
-        <div className="pn-stagger grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatCard label="نوبت‌های امروز" value={fa(todays.length)} hint={`${fa(doneToday)} انجام‌شده`} icon={CalendarClock} />
           <StatCard label="در صف تأیید" value={fa(pending.length)} hint="منتظر تصمیم پذیرش" tone={pending.length ? 'warn' : 'default'} icon={Clock} />
           <StatCard label="عدم حضور" value={fa(noShowsToday)} hint={`${fa(noShowsWeek)} مورد در هفته گذشته`} tone={noShowsToday ? 'bad' : 'default'} icon={AlertOctagon} />
           <StatCard label="درآمد امروز" value={`${fa(earned)}`} hint={`تومان · پیش‌بینی ${fa(expected)}`} tone="good" icon={Wallet} />
         </div>
 
-        <div className="pn-stagger grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           <Card className="lg:col-span-2">
             <SectionTitle
               title="برنامه امروز"

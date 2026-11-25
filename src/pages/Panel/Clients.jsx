@@ -78,7 +78,7 @@ function ClientDrawer({ client, lookups, bookings, onClose, onOpenBooking }) {
               </button>
             </div>
             {credits.isLoading ? (
-              <div className="pn-shimmer h-12 rounded-lg" />
+              <div className="pn-skeleton h-12 rounded-lg" />
             ) : credits.isError ? (
               <p className="text-xs text-destructive">{credits.error?.message || 'دریافت اعتبارها انجام نشد'}</p>
             ) : credits.data?.length ? (

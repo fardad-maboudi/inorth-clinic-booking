@@ -1,8 +1,17 @@
 import {
-  listPluginRecords,
   getPluginRecord,
+  joorchinSdkCall,
+  listPluginRecords,
   requestPluginAction,
+  sdkSessionMatchesCaller,
 } from "@/api/joorchin";
+import { demoMode } from "@/demo/install.js";
+import { joorchin } from "@/lib/joorchinClient.js";
+
+function withTypedBookingsSdk(operation, fallback) {
+  if (demoMode || !sdkSessionMatchesCaller()) return fallback();
+  return joorchinSdkCall(operation);
+}
 
 function bookingSession() {
   let id = localStorage.getItem("joorchin-booking-session");
@@ -74,22 +83,19 @@ export function bookSlot({
   intake,
   creditId,
 }) {
-  return requestPluginAction(
-    "bookings",
-    "slots/" + encodeURIComponent(slotId) + "/book",
-    {
-      method: "POST",
-      data: {
-        customerName,
-        customerPhone,
-        customerEmail,
-        seats,
-        notes,
-        intake,
-        creditId,
+  const input = { customerName, customerPhone, customerEmail, seats, notes, intake, creditId };
+  const session = bookingSession();
+  return withTypedBookingsSdk(
+    () => joorchin.bookings.bookSlot(slotId, input, { session }),
+    () => requestPluginAction(
+      "bookings",
+      "slots/" + encodeURIComponent(slotId) + "/book",
+      {
+        method: "POST",
+        data: input,
+        headers: { "x-booking-session": session },
       },
-      headers: { "x-booking-session": bookingSession() },
-    },
+    ),
   );
 }
 
@@ -103,14 +109,18 @@ export const createBooking = bookSlot;
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export function cancelMyBooking(bookingId, reason) {
-  return requestPluginAction(
-    "bookings",
-    "bookings/" + encodeURIComponent(bookingId) + "/cancel",
-    {
-      method: "POST",
-      data: { reason },
-      headers: { "x-booking-session": bookingSession() },
-    },
+  const session = bookingSession();
+  return withTypedBookingsSdk(
+    () => joorchin.bookings.cancelBooking(bookingId, { reason }, { session }),
+    () => requestPluginAction(
+      "bookings",
+      "bookings/" + encodeURIComponent(bookingId) + "/cancel",
+      {
+        method: "POST",
+        data: { reason },
+        headers: { "x-booking-session": session },
+      },
+    ),
   );
 }
 
@@ -122,14 +132,19 @@ export function cancelMyBooking(bookingId, reason) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export function rescheduleBooking(bookingId, newSlotId, reason) {
-  return requestPluginAction(
-    "bookings",
-    "bookings/" + encodeURIComponent(bookingId) + "/reschedule",
-    {
-      method: "POST",
-      data: { newSlotId, reason },
-      headers: { "x-booking-session": bookingSession() },
-    },
+  const input = { newSlotId, reason };
+  const session = bookingSession();
+  return withTypedBookingsSdk(
+    () => joorchin.bookings.rescheduleBooking(bookingId, input, { session }),
+    () => requestPluginAction(
+      "bookings",
+      "bookings/" + encodeURIComponent(bookingId) + "/reschedule",
+      {
+        method: "POST",
+        data: input,
+        headers: { "x-booking-session": session },
+      },
+    ),
   );
 }
 
@@ -138,10 +153,14 @@ export function rescheduleBooking(bookingId, newSlotId, reason) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export function listMyBookings() {
-  return requestPluginAction("bookings", "my", {
-    method: "GET",
-    headers: { "x-booking-session": bookingSession() },
-  }).then((res) => res.items || []);
+  const session = bookingSession();
+  return withTypedBookingsSdk(
+    () => joorchin.bookings.listMyBookings({ session }),
+    () => requestPluginAction("bookings", "my", {
+      method: "GET",
+      headers: { "x-booking-session": session },
+    }).then((res) => res.items || []),
+  );
 }
 
 /** Alias for listMyBookings. */
@@ -153,13 +172,17 @@ export const listBookings = listMyBookings;
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export function getBooking(bookingId) {
-  return requestPluginAction(
-    "bookings",
-    "bookings/" + encodeURIComponent(bookingId),
-    {
-      method: "GET",
-      headers: { "x-booking-session": bookingSession() },
-    },
+  const session = bookingSession();
+  return withTypedBookingsSdk(
+    () => joorchin.bookings.getBooking(bookingId, { session }),
+    () => requestPluginAction(
+      "bookings",
+      "bookings/" + encodeURIComponent(bookingId),
+      {
+        method: "GET",
+        headers: { "x-booking-session": session },
+      },
+    ),
   );
 }
 

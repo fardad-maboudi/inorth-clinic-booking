@@ -43,7 +43,7 @@ const STAT_TONES = { default: '', warn: 'text-amber-700', bad: 'text-rose-700', 
 export function StatCard({ label, value, hint, tone = 'default', icon }) {
   const Icon = icon;
   return (
-    <div className={cn(card, 'pn-lift flex min-w-0 items-start justify-between gap-3 p-4')}>
+    <div className={cn(card, 'flex min-w-0 items-start justify-between gap-3 p-4')}>
       <div className="min-w-0">
         <p className="truncate text-xs font-medium text-muted-foreground">{label}</p>
         <p className={cn('mt-1.5 text-2xl font-bold leading-none sm:text-3xl', STAT_TONES[tone])}>{value}</p>
@@ -63,7 +63,7 @@ export function LoadingState({ label = 'در حال دریافت اطلاعات�
     <div role="status" aria-live="polite" className="space-y-2">
       <span className="sr-only">{label}</span>
       {Array.from({ length: rows }, (_, i) => (
-        <div key={i} className="pn-shimmer h-12 rounded-lg" style={{ opacity: 1 - i * 0.12 }} />
+        <div key={i} className="pn-skeleton h-12 rounded-lg" style={{ opacity: 1 - i * 0.12 }} />
       ))}
     </div>
   );
@@ -172,7 +172,7 @@ export function DataTable({ columns, rows, onRowClick, rowKey, caption }) {
   return (
     <>
       <div className={cn(card, 'hidden overflow-x-auto md:block')}>
-        <table className="pn-rows w-full text-start text-sm">
+        <table className="w-full text-start text-sm">
           {caption && <caption className="sr-only">{caption}</caption>}
           <thead className="bg-subtle text-xs text-muted-foreground">
             <tr>
@@ -200,7 +200,7 @@ export function DataTable({ columns, rows, onRowClick, rowKey, caption }) {
           </tbody>
         </table>
       </div>
-      <ul className="pn-rows-m space-y-2 md:hidden">
+      <ul className="space-y-2 md:hidden">
         {rows.map((row, i) => (
           <li key={rowKey(row, i)}>
             <div

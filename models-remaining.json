@@ -1,0 +1,1087 @@
+[
+  {
+    "name": "product",
+    "schemaDefinition": {
+      "label": "محصولات فروشگاه",
+      "description": "بسته‌های جلسات و کارت‌های هدیهٔ فروخته‌شده در سایت.",
+      "required": [
+        "title",
+        "price"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "label": "عنوان",
+          "description": "عنوان",
+          "maxLength": 300
+        },
+        "goodsKind": {
+          "type": "string",
+          "label": "نوع کالا برای سیاست پرداخت تلگرام؛ مقدار نامشخص در تلگرام قابل خرید نیست",
+          "description": "نوع کالا برای سیاست پرداخت تلگرام؛ مقدار نامشخص در تلگرام قابل خرید نیست",
+          "enum": [
+            "physical",
+            "digital"
+          ],
+          "enumLabels": {
+            "physical": "فیزیکی",
+            "digital": "دیجیتال"
+          }
+        },
+        "slug": {
+          "type": "string",
+          "label": "شناسه (لاتین)",
+          "description": "شناسه (لاتین)",
+          "maxLength": 160
+        },
+        "sku": {
+          "type": "string",
+          "label": "کد کالا",
+          "description": "کد کالا",
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "label": "توضیحات",
+          "description": "توضیحات"
+        },
+        "price": {
+          "type": "number",
+          "label": "قیمت",
+          "description": "قیمت",
+          "min": 0
+        },
+        "compareAtPrice": {
+          "type": "number",
+          "label": "قیمت قبل از تخفیف",
+          "description": "قیمت قبل از تخفیف",
+          "min": 0
+        },
+        "currency": {
+          "type": "string",
+          "label": "واحد پول",
+          "description": "واحد پول",
+          "maxLength": 8,
+          "enum": [
+            "IRR",
+            "IRT"
+          ],
+          "enumLabels": {
+            "IRR": "ریال",
+            "IRT": "تومان"
+          }
+        },
+        "images": {
+          "type": "array",
+          "label": "تصاویر",
+          "description": "تصاویر"
+        },
+        "mediaProvenance": {
+          "type": "string",
+          "label": "منبع تصاویر",
+          "description": "منبع تصاویر",
+          "enum": [
+            "interim_seed",
+            "asset",
+            "mixed"
+          ],
+          "enumLabels": {
+            "interim_seed": "تصویر موقت",
+            "asset": "رسانهٔ نهایی",
+            "mixed": "ترکیبی"
+          }
+        },
+        "stock": {
+          "type": "number",
+          "label": "موجودی",
+          "description": "موجودی",
+          "min": 0
+        },
+        "order": {
+          "type": "number",
+          "label": "ترتیب نمایش",
+          "description": "ترتیب نمایش",
+          "min": 0
+        },
+        "categoryId": {
+          "type": "objectId",
+          "label": "دسته‌بندی",
+          "description": "دسته‌بندی"
+        },
+        "attributes": {
+          "type": "object",
+          "label": "ویژگی‌ها",
+          "description": "ویژگی‌ها"
+        },
+        "variants": {
+          "type": "array",
+          "label": "تنوع‌ها",
+          "description": "تنوع‌ها"
+        },
+        "tags": {
+          "type": "array",
+          "label": "برچسب‌ها",
+          "description": "برچسب‌ها"
+        },
+        "weight": {
+          "type": "number",
+          "label": "وزن (گرم)",
+          "description": "وزن (گرم)",
+          "min": 0
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "فعال"
+        }
+      }
+    }
+  },
+  {
+    "name": "cart",
+    "schemaDefinition": {
+      "label": "سبدهای خرید",
+      "description": "سبد خرید مهمان یا کاربر؛ قیمت‌ها و جمع‌ها توسط سرور محاسبه می‌شوند.",
+      "required": [],
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "label": "شناسه نشست",
+          "description": "شناسه نشست",
+          "maxLength": 120
+        },
+        "items": {
+          "type": "array",
+          "label": "اقلام",
+          "description": "اقلام"
+        },
+        "couponCode": {
+          "type": "string",
+          "label": "کد تخفیف",
+          "description": "کد تخفیف",
+          "maxLength": 60
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت",
+          "description": "وضعیت",
+          "enum": [
+            "active",
+            "converted",
+            "abandoned"
+          ],
+          "enumLabels": {
+            "active": "فعال",
+            "converted": "تبدیل‌شده به سفارش",
+            "abandoned": "رهاشده"
+          }
+        },
+        "currency": {
+          "type": "string",
+          "label": "واحد پول",
+          "description": "واحد پول",
+          "maxLength": 8
+        },
+        "shippingMethodId": {
+          "type": "string",
+          "label": "روش ارسال",
+          "description": "روش ارسال",
+          "maxLength": 120
+        },
+        "expiresAt": {
+          "type": "string",
+          "label": "تاریخ انقضا",
+          "description": "تاریخ انقضا"
+        },
+        "discount": {
+          "type": "number",
+          "label": "تخفیف",
+          "description": "مبلغ تخفیف محاسبه‌شده.",
+          "min": 0
+        },
+        "mergedSessionIds": {
+          "type": "array",
+          "label": "نشست‌های ادغام‌شده",
+          "description": "شناسهٔ نشست‌هایی که سبدشان ادغام شده است."
+        },
+        "shipping": {
+          "type": "object",
+          "label": "اطلاعات ارسال",
+          "description": "روش و جزئیات ارسال انتخاب‌شده."
+        },
+        "shippingCost": {
+          "type": "number",
+          "label": "هزینهٔ ارسال",
+          "description": "هزینهٔ ارسال محاسبه‌شده.",
+          "min": 0
+        },
+        "subtotal": {
+          "type": "number",
+          "label": "جمع جزء",
+          "description": "جمع قیمت اقلام پیش از تخفیف و مالیات.",
+          "min": 0
+        },
+        "tax": {
+          "type": "number",
+          "label": "مالیات",
+          "description": "مالیات محاسبه‌شده.",
+          "min": 0
+        },
+        "total": {
+          "type": "number",
+          "label": "مبلغ کل",
+          "description": "مبلغ نهایی سبد که سرور محاسبه می‌کند.",
+          "min": 0
+        }
+      }
+    }
+  },
+  {
+    "name": "customer",
+    "schemaDefinition": {
+      "label": "مشتریان فروشگاه",
+      "description": "اطلاعات مشتریانی که در سفارش‌های فروشگاه ثبت می‌شوند.",
+      "required": [],
+      "properties": {
+        "name": {
+          "type": "string",
+          "label": "نام",
+          "description": "نام",
+          "maxLength": 200
+        },
+        "email": {
+          "type": "string",
+          "label": "ایمیل",
+          "description": "ایمیل",
+          "maxLength": 320
+        },
+        "phone": {
+          "type": "string",
+          "label": "تلفن",
+          "description": "تلفن",
+          "maxLength": 40
+        },
+        "addresses": {
+          "type": "array",
+          "label": "آدرس‌ها",
+          "description": "آدرس‌ها"
+        }
+      }
+    }
+  },
+  {
+    "name": "order",
+    "schemaDefinition": {
+      "label": "سفارش‌های فروشگاه",
+      "description": "سفارش‌ها، وضعیت پرداخت، اقلام و وضعیت انجام سفارش.",
+      "required": [
+        "items",
+        "total"
+      ],
+      "properties": {
+        "currency": {
+          "type": "string",
+          "label": "واحد پول",
+          "description": "واحد پول",
+          "maxLength": 8
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت",
+          "description": "وضعیت",
+          "enum": [
+            "pending",
+            "free_order",
+            "paid",
+            "shipped",
+            "delivered",
+            "cancelled",
+            "refunded",
+            "partially_refunded",
+            "expired"
+          ],
+          "enumLabels": {
+            "pending": "در انتظار پرداخت",
+            "free_order": "سفارش رایگان",
+            "paid": "پرداخت‌شده",
+            "shipped": "ارسال‌شده",
+            "delivered": "تحویل‌شده",
+            "cancelled": "لغوشده",
+            "refunded": "بازپرداخت‌شده",
+            "partially_refunded": "بازپرداخت جزئی",
+            "expired": "منقضی"
+          }
+        },
+        "customerId": {
+          "type": "objectId",
+          "label": "مشتری",
+          "description": "مشتری",
+          "relationTarget": "customer"
+        },
+        "customer": {
+          "type": "object",
+          "label": "اطلاعات مشتری",
+          "description": "اطلاعات مشتری"
+        },
+        "address": {
+          "type": "object",
+          "label": "آدرس",
+          "description": "آدرس"
+        },
+        "couponCode": {
+          "type": "string",
+          "label": "کد تخفیف",
+          "description": "کد تخفیف",
+          "maxLength": 60
+        },
+        "sessionId": {
+          "type": "string",
+          "label": "شناسه نشست مهمان",
+          "description": "شناسه نشست مهمان",
+          "maxLength": 120
+        },
+        "paymentRef": {
+          "type": "string",
+          "label": "کد پیگیری پرداخت",
+          "description": "کد پیگیری پرداخت",
+          "maxLength": 200
+        },
+        "refundRef": {
+          "type": "string",
+          "label": "کد پیگیری مرجوعی در درگاه",
+          "description": "کد پیگیری مرجوعی در درگاه",
+          "maxLength": 200
+        },
+        "expiredAt": {
+          "type": "date",
+          "label": "تاریخ انقضای سفارش",
+          "description": "تاریخ انقضای سفارش"
+        },
+        "cancelledAt": {
+          "type": "date",
+          "label": "زمان لغو",
+          "description": "زمان لغو سفارش."
+        },
+        "cancelReason": {
+          "type": "string",
+          "label": "دلیل لغو",
+          "description": "دلیل لغو سفارش."
+        },
+        "discount": {
+          "type": "number",
+          "label": "تخفیف",
+          "description": "مبلغ تخفیف سفارش.",
+          "min": 0
+        },
+        "expiredEventEmittedAt": {
+          "type": "date",
+          "label": "زمان ثبت رویداد انقضا",
+          "description": "زمان ثبت رویداد انقضای سفارش."
+        },
+        "fulfillmentHistory": {
+          "type": "array",
+          "label": "تاریخچهٔ انجام سفارش",
+          "description": "تغییرات و رویدادهای انجام سفارش."
+        },
+        "fulfillmentStatus": {
+          "type": "string",
+          "label": "وضعیت انجام",
+          "description": "وضعیت پردازش، ارسال یا تحویل سفارش.",
+          "enum": [
+            "unfulfilled",
+            "shipping_pending",
+            "booking_failed",
+            "processing",
+            "ready_for_pickup",
+            "shipped",
+            "in_transit",
+            "delivered",
+            "returned",
+            "lost",
+            "failed"
+          ],
+          "enumLabels": {
+            "unfulfilled": "انجام‌نشده",
+            "shipping_pending": "در انتظار ارسال",
+            "booking_failed": "خطا در ثبت رزرو",
+            "processing": "در حال پردازش",
+            "ready_for_pickup": "آمادهٔ دریافت",
+            "shipped": "ارسال‌شده",
+            "in_transit": "در مسیر",
+            "delivered": "تحویل‌شده",
+            "returned": "مرجوع‌شده",
+            "lost": "مفقودشده",
+            "failed": "ناموفق"
+          }
+        },
+        "inventoryRestockedAt": {
+          "type": "date",
+          "label": "زمان بازگشت موجودی",
+          "description": "زمان بازگرداندن موجودی کالا پس از لغو یا انقضا."
+        },
+        "inventoryRestockReason": {
+          "type": "string",
+          "label": "دلیل بازگشت موجودی",
+          "description": "دلیل بازگرداندن موجودی کالا."
+        },
+        "items": {
+          "type": "array",
+          "label": "اقلام سفارش",
+          "description": "تصویر ثبت‌شده از محصولات و تعداد آن‌ها در زمان سفارش."
+        },
+        "latePayment": {
+          "type": "object",
+          "label": "پرداخت دیرهنگام",
+          "description": "اطلاعات پرداختی که پس از انقضای سفارش انجام شده است."
+        },
+        "manualPaymentAuthority": {
+          "type": "string",
+          "label": "شناسهٔ پرداخت دستی",
+          "description": "شناسهٔ پرداخت کارت‌به‌کارت یا پرداخت دستی."
+        },
+        "manualPaymentStatus": {
+          "type": "string",
+          "label": "وضعیت پرداخت دستی",
+          "description": "وضعیت بررسی رسید پرداخت دستی.",
+          "enum": [
+            "pending_receipt",
+            "awaiting_approval",
+            "approved"
+          ],
+          "enumLabels": {
+            "pending_receipt": "در انتظار رسید",
+            "awaiting_approval": "در انتظار تأیید",
+            "approved": "تأییدشده"
+          }
+        },
+        "manualReceiptSubmittedAt": {
+          "type": "date",
+          "label": "زمان ارسال رسید",
+          "description": "زمان ارسال رسید پرداخت دستی."
+        },
+        "paidEventEmittedAt": {
+          "type": "date",
+          "label": "زمان ثبت رویداد پرداخت",
+          "description": "زمان ثبت رویداد پرداخت موفق."
+        },
+        "paymentHistory": {
+          "type": "array",
+          "label": "تاریخچهٔ پرداخت",
+          "description": "تلاش‌ها و رخدادهای پرداخت سفارش."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "label": "روش پرداخت",
+          "description": "روش پرداخت انتخاب‌شده.",
+          "enum": [
+            "online",
+            "cod",
+            "cardtocard"
+          ],
+          "enumLabels": {
+            "online": "درگاه آنلاین",
+            "cod": "پرداخت هنگام دریافت",
+            "cardtocard": "کارت‌به‌کارت"
+          }
+        },
+        "refundedAmount": {
+          "type": "number",
+          "label": "مبلغ بازپرداخت",
+          "description": "مبلغ بازپرداخت‌شده.",
+          "min": 0
+        },
+        "refundedAt": {
+          "type": "date",
+          "label": "زمان بازپرداخت",
+          "description": "زمان انجام بازپرداخت."
+        },
+        "refundHistory": {
+          "type": "array",
+          "label": "تاریخچهٔ بازپرداخت",
+          "description": "رخدادهای بازپرداخت سفارش."
+        },
+        "refundReason": {
+          "type": "string",
+          "label": "دلیل بازپرداخت",
+          "description": "دلیل ثبت‌شده برای بازپرداخت."
+        },
+        "shipping": {
+          "type": "object",
+          "label": "اطلاعات ارسال",
+          "description": "نشانی و جزئیات ارسال ثبت‌شده."
+        },
+        "shippingCost": {
+          "type": "number",
+          "label": "هزینهٔ ارسال",
+          "description": "هزینهٔ ارسال سفارش.",
+          "min": 0
+        },
+        "subtotal": {
+          "type": "number",
+          "label": "جمع جزء",
+          "description": "جمع قیمت اقلام پیش از تخفیف و مالیات.",
+          "min": 0
+        },
+        "surface": {
+          "type": "string",
+          "label": "بستر ثبت سفارش",
+          "description": "بستری که سفارش از آن ثبت شده است.",
+          "enum": [
+            "telegram-miniapp"
+          ],
+          "enumLabels": {
+            "telegram-miniapp": "مینی‌اپ تلگرام"
+          }
+        },
+        "tax": {
+          "type": "number",
+          "label": "مالیات",
+          "description": "مالیات سفارش.",
+          "min": 0
+        },
+        "total": {
+          "type": "number",
+          "label": "مبلغ کل",
+          "description": "مبلغ نهایی سفارش.",
+          "min": 0
+        }
+      }
+    }
+  },
+  {
+    "name": "storesetting",
+    "schemaDefinition": {
+      "label": "تنظیمات فروشگاه",
+      "description": "واحد پول، مالیات، اطلاعات تماس و نشانی مبدأ فروشگاه.",
+      "required": [],
+      "properties": {
+        "storeName": {
+          "type": "string",
+          "label": "نام فروشگاه",
+          "description": "نام فروشگاه",
+          "maxLength": 200
+        },
+        "currency": {
+          "type": "string",
+          "label": "واحد پول",
+          "description": "واحد پول",
+          "maxLength": 8,
+          "enum": [
+            "IRR",
+            "IRT"
+          ],
+          "enumLabels": {
+            "IRR": "ریال",
+            "IRT": "تومان"
+          }
+        },
+        "taxRate": {
+          "type": "number",
+          "label": "نرخ مالیات (درصد)",
+          "description": "نرخ مالیات (درصد)",
+          "min": 0
+        },
+        "taxIncluded": {
+          "type": "boolean",
+          "label": "قیمت‌ها شامل مالیات است",
+          "description": "قیمت‌ها شامل مالیات است"
+        },
+        "pendingOrderTtlHours": {
+          "type": "number",
+          "label": "مهلت نگه‌داشتن موجودی سفارش پرداخت‌نشده (ساعت)",
+          "description": "مهلت نگه‌داشتن موجودی سفارش پرداخت‌نشده (ساعت)",
+          "min": 0
+        },
+        "originName": {
+          "type": "string",
+          "label": "نام فرستنده",
+          "description": "نام فرستنده",
+          "maxLength": 120
+        },
+        "originPhone": {
+          "type": "string",
+          "label": "موبایل فرستنده",
+          "description": "موبایل فرستنده",
+          "maxLength": 40
+        },
+        "originLine1": {
+          "type": "string",
+          "label": "نشانی مبدأ",
+          "description": "نشانی مبدأ",
+          "maxLength": 400
+        },
+        "originCity": {
+          "type": "string",
+          "label": "شهر مبدأ",
+          "description": "شهر مبدأ",
+          "maxLength": 120
+        },
+        "originProvince": {
+          "type": "string",
+          "label": "استان مبدأ",
+          "description": "استان مبدأ",
+          "maxLength": 120
+        },
+        "originPostalCode": {
+          "type": "string",
+          "label": "کد پستی مبدأ",
+          "description": "کد پستی مبدأ",
+          "maxLength": 20
+        },
+        "contactEmail": {
+          "type": "string",
+          "label": "ایمیل تماس",
+          "description": "ایمیل تماس",
+          "maxLength": 200
+        },
+        "contactPhone": {
+          "type": "string",
+          "label": "تلفن تماس",
+          "description": "تلفن تماس",
+          "maxLength": 40
+        }
+      }
+    }
+  },
+  {
+    "name": "loyalty_member",
+    "schemaDefinition": {
+      "label": "اعضای باشگاه مشتریان",
+      "description": "ماندهٔ امتیاز، سطح عضویت و اعتبار هدیهٔ هر عضو.",
+      "required": [],
+      "properties": {
+        "giftCardBalance": {
+          "type": "number",
+          "label": "ماندهٔ کارت هدیه",
+          "description": "موجودی کارت هدیهٔ عضو.",
+          "min": 0
+        },
+        "giftEffects": {
+          "type": "array",
+          "label": "اثرهای کارت هدیه",
+          "description": "کلیدهای اثر کارت هدیه برای جلوگیری از اعمال تکراری."
+        },
+        "lifetimeSpend": {
+          "type": "number",
+          "label": "مجموع خرید",
+          "description": "مجموع هزینهٔ ثبت‌شدهٔ عضو.",
+          "min": 0
+        },
+        "pointEffects": {
+          "type": "array",
+          "label": "اثرهای امتیاز",
+          "description": "کلیدهای اثر امتیاز برای جلوگیری از ثبت تکراری."
+        },
+        "points": {
+          "type": "number",
+          "label": "امتیاز",
+          "description": "ماندهٔ امتیاز وفاداری عضو.",
+          "min": 0
+        },
+        "spendEffects": {
+          "type": "array",
+          "label": "اثرهای خرید",
+          "description": "کلیدهای اثر خرید برای جلوگیری از محاسبهٔ تکراری."
+        },
+        "tier": {
+          "type": "string",
+          "label": "سطح عضویت",
+          "description": "سطح فعلی عضو در باشگاه مشتریان.",
+          "enum": [
+            "bronze",
+            "silver",
+            "gold"
+          ],
+          "enumLabels": {
+            "bronze": "برنزی",
+            "silver": "نقره‌ای",
+            "gold": "طلایی"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "loyalty_ledger",
+    "schemaDefinition": {
+      "label": "دفتر امتیاز وفاداری",
+      "description": "رویدادهای ثبت‌شدهٔ کسب، مصرف، اصلاح یا انقضای امتیاز.",
+      "required": [
+        "delta",
+        "effectKey",
+        "reason"
+      ],
+      "properties": {
+        "delta": {
+          "type": "number",
+          "label": "تغییر امتیاز",
+          "description": "مقدار افزایش یا کاهش امتیاز."
+        },
+        "effectKey": {
+          "type": "string",
+          "label": "کلید اثر",
+          "description": "کلید یکتای رویداد برای جلوگیری از اعمال دوباره."
+        },
+        "note": {
+          "type": "string",
+          "label": "یادداشت",
+          "description": "شرح رویداد امتیاز."
+        },
+        "orderId": {
+          "type": "objectId",
+          "label": "سفارش",
+          "description": "سفارشی که این رویداد امتیاز از آن ناشی شده است.",
+          "relationTarget": "order"
+        },
+        "reason": {
+          "type": "string",
+          "label": "دلیل",
+          "description": "نوع رویداد در دفتر امتیاز.",
+          "enum": [
+            "earn",
+            "redeem",
+            "adjust",
+            "expire",
+            "cashback",
+            "gift_card"
+          ],
+          "enumLabels": {
+            "earn": "کسب",
+            "redeem": "مصرف",
+            "adjust": "اصلاح",
+            "expire": "انقضا",
+            "cashback": "بازگشت وجه",
+            "gift_card": "کارت هدیه"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "review",
+    "schemaDefinition": {
+      "label": "نظرهای مراجعان",
+      "description": "نظرها و امتیازهای ثبت‌شده دربارهٔ خدمات یا محصولات.",
+      "required": [
+        "targetId",
+        "rating"
+      ],
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "label": "شناسه مورد",
+          "description": "شناسه مورد"
+        },
+        "targetType": {
+          "type": "string",
+          "label": "نوع مورد",
+          "description": "نوع مورد",
+          "maxLength": 80
+        },
+        "rating": {
+          "type": "number",
+          "label": "امتیاز",
+          "description": "امتیاز",
+          "min": 1,
+          "max": 5
+        },
+        "title": {
+          "type": "string",
+          "label": "عنوان",
+          "description": "عنوان",
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "label": "متن",
+          "description": "متن",
+          "maxLength": 5000
+        },
+        "authorName": {
+          "type": "string",
+          "label": "نام نویسنده",
+          "description": "نام نویسنده",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت نظر",
+          "description": "وضعیت بررسی و انتشار نظر.",
+          "enum": [
+            "pending",
+            "approved",
+            "rejected"
+          ],
+          "enumLabels": {
+            "pending": "در انتظار بررسی",
+            "approved": "تأییدشده",
+            "rejected": "ردشده"
+          },
+          "default": "pending"
+        }
+      }
+    }
+  },
+  {
+    "name": "support_ticket",
+    "schemaDefinition": {
+      "label": "درخواست‌های پشتیبانی",
+      "description": "درخواست‌ها و وضعیت رسیدگی به پشتیبانی سایت.",
+      "required": [
+        "subject",
+        "body"
+      ],
+      "properties": {
+        "subject": {
+          "type": "string",
+          "label": "موضوع",
+          "description": "موضوع",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "label": "شرح درخواست",
+          "description": "شرح درخواست",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "category": {
+          "type": "string",
+          "label": "دسته‌بندی",
+          "description": "دسته‌بندی",
+          "maxLength": 80
+        },
+        "affectedAppId": {
+          "type": "string",
+          "label": "شناسهٔ برنامهٔ مرتبط",
+          "description": "شناسهٔ برنامه‌ای که درخواست به آن مربوط است."
+        },
+        "affectedPaymentId": {
+          "type": "string",
+          "label": "شناسهٔ پرداخت مرتبط",
+          "description": "شناسهٔ پرداختی که درخواست به آن مربوط است."
+        },
+        "agentRunId": {
+          "type": "string",
+          "label": "شناسهٔ اجرای عامل",
+          "description": "شناسهٔ اجرای عامل مرتبط با درخواست."
+        },
+        "assigneeId": {
+          "type": "string",
+          "label": "شناسهٔ مسئول",
+          "description": "شناسهٔ همکار مسئول رسیدگی."
+        },
+        "closedAt": {
+          "type": "date",
+          "label": "زمان بسته‌شدن",
+          "description": "زمان بسته‌شدن درخواست."
+        },
+        "errorCode": {
+          "type": "string",
+          "label": "کد خطا",
+          "description": "کد خطای مرتبط با درخواست."
+        },
+        "lastMessageAt": {
+          "type": "date",
+          "label": "زمان آخرین پیام",
+          "description": "زمان آخرین پیام در گفت‌وگوی درخواست."
+        },
+        "lastMessageBy": {
+          "type": "string",
+          "label": "فرستندهٔ آخرین پیام",
+          "description": "نوع فرستندهٔ آخرین پیام.",
+          "enum": [
+            "customer",
+            "support"
+          ],
+          "enumLabels": {
+            "customer": "مراجع",
+            "support": "پشتیبانی"
+          }
+        },
+        "occurredAt": {
+          "type": "date",
+          "label": "زمان رخداد",
+          "description": "زمان رخدادی که باعث ایجاد درخواست شده است."
+        },
+        "priority": {
+          "type": "string",
+          "label": "اولویت",
+          "description": "اولویت رسیدگی به درخواست.",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "urgent"
+          ],
+          "enumLabels": {
+            "low": "کم",
+            "normal": "عادی",
+            "high": "زیاد",
+            "urgent": "فوری"
+          }
+        },
+        "resolvedAt": {
+          "type": "date",
+          "label": "زمان حل‌شدن",
+          "description": "زمان حل‌شدن درخواست."
+        },
+        "source": {
+          "type": "string",
+          "label": "منبع ثبت",
+          "description": "بستری که درخواست از آن ثبت شده است.",
+          "enum": [
+            "web",
+            "studio",
+            "telegram",
+            "api"
+          ],
+          "enumLabels": {
+            "web": "سایت",
+            "studio": "استودیو",
+            "telegram": "تلگرام",
+            "api": "رابط برنامه‌نویسی"
+          }
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت درخواست",
+          "description": "وضعیت جاری رسیدگی.",
+          "enum": [
+            "open",
+            "waiting_on_support",
+            "waiting_on_customer",
+            "resolved",
+            "closed"
+          ],
+          "enumLabels": {
+            "open": "باز",
+            "waiting_on_support": "در انتظار پشتیبانی",
+            "waiting_on_customer": "در انتظار مراجع",
+            "resolved": "حل‌شده",
+            "closed": "بسته"
+          },
+          "default": "open"
+        }
+      }
+    }
+  },
+  {
+    "name": "support_ticket_reply",
+    "schemaDefinition": {
+      "label": "پاسخ‌های پشتیبانی",
+      "description": "پیام‌های ردوبدل‌شده در هر درخواست پشتیبانی.",
+      "required": [
+        "ticketId",
+        "authorType",
+        "body"
+      ],
+      "properties": {
+        "authorType": {
+          "type": "string",
+          "label": "نوع نویسنده",
+          "description": "مشخص می‌کند پیام را مراجع نوشته یا پشتیبانی.",
+          "enum": [
+            "customer",
+            "support"
+          ],
+          "enumLabels": {
+            "customer": "مراجع",
+            "support": "پشتیبانی"
+          }
+        },
+        "body": {
+          "type": "string",
+          "label": "متن پیام",
+          "description": "متن پاسخ یا یادداشت در رشتهٔ پشتیبانی.",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "internal": {
+          "type": "boolean",
+          "label": "یادداشت داخلی",
+          "description": "آیا این پیام فقط برای همکاران قابل مشاهده است?",
+          "default": false
+        },
+        "ticketId": {
+          "type": "objectId",
+          "label": "درخواست پشتیبانی",
+          "description": "درخواستی که این پاسخ به آن تعلق دارد.",
+          "relationTarget": "support_ticket"
+        }
+      }
+    }
+  },
+  {
+    "name": "notification",
+    "schemaDefinition": {
+      "label": "اعلان‌های کاربر",
+      "description": "اعلان‌های درون‌برنامه‌ای نمایش‌داده‌شده در صندوق اعلان کاربر.",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "label": "عنوان",
+          "description": "عنوان",
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "label": "متن",
+          "description": "متن",
+          "maxLength": 5000
+        },
+        "type": {
+          "type": "string",
+          "label": "نوع",
+          "description": "نوع",
+          "enum": [
+            "order",
+            "account",
+            "system",
+            "promo",
+            "platform"
+          ],
+          "enumLabels": {
+            "order": "سفارش",
+            "account": "حساب کاربری",
+            "system": "سیستمی",
+            "promo": "تبلیغاتی",
+            "platform": "پلتفرم"
+          }
+        },
+        "link": {
+          "type": "string",
+          "label": "لینک",
+          "description": "لینک",
+          "maxLength": 500
+        },
+        "readAt": {
+          "type": "date",
+          "label": "زمان خواندن",
+          "description": "زمان خواندن"
+        },
+        "sourceEvent": {
+          "type": "string",
+          "label": "رویداد منبع",
+          "description": "رویداد منبع",
+          "maxLength": 120
+        },
+        "dedupKey": {
+          "type": "string",
+          "label": "کلید تکرار",
+          "description": "کلید تکرار",
+          "maxLength": 240
+        },
+        "channels": {
+          "type": "object",
+          "label": "کانال‌های ارسال",
+          "description": "کانال‌های ارسال"
+        }
+      }
+    }
+  }
+]

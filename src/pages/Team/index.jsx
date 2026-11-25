@@ -40,45 +40,52 @@ export default function TeamPage() {
 
   return (
     <>
-      {/* Asymmetrical Editorial Split Header */}
       <header className="cl-team-hero">
-        <div className="cl-wrap cl-rv">
-          <div className="cl-team-split">
-            <div className="cl-team-hero-info">
-              <p className="cl-eyebrow">کادر پزشکی و درمانی</p>
-              <h1>تیم متخصصان و پزشکان کلینیک نیلوفر</h1>
-              <p className="cl-lead">
-                ما باور داریم زیبایی پایدار، بر پایهٔ علم پزشکی، تخصص آکادمیک و دستان ماهر شکل می‌گیرد. تمامی درمان‌های کلینیک نیلوفر زیر نظر پزشکان پوست، متخصصان زیبایی و کادر بالینی دارای پروانه و با بالاترین استانداردهای ایمنی انجام می‌شود.
-              </p>
+        <div className="cl-wrap cl-team-hero-grid">
+          <div className="cl-team-hero-info">
+            <p className="cl-eyebrow">کادر پزشکی و درمانی</p>
+            <h1>متخصصانی که با دقت، کنار شما هستند</h1>
+            <p className="cl-lead">
+              زیبایی پایدار با شناخت دقیق نیازهای پوست آغاز می‌شود. با تیم درمانی کلینیک نیلوفر آشنا شوید و مسیر مراقبت مناسب خود را با همراهی متخصصان انتخاب کنید.
+            </p>
+            <div className="cl-team-hero-facts" aria-label="اطلاعات تیم درمانی">
+              <div><strong>{loading ? '…' : error ? '—' : nf(staff.length)}</strong><span>عضو تیم درمانی</span></div>
+              <div><strong>پیش از درمان</strong><span>ارزیابی نیازهای پوست</span></div>
             </div>
+            <div className="cl-team-hero-actions">
+              <Link className="cl-btn cl-btn-rose" to="/book">مشاوره و رزرو نوبت</Link>
+              <Link className="cl-team-services-link" to="/services">آشنایی با خدمات ›</Link>
+            </div>
+          </div>
 
-            <div className="cl-team-trust-card" aria-label="اعتبار درمانی و نظام پزشکی">
-              <div className="cl-team-trust-top">
-                <span className="cl-badge">اصالت و پروانه رسمی</span>
-                <span className="cl-muted cl-small">پایش مستمر بالینی</span>
-              </div>
-              <h2 className="cl-team-trust-title">استانداردهای علمی و مجوزهای بالینی</h2>
-              <ul className="cl-team-trust-list">
-                <li>
-                  <span className="cl-team-trust-check" aria-hidden="true">✓</span>
-                  <span>{staff.length ? `${nf(staff.length)} پزشک و کارشناس ارشد دارای پروانه نظام پزشکی` : 'پزشکان و کارشناسان دارای پروانه نظام پزشکی'}</span>
-                </li>
-                <li>
-                  <span className="cl-team-trust-check" aria-hidden="true">✓</span>
-                  <span>۱۰۰٪ کادر درمانی دارای دوره‌های تکمیلی بین‌المللی پوست و لیزر</span>
-                </li>
-                <li>
-                  <span className="cl-team-trust-check" aria-hidden="true">✓</span>
-                  <span>پایش مستمر پرونده‌های درمانی و بهداشت کامل اتاق‌های درمان</span>
-                </li>
-              </ul>
+          <div className="cl-team-hero-media">
+            <img src="/images/clinic-team-hero.jpg" alt="دو عضو تیم درمانی در حال بررسی پروندهٔ مراجع" fetchPriority="high" />
+            <div className="cl-team-image-caption">
+              <span>رویکرد نیلوفر</span>
+              <strong>تخصص، دقت و همراهی در هر مرحله</strong>
             </div>
+            <aside className="cl-team-trust-card" aria-label="تعهدات تیم درمانی">
+              <span className="cl-team-trust-check" aria-hidden="true">✓</span>
+              <div>
+                <strong>ارزیابی پیش از اقدام</strong>
+                <span>انتخاب درمان با توجه به نیاز و سوابق سلامت شما</span>
+              </div>
+            </aside>
           </div>
         </div>
       </header>
 
-      {/* Main Staff Directory Section */}
-      <section className="cl-wrap cl-section">
+      <section className="cl-wrap cl-section cl-team-directory">
+        <div className="cl-team-directory-head">
+          <div>
+            <p className="cl-eyebrow">فهرست تیم</p>
+            <h2>آشنایی با متخصصان کلینیک</h2>
+            <p className="cl-muted">تخصص را انتخاب کنید تا اعضای مرتبط با همان حوزه را ببینید.</p>
+          </div>
+          {!loading && !error ? (
+            <span className="cl-team-count-pill" aria-live="polite">{nf(shownStaff.length)} متخصص</span>
+          ) : null}
+        </div>
         <div className="cl-team-filter-bar">
           <FilterBar
             items={specialties}
@@ -87,11 +94,6 @@ export default function TeamPage() {
             label="دسته‌بندی تخصص‌ها"
             allLabel="همه تخصص‌ها"
           />
-          {!loading && !error && shownStaff.length ? (
-            <span className="cl-team-count-pill" aria-live="polite">
-              نمایش {nf(shownStaff.length)} متخصص
-            </span>
-          ) : null}
         </div>
 
         {loading ? (
@@ -128,7 +130,7 @@ export default function TeamPage() {
 
       {/* Signature Medical Board & Care Standards Band (Deep Dark) */}
       <section className="cl-standards-band" aria-label="منشور اخلاقی و استانداردهای بالینی کلینیک">
-        <div className="cl-wrap cl-rv">
+        <div className="cl-wrap">
           <div className="cl-sechead cl-sechead-light">
             <div>
               <p className="cl-eyebrow cl-eyebrow-light">منشور اخلاقی و تعهدات بالینی</p>
@@ -169,7 +171,7 @@ export default function TeamPage() {
 
       {/* Light Guidance & Consultation Band */}
       <section className="cl-band" aria-label="مشاوره برای انتخاب پزشک">
-        <div className="cl-wrap cl-section cl-rv">
+        <div className="cl-wrap cl-section">
           <div className="cl-sechead">
             <div>
               <p className="cl-eyebrow">مشاورهٔ انتخاب درمان</p>

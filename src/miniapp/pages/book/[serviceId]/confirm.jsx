@@ -76,7 +76,7 @@ export default function MiniappConfirm() {
         <Failure message="اطلاعات نوبت بارگذاری نشد. ممکن است این زمان پر شده باشد." onRetry={reload} />
       ) : (
         <div className="space-y-5">
-          <Card className="ma-rise !p-0 overflow-hidden">
+          <Card className="!p-0 overflow-hidden">
             <div className="p-4 pb-5">
               <p className="text-lg font-extrabold leading-8">{service.name}</p>
               <div className="mt-3 flex items-end justify-between gap-3">
@@ -107,7 +107,7 @@ export default function MiniappConfirm() {
           </Card>
 
           {credit ? (
-            <Card className="ma-rise flex items-center gap-3 !p-3.5" style={{ "--i": 1 }}>
+            <Card className="flex items-center gap-3 !p-3.5">
               <Ticket size={20} strokeWidth={1.75} aria-hidden className="shrink-0 text-brand" />
               <span className="min-w-0 flex-1 text-sm">
                 <span className="block font-semibold">استفاده از جلسهٔ بسته</span>
@@ -117,7 +117,7 @@ export default function MiniappConfirm() {
             </Card>
           ) : null}
 
-          <div className="ma-rise space-y-4" style={{ "--i": 2 }}>
+          <div className="space-y-4">
             <Field label="نام و نام خانوادگی">
               <input className={inputClass} value={profile.name} onChange={(e) => profile.setName(e.target.value)} autoComplete="name" placeholder="مثلاً سارا احمدی" />
             </Field>

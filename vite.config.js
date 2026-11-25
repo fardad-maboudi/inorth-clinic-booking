@@ -6,12 +6,18 @@ import { resolve } from "node:path";
 import { VitePWA } from "vite-plugin-pwa";
 import joorchinVitePlugin from "./vite-plugin/index.js";
 import { pwaConfig } from "./src/config/pwa.js";
+import { resolveJoorchinApiOrigin } from "./src/config/joorchin-api-origin.js";
 
 const packageDependencies = Object.keys(
   createRequire(import.meta.url)("./package.json").dependencies,
 ).filter((name) => !name.startsWith("@babel/") && !name.startsWith("@joorchin/"));
 const optimizedDependencies = [
   ...packageDependencies,
+  // The client SDK is intentionally left unbundled, but it imports these
+  // js-tiktoken subpaths. Pre-bundle them explicitly so their CommonJS
+  // base64-js dependency is converted before the browser loads the SDK.
+  "js-tiktoken/lite",
+  "js-tiktoken/ranks/o200k_base",
   "react-dom/client",
   "react/jsx-runtime",
 ];
@@ -24,8 +30,9 @@ export default defineConfig(async ({ command, mode }) => {
   const base = env.VITE_BASE || process.env.VITE_BASE || "/";
   const appId =
     env.VITE_APP_ID || process.env.VITE_APP_ID || "6ae869523c5af491ed8a859b";
-  const serverTarget =
-    env.VITE_JOORCHIN_SERVER_URL || process.env.VITE_JOORCHIN_SERVER_URL || "https://api.joorchin.site";
+  const serverTarget = resolveJoorchinApiOrigin(
+    env.VITE_JOORCHIN_SERVER_URL || process.env.VITE_JOORCHIN_SERVER_URL,
+  );
 
   return {
     base,
@@ -145,6 +152,9 @@ export default defineConfig(async ({ command, mode }) => {
           ],
         },
         workbox: {
+          // The browser SDK is a shared runtime dependency and currently exceeds
+          // Workbox's 2 MiB default; keep it available for offline app startup.
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           navigateFallback: "/index.html",
           navigateFallbackDenylist: [/^\/api\//, /^\/miniapp(?:\/|$)/],
           globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,webmanifest}"],

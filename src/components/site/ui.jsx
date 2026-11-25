@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
 import { durationLabel, idOf, initials, money, nf } from "./format";
+import { serviceImageFor, staffImageFor } from "./images";
 
 export function Logo({ size = 30, className = "" }) {
   const width = Math.round(size * (342 / 421));
@@ -193,6 +194,17 @@ export function SkeletonGrid({ n = 3, cols = 3 }) {
   );
 }
 
+export function FaqToggleIcon() {
+  return (
+    <span className="cl-faq-toggle-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" focusable="false">
+        <path className="cl-faq-toggle-vertical" d="M12 5v14" />
+        <path d="M5 12h14" />
+      </svg>
+    </span>
+  );
+}
+
 export function FaqSkeleton({ n = 4, className = "" }) {
   const widths = ["68%", "82%", "56%", "74%", "62%"];
   return (
@@ -217,7 +229,7 @@ export function FaqSkeleton({ n = 4, className = "" }) {
 export function PageHead({ eyebrow, title, lead, children }) {
   return (
     <header className="cl-pagehead">
-      <div className="cl-wrap cl-rv">
+      <div className="cl-wrap">
         {eyebrow ? <p className="cl-eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
         {lead ? <p className="cl-lead">{lead}</p> : null}
@@ -235,7 +247,7 @@ export function SectionHead({
   light = false,
 }) {
   return (
-    <div className="cl-sechead cl-rv">
+    <div className="cl-sechead">
       <div>
         {eyebrow ? (
           <p className={`cl-eyebrow${light ? " cl-eyebrow-light" : ""}`}>
@@ -254,17 +266,30 @@ export function SectionHead({
   );
 }
 
-export function ServiceCard({ service, staffCount }) {
+export function ServiceCard({ service, staffCount, compact = false }) {
   const id = idOf(service);
+  const imageSrc = serviceImageFor(service);
+  const imageFallback = serviceImageFor({ ...service, image: undefined });
   const pkg = service.package?.enabled ? service.package : null;
   return (
     <article
-      className="cl-card cl-service cl-rv"
+      className={`cl-card cl-service${compact ? " cl-service-compact" : ""}`}
       style={{ "--tile": service.color || "var(--color-brand-600)" }}
     >
-      <div className="">
+      <div className="cl-service-visual" aria-hidden="true">
+        <img
+          src={imageSrc}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={(event) => {
+            if (event.currentTarget.dataset.fallback) return;
+            event.currentTarget.dataset.fallback = 'true';
+            event.currentTarget.src = imageFallback;
+          }}
+        />
+        <span className="cl-service-group">{service.group || "خدمات تخصصی"}</span>
         <ServiceIcon group={service.group} color={service.color} />
-        <p className="cl-chip">{service.group || "خدمات"}</p>
       </div>
       <h3>
         <Link to={`/services/${id}`} className="cl-stretch">
@@ -310,17 +335,36 @@ export function StaffCard({ person, services = [] }) {
   const id = idOf(person);
   const remaining = services.length - 2;
   const primaryService = services[0];
+  const image = staffImageFor(person, services);
+  const imageFallback = staffImageFor({ ...person, avatar: undefined, image: undefined }, services).src;
   const bookingTo = primaryService
     ? `/book?service=${idOf(primaryService)}&staff=${id}`
     : `/book?staff=${id}`;
 
   return (
     <article
-      className="cl-card cl-person cl-rv"
+      className="cl-card cl-person"
       style={{ "--tile": person.color || "var(--color-brand-600)" }}
     >
-      <div className="cl-person-art">
-        <Avatar name={person.name} color={person.color} size={76} />
+      <div className={`cl-person-art${image.isPortrait ? " has-portrait" : ""}`}>
+        <img
+          className="cl-person-photo"
+          src={image.src}
+          alt={image.isPortrait ? person.name : ""}
+          loading="lazy"
+          decoding="async"
+          onError={(event) => {
+            if (event.currentTarget.dataset.fallback) return;
+            event.currentTarget.dataset.fallback = 'true';
+            event.currentTarget.src = imageFallback;
+            event.currentTarget.alt = '';
+            event.currentTarget.closest('.cl-person-art')?.classList.remove('has-portrait');
+          }}
+        />
+        <span className="cl-person-art-note">نمایی از فضای درمان</span>
+        <span className="cl-person-art-avatar">
+          <Avatar name={person.name} color={person.color} size={52} />
+        </span>
       </div>
       <div className="cl-person-body">
         <h3>

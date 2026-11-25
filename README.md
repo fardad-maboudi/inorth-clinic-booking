@@ -25,18 +25,54 @@ staff `09120000101` at `/admin/login`, then `/panel`. Reset demo data with `?dem
 
 ## SDK integration seam
 
-Pages import only `@/api/plugins/*` (visitor) and `@/api/backoffice/*` (panel, staff
-only), never raw URLs. Those SDK modules call `fetch('/api/v1/apps/<id>/...')`.
-`src/demo/install.js` (imported from `src/config/site.js` and the Mini App data
-module) answers those calls from `engine.js` unless `VITE_API_MODE=live`, in which
-case nothing is patched and the app talks to the real platform. To go live: set
-`VITE_API_MODE=live`, delete `src/demo/` and its two imports, install the plugins
-on a Joorchin app and apply `seed/clinic-seed-pack.ts` through the plugin routes.
+Pages import the delivered `@/api/plugins/*` (visitor) and
+`@/api/backoffice/*` (staff-only) modules rather than constructing platform
+URLs in components. Live app-scoped auth, entity, visitor/staff plugin-record
+and action, team, integration, and booking calls use `@joorchin/client-sdk`
+0.3.1 where its public contracts match; remaining custom service routes use the
+shared fetch transport. Auth and refresh use app-scoped routes
+(`/apps/:appId/auth/...`, including
+`/apps/:appId/auth/refresh`), while profile reads/updates use
+`/apps/:appId/users/me`. Both transports share the delivered app's access token;
+the SDK owns refresh rotation and mirrors the pair back to the site's auth store.
 
-The engine mirrors the real bookings contract: one atomic seat claim per slot
-(parallel requests for one seat give one booking and 409s), cancel/reschedule
-windows, credit consume/restore, credits visible to a client only when linked to
-their account, no-show counters with auto-block, Nowruz closure, staff-only routes.
+Set `VITE_JOORCHIN_SERVER_URL` to the Joorchin API origin (without `/api/v1`);
+this clinic defaults to `https://api.joorchin.site`. A stale Pinggy value in
+`VITE_JOORCHIN_SERVER_URL` is treated as a temporary tunnel and resolves to the
+official API instead. Keep the API origin separate from the payment callback:
+`VITE_PUBLIC_URL`, `VITE_APP_URL`, or `VITE_SITE_URL` identifies the public
+frontend origin. Local checkout requires that value to be an HTTPS tunnel or a
+deployed site URL; without it, checkout stops with a clear configuration error
+instead of returning to an unavailable preview. Vite dev proxies `/api` to the
+API origin, while the production SDK and shared fetch transport call the origin
+directly. Demo mode remains the
+default in development and is intercepted in-browser. Production builds default to
+`VITE_API_MODE=live`, and `Dockerfile.prod` explicitly sets it to `live`. To produce
+an intentional demo artifact, opt in with `VITE_API_MODE=demo` (or Docker's
+`--build-arg VITE_API_MODE=demo`). For a customer-hosted production image, pass
+`--build-arg VITE_JOORCHIN_SERVER_URL=https://<your-joorchin-api-origin>` as well
+as `VITE_APP_ID`.
+
+The production Docker image is static Nginx and does not define an `/api` proxy.
+Direct browser-to-API calls therefore require the Joorchin API to allow the
+published site's exact origin, `OPTIONS` preflight, the used methods (`GET`,
+`POST`, `PUT`, `PATCH`, `DELETE`), and request headers such as `Authorization`,
+`Content-Type`, `X-App-Id`, `X-Joorchin-Client`, `x-booking-session`,
+`x-cart-session`, and `x-joorchin-surface`. SDK 0.3.1 sends browser credentials
+on requests without an SDK-owned bearer session, so the API must return
+`Access-Control-Allow-Credentials: true`
+and an explicit allowed origin for those calls; `Access-Control-Allow-Origin: *`
+is incompatible. When the SDK has its own bearer session it disables cookies
+and sends the token instead. Verify CORS, app-scoped routes, and deployment
+routing before release. Install the required plugins on the Joorchin app and apply
+`seed/clinic-seed-pack.ts` through the plugin routes before enabling live
+booking. SDK wiring does not itself install plugins or fix server-side
+authorization/business rules.
+
+The in-browser engine is an approximate local simulator, not a security or
+business-rule guarantee for the live service. Its behavior has known deviations
+from the desired booking contract; do not use demo results to sign off live
+authorization, booking, payment, or credit behavior.
 
 ## Feature coverage
 

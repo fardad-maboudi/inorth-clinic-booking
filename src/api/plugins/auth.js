@@ -1,4 +1,4 @@
-import { joorchinFetch as fetch } from "../joorchin.js";
+import { joorchinFetch as fetch, joorchinResponseError, joorchinSdkCall } from "../joorchin.js";
 /**
  * Auth plugin client — OTP/password login, recovery and profile.
  * Import from '@/api/plugins/auth'.
@@ -6,7 +6,15 @@ import { joorchinFetch as fetch } from "../joorchin.js";
 import { normalizeIranianMobile, toLatinDigits } from '../auth.js';
 import { useQuery } from '@tanstack/react-query';
 import { getAuthHeaders as getPreviewHeaders } from '../auth.js';
-import { joorchinResponseError } from '@/api/joorchin';
+import { demoMode } from '@/demo/install.js';
+import {
+  clearJoorchinSession,
+  joorchin,
+  joorchinSessionMatchesAuthorization,
+  refreshJoorchinSession,
+  setJoorchinAccessToken,
+  setJoorchinSession,
+} from '@/lib/joorchinClient.js';
 
 const APP_ID = import.meta.env.VITE_APP_ID;
 const TOKEN_KEY = `joorchin_user_token:${import.meta.env?.VITE_APP_ID}`;
@@ -19,12 +27,11 @@ const APP_BASE = `/api/v1/apps/${APP_ID}`;
  * @param {string} token
  */
 export function setAuthToken(token) {
-  localStorage.setItem(TOKEN_KEY, token);
+  setJoorchinAccessToken(token);
 }
 
 export function clearAuthToken() {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(REFRESH_KEY);
+  clearJoorchinSession();
 }
 
 /**
@@ -33,9 +40,8 @@ export function clearAuthToken() {
  * reaches this site — the server hands site logins the refresh token in the
  * JSON body instead, and we send it back explicitly.
  */
-function storeSession(data) {
-  if (data?.token) setAuthToken(data.token);
-  if (data?.refreshToken) localStorage.setItem(REFRESH_KEY, data.refreshToken);
+export function storeSession(data) {
+  setJoorchinSession(data);
   return data;
 }
 
@@ -45,6 +51,15 @@ function storeSession(data) {
 export async function refreshSession() {
   const refreshToken = localStorage.getItem(REFRESH_KEY);
   if (!refreshToken) return null;
+  if (!demoMode) {
+    try {
+      const pair = await joorchinSdkCall(() => refreshJoorchinSession());
+      return storeSession({ token: pair.access_token, refreshToken: pair.refreshToken });
+    } catch (error) {
+      if (error?.status === 401 || error?.status === 403) clearAuthToken();
+      throw error;
+    }
+  }
   const response = await fetch('/api/v1/auth/refresh', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-app-id': APP_ID },
@@ -60,7 +75,9 @@ export async function refreshSession() {
 /** Run a request, and retry it once through a refresh on a 401. */
 async function withSession(run) {
   const response = await run();
-  if (response.status !== 401) return response;
+  if (response.status !== 401 || !demoMode) return response;
+  const authorization = getUserAuthHeaders().Authorization;
+  if (!joorchinSessionMatchesAuthorization(authorization)) return response;
   const refreshed = await refreshSession();
   return refreshed ? run() : response;
 }
@@ -82,8 +99,6 @@ export const SITE_ADMIN_LOGIN_PATH = '/admin/login';
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export function getUserAuthHeaders() {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) return { Authorization: `Bearer ${token}` };
   return getPreviewHeaders();
 }
 
@@ -102,6 +117,7 @@ async function parse(response) {
  * const session = await verifyOtp('09121234567', '12345'); // signs the customer in
  */
 export async function requestOtp(phoneNumber) {
+  if (!demoMode) return joorchinSdkCall(() => joorchin.auth.requestOtp(phoneNumber));
   return parse(await fetch('/api/v1/auth/initiate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-app-id': APP_ID },
@@ -114,6 +130,10 @@ export async function requestOtp(phoneNumber) {
  * @param {string} otp  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function verifyOtp(phoneNumber, otp) {
+  if (!demoMode) {
+    const data = await joorchinSdkCall(() => joorchin.auth.verifyOtp({ phone: phoneNumber, otpCode: otp }));
+    return storeSession(data);
+  }
   const data = await parse(await fetch('/api/v1/auth/verify-otp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-app-id': APP_ID },
@@ -128,6 +148,10 @@ export async function verifyOtp(phoneNumber, otp) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function loginWithPassword(phoneNumber, password) {
+  if (!demoMode) {
+    const data = await joorchinSdkCall(() => joorchin.auth.loginWithPassword(phoneNumber, password));
+    return storeSession(data);
+  }
   const data = await parse(await fetch(APP_BASE + '/auth/login/password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber), password }),
@@ -141,6 +165,7 @@ export async function loginWithPassword(phoneNumber, password) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function forgotPassword(phoneNumber) {
+  if (!demoMode) return joorchinSdkCall(() => joorchin.auth.forgotPassword(phoneNumber));
   return parse(await fetch(APP_BASE + '/auth/forgot-password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber) }),
@@ -155,6 +180,11 @@ export async function forgotPassword(phoneNumber) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function resetPassword(phoneNumber, otp, newPassword) {
+  if (!demoMode) {
+    const result = await joorchinSdkCall(() => joorchin.auth.resetPassword(phoneNumber, String(otp), String(newPassword)));
+    clearAuthToken();
+    return result;
+  }
   const result = await parse(await fetch(APP_BASE + '/auth/reset-password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber), otp, newPassword }),
@@ -167,6 +197,7 @@ export async function resetPassword(phoneNumber, otp, newPassword) {
  * @param {string} phoneNumber  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function requestAdminOtp(phoneNumber) {
+  if (!demoMode) return joorchinSdkCall(() => joorchin.auth.requestStaffOtp(phoneNumber));
   return parse(await fetch(APP_BASE + '/auth/admin/initiate', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber) }),
@@ -178,6 +209,10 @@ export async function requestAdminOtp(phoneNumber) {
  * @param {string} otp  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function verifyAdminOtp(phoneNumber, otp) {
+  if (!demoMode) {
+    const data = await joorchinSdkCall(() => joorchin.auth.loginStaffViaPhoneOtp(phoneNumber, otp));
+    return storeSession(data);
+  }
   const data = await parse(await fetch(APP_BASE + '/auth/admin/verify-otp', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber), otp }),
@@ -191,6 +226,10 @@ export async function verifyAdminOtp(phoneNumber, otp) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function loginAdminWithPassword(phoneNumber, password) {
+  if (!demoMode) {
+    const data = await joorchinSdkCall(() => joorchin.auth.loginStaffWithPassword(phoneNumber, password));
+    return storeSession(data);
+  }
   const data = await parse(await fetch(APP_BASE + '/auth/admin/login/password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber), password }),
@@ -203,6 +242,7 @@ export async function loginAdminWithPassword(phoneNumber, password) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function forgotAdminPassword(phoneNumber) {
+  if (!demoMode) return joorchinSdkCall(() => joorchin.auth.forgotStaffPassword(phoneNumber));
   return parse(await fetch(APP_BASE + '/auth/admin/forgot-password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber) }),
@@ -216,6 +256,11 @@ export async function forgotAdminPassword(phoneNumber) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function resetAdminPassword(phoneNumber, otp, newPassword) {
+  if (!demoMode) {
+    const result = await joorchinSdkCall(() => joorchin.auth.resetStaffPassword(phoneNumber, otp, newPassword));
+    clearAuthToken();
+    return result;
+  }
   const result = await parse(await fetch(APP_BASE + '/auth/admin/reset-password', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phoneNumber: normalizeIranianMobile(phoneNumber) ?? toLatinDigits(phoneNumber), otp, newPassword }),
@@ -228,8 +273,12 @@ export async function resetAdminPassword(phoneNumber, otp, newPassword) {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function me() {
+  const headers = getUserAuthHeaders();
+  if (!demoMode && headers.Authorization && joorchinSessionMatchesAuthorization(headers.Authorization)) {
+    return joorchinSdkCall(() => joorchin.auth.me());
+  }
   return parse(await withSession(() =>
-    fetch(`${APP_BASE}/users/me`, { headers: getUserAuthHeaders() })));
+    fetch(`${APP_BASE}/users/me`, { headers })));
 }
 
 /**
@@ -237,9 +286,13 @@ export async function me() {
  * @returns {Promise<import('../joorchin.js').ApiResult>}
  */
 export async function updateMe(payload) {
+  const authHeaders = getUserAuthHeaders();
+  if (!demoMode && authHeaders.Authorization && joorchinSessionMatchesAuthorization(authHeaders.Authorization)) {
+    return joorchinSdkCall(() => joorchin.auth.updateMe(payload));
+  }
   return parse(await withSession(() => fetch(`${APP_BASE}/users/me`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getUserAuthHeaders() },
+    headers: { 'Content-Type': 'application/json', ...authHeaders },
     body: JSON.stringify(payload),
   })));
 }
@@ -249,8 +302,9 @@ export async function updateMe(payload) {
  */
 export async function logout() {
   const headers = getUserAuthHeaders();
+  const logoutUrl = demoMode ? '/api/v1/auth/logout' : `${APP_BASE}/auth/logout`;
   try {
-    return await parse(await fetch('/api/v1/auth/logout', {
+    return await parse(await fetch(logoutUrl, {
       method: 'POST',
       headers,
     }));

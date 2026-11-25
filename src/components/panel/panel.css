@@ -1,5 +1,4 @@
-/* Staff panel motion + browser-surface theming. Everything animated is transform/opacity,
-   and every animation is dropped under prefers-reduced-motion. */
+/* Staff panel interactions stay crisp; operational data appears without entrance motion. */
 .pn-root {
   --pn-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pn-shadow: 0 1px 0 rgb(15 23 20 / 0.03), 0 14px 28px -22px rgb(15 77 70 / 0.35);
@@ -16,47 +15,18 @@
 .pn-root p, .pn-root dl, .pn-root dd { margin: 0; }
 
 .pn-card { box-shadow: var(--pn-shadow); }
-.pn-lift { transition: transform 0.25s var(--pn-ease), box-shadow 0.25s var(--pn-ease), background-color 0.2s; }
-.pn-lift:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgb(15 23 20 / 0.03), 0 18px 32px -20px rgb(15 77 70 / 0.45); }
 .pn-press:active { transform: scale(0.97); }
 .pn-root button, .pn-root a { transition: transform 0.15s var(--pn-ease), background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s, box-shadow 0.2s; }
-
-@keyframes pn-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes pn-pop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
-@keyframes pn-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
-@keyframes pn-ping { 0% { transform: scale(0.6); opacity: 0.7; } 80%, 100% { transform: scale(2.4); opacity: 0; } }
-@keyframes pn-drift { from { transform: translateX(0); } to { transform: translateX(-6px); } }
-
-.pn-view { animation: pn-rise 0.42s var(--pn-ease) both; }
-.pn-stagger > * { animation: pn-rise 0.45s var(--pn-ease) both; animation-delay: calc(var(--i, 0) * 45ms); }
-.pn-stagger > *:nth-child(1) { --i: 0; } .pn-stagger > *:nth-child(2) { --i: 1; } .pn-stagger > *:nth-child(3) { --i: 2; }
-.pn-stagger > *:nth-child(4) { --i: 3; } .pn-stagger > *:nth-child(5) { --i: 4; } .pn-stagger > *:nth-child(6) { --i: 5; }
-.pn-stagger > *:nth-child(n + 7) { --i: 6; }
-.pn-rows tbody tr, .pn-rows-m > li { animation: pn-rise 0.4s var(--pn-ease) both; }
-.pn-rows tbody tr:nth-child(1), .pn-rows-m > li:nth-child(1) { animation-delay: 0ms; }
-.pn-rows tbody tr:nth-child(2), .pn-rows-m > li:nth-child(2) { animation-delay: 30ms; }
-.pn-rows tbody tr:nth-child(3), .pn-rows-m > li:nth-child(3) { animation-delay: 60ms; }
-.pn-rows tbody tr:nth-child(4), .pn-rows-m > li:nth-child(4) { animation-delay: 90ms; }
-.pn-rows tbody tr:nth-child(5), .pn-rows-m > li:nth-child(5) { animation-delay: 120ms; }
-.pn-rows tbody tr:nth-child(n + 6), .pn-rows-m > li:nth-child(n + 6) { animation-delay: 150ms; }
-.pn-block { animation: pn-pop 0.5s var(--pn-ease) both; animation-delay: calc(var(--i, 0) * 40ms); }
-.pn-shimmer {
-  background: linear-gradient(100deg, var(--subtle) 30%, color-mix(in srgb, var(--subtle) 55%, white) 50%, var(--subtle) 70%);
-  background-size: 240% 100%;
-  animation: pn-shimmer 1.5s linear infinite;
+.pn-skeleton {
+  background: var(--subtle);
 }
 .pn-now::before {
   content: ''; position: absolute; inset-inline-start: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%;
-  background: #e11d48; box-shadow: 0 0 0 0 rgb(225 29 72 / 0.5);
-}
-.pn-now::after {
-  content: ''; position: absolute; inset-inline-start: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%;
-  border: 2px solid #e11d48; animation: pn-ping 2.2s ease-out infinite;
+  background: #e11d48;
 }
 .pn-nav-active { box-shadow: 0 10px 18px -12px color-mix(in srgb, var(--primary) 80%, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
-  .pn-view, .pn-stagger > *, .pn-rows tbody tr, .pn-rows-m > li, .pn-block, .pn-shimmer, .pn-now::after { animation: none !important; }
-  .pn-lift:hover, .pn-press:active { transform: none; }
-  .pn-root button, .pn-root a { transition: none; }
+  .pn-press:active { transform: none; }
+  .pn-root button, .pn-root a { transition-duration: 0.01ms !important; }
 }

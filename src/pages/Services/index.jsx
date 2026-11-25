@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FilterBar, ServiceCard, SkeletonGrid, StateBox } from '@/components/site/ui';
+import { FaqToggleIcon, FilterBar, ServiceCard, ServiceIcon, SkeletonGrid, StateBox } from '@/components/site/ui';
 import { errText, idOf, nf } from '@/components/site/format';
 import { useCatalog, useTitle } from '@/components/site/hooks';
 
@@ -10,65 +10,89 @@ export default function ServicesPage() {
   const [group, setGroup] = useState('all');
 
   const services = data?.services ?? [];
-  const groups = [...new Set(services.map((s) => s.group).filter(Boolean))];
-  const shown = group === 'all' ? services : services.filter((s) => s.group === group);
+  const groups = [...new Set(services.map((service) => service.group).filter(Boolean))];
+  const shown = group === 'all' ? services : services.filter((service) => service.group === group);
 
   return (
     <>
-      {/* Compact Functional Catalog Header */}
       <header className="cl-services-hero">
-        <div className="cl-wrap cl-rv">
-          <div className="cl-services-hero-content">
-            <p className="cl-eyebrow">کاتالوگ خدمات و درمان‌ها</p>
-            <h1>خدمات تخصصی کلینیک نیلوفر</h1>
-            <p className="cl-lead">
-              بررسی مدت‌زمان، تعرفه و متخصصان ارائه‌دهندهٔ هر خدمت در یک نگاه؛ خدمت مورد نظر خود را انتخاب کرده و مستقیماً نوبت بگیرید.
-            </p>
+        <div className="cl-wrap">
+          <div className="cl-services-hero-grid">
+            <div className="cl-services-hero-content">
+              <p className="cl-eyebrow">راهنمای خدمات نیلوفر</p>
+              <h1>مراقبتی که با نیاز پوست شما شروع می‌شود</h1>
+              <p className="cl-lead">
+                درمان‌های پوست و زیبایی را با بررسی تخصص، زمان و تعرفه انتخاب کنید؛ جزئیات هر خدمت و مسیر رزرو را یک‌جا و روشن ببینید.
+              </p>
+              <div className="cl-services-hero-points" aria-label="اطلاعات قابل بررسی برای هر خدمت">
+                <span>شرح هر درمان</span>
+                <span>مدت و تعرفه</span>
+                <span>متخصصان ارائه‌دهنده</span>
+              </div>
+            </div>
+
+            <div className="cl-services-mosaic" role="img" aria-label="تصاویر مراقبت پوست و لیزر در محیط کلینیک">
+              <div className="cl-services-photo cl-services-photo-main">
+                <img src="/images/skincare-facial-care.jpg" alt="" fetchPriority="high" />
+              </div>
+              <div className="cl-services-photo cl-services-photo-laser">
+                <img src="/images/skin-laser-care.jpg" alt="" loading="lazy" />
+              </div>
+              <div className="cl-services-mosaic-note">
+                <ServiceIcon group="پوست و مو" />
+                <span><strong>انتخاب آگاهانه</strong><small>از مشاوره تا رزرو خدمت</small></span>
+              </div>
+            </div>
           </div>
 
           <div className="cl-services-toolbar">
+            <div className="cl-services-toolbar-label">
+              <span className="cl-services-toolbar-kicker">جست‌وجوی مسیر مناسب</span>
+              <span className="cl-muted cl-small">دسته‌بندی خدمات</span>
+            </div>
             <FilterBar
               items={groups}
               value={group}
               onChange={setGroup}
               label="دسته‌بندی خدمات"
-              allLabel="همه خدمات"
+              allLabel="همهٔ خدمات"
             />
-            {!loading && !error && (
+            {!loading && !error ? (
               <span className="cl-services-count-badge" aria-live="polite">
                 {group === 'all'
-                  ? `نمایش همهٔ ${nf(services.length)} خدمت کلینیک`
-                  : `نمایش ${nf(shown.length)} خدمت در دستهٔ ${group}`}
+                  ? `${nf(services.length)} خدمت`
+                  : `${nf(shown.length)} خدمت در ${group}`}
               </span>
-            )}
+            ) : null}
           </div>
         </div>
       </header>
 
-      {/* Main Services Catalog Section */}
-      <section className="cl-wrap cl-section">
+      <section className="cl-wrap cl-section cl-services-directory" aria-label="فهرست خدمات کلینیک">
         {loading ? (
           <SkeletonGrid n={6} cols={3} />
         ) : error ? (
           <StateBox kind="error" title="خدمات دریافت نشد" text={errText(error)} onRetry={reload} />
         ) : shown.length ? (
           group === 'all' ? (
-            /* Categorized Group Directory when showing all */
-            groups.map((g) => {
-              const groupServices = services.filter((s) => s.group === g);
+            groups.map((category) => {
+              const groupServices = services.filter((service) => service.group === category);
               if (!groupServices.length) return null;
               return (
-                <div key={g} className="cl-services-group">
+                <div key={category} className="cl-services-group">
                   <div className="cl-services-group-head">
-                    <h2>{g}</h2>
-                    <span className="cl-services-group-count">{nf(groupServices.length)} خدمت فعال</span>
+                    <div>
+                      <p className="cl-eyebrow">بر پایهٔ نیاز شما</p>
+                      <h2>{category}</h2>
+                    </div>
+                    <span className="cl-services-group-count">{nf(groupServices.length)} خدمت</span>
                   </div>
                   <div className="cl-grid cl-grid-3 cl-services-grid">
-                    {groupServices.map((s) => (
+                    {groupServices.map((service) => (
                       <ServiceCard
-                        key={idOf(s)}
-                        service={s}
-                        staffCount={s.resourceIds?.length}
+                        key={idOf(service)}
+                        service={service}
+                        staffCount={service.resourceIds?.length}
                       />
                     ))}
                   </div>
@@ -76,13 +100,12 @@ export default function ServicesPage() {
               );
             })
           ) : (
-            /* Filtered Grid for selected category */
             <div className="cl-grid cl-grid-3 cl-services-grid" key={group}>
-              {shown.map((s) => (
+              {shown.map((service) => (
                 <ServiceCard
-                  key={idOf(s)}
-                  service={s}
-                  staffCount={s.resourceIds?.length}
+                  key={idOf(service)}
+                  service={service}
+                  staffCount={service.resourceIds?.length}
                 />
               ))}
             </div>
@@ -93,11 +116,7 @@ export default function ServicesPage() {
             title="خدمتی در این دسته موجود نیست"
             text="می‌توانید فیلتر را پاک کنید تا همهٔ خدمات کلینیک را مشاهده کنید."
             action={
-              <button
-                type="button"
-                className="cl-btn cl-btn-outline"
-                onClick={() => setGroup('all')}
-              >
+              <button type="button" className="cl-btn cl-btn-outline" onClick={() => setGroup('all')}>
                 نمایش همهٔ خدمات
               </button>
             }
@@ -105,61 +124,47 @@ export default function ServicesPage() {
         )}
       </section>
 
-      {/* Consultation Guidance Band */}
-      <section className="cl-band" aria-label="مشاوره برای انتخاب درمان">
-        <div className="cl-wrap cl-section cl-rv">
-          <div className="cl-sechead">
-            <div>
-              <p className="cl-eyebrow">مشاورهٔ تخصصی پوست و زیبایی</p>
-              <h2>نمی‌دانید کدام درمان برای پوست شما مناسب‌تر است؟</h2>
-              <p className="cl-lead">
-                پزشکان و کارشناسان کلینیک نیلوفر پیش از هر اقدام درمانی، با آنالیز دقیق پوست و شرح نیازهای شما، مناسب‌ترین پروتکل درمانی و تعداد جلسات لازم را پیشنهاد می‌کنند.
-              </p>
-            </div>
+      <section className="cl-services-consult" aria-label="مشاوره برای انتخاب درمان">
+        <div className="cl-wrap cl-services-consult-inner">
+          <div>
+            <p className="cl-eyebrow cl-eyebrow-light">پیش از انتخاب درمان</p>
+            <h2>برای پوست شما، کدام مسیر مناسب‌تر است؟</h2>
+            <p>
+              در جلسهٔ مشاوره، پزشک با بررسی نوع پوست و نیازهای شما دربارهٔ گزینه‌های درمان و تعداد جلسات راهنمایی می‌کند.
+            </p>
           </div>
-
-          <div className="cl-actions" style={{ justifyContent: 'center' }}>
-            <Link className="cl-btn cl-btn-primary cl-btn-lg" to="/book">
-              رزرو وقت معاینه و آنالیز پوست
-            </Link>
-            <a className="cl-btn cl-btn-outline cl-btn-lg" href="tel:02188888888">
-              تماس با مشاوران پذیرش کلینیک
-            </a>
+          <div className="cl-services-consult-actions">
+            <Link className="cl-btn cl-btn-rose cl-btn-lg" to="/book">رزرو مشاوره</Link>
+            <a className="cl-btn cl-btn-glass cl-btn-lg" href="tel:02188888888">تماس با پذیرش</a>
           </div>
         </div>
       </section>
 
-      {/* Clinical FAQ Light Section */}
       <section className="cl-wrap cl-section" aria-label="پرسش‌های متداول خدمات">
         <div className="cl-sechead">
           <div>
-            <p className="cl-eyebrow">پرسش‌های متداول خدمات</p>
-            <h2>نکات مهم پیش و پس از درمان</h2>
+            <p className="cl-eyebrow">پیش از مراجعه</p>
+            <h2>چند نکته دربارهٔ روند درمان</h2>
           </div>
-          <Link className="cl-link" to="/faq">
-            مشاهدهٔ تمام پرسش‌های متداول ›
-          </Link>
+          <Link className="cl-link" to="/faq">مشاهدهٔ همهٔ پرسش‌ها ›</Link>
         </div>
 
-        <div className="cl-faq">
-          <details className="cl-card cl-rv">
-            <summary>آیا پیش از خدمات لیزر یا پوست نیاز به جلسهٔ مشاوره است؟</summary>
-            <p>بله، در اولین مراجعه به کلینیک نیلوفر، پروندهٔ سلامت شما تکمیل و نوع پوست توسط پزشک بررسی می‌شود تا مناسب‌ترین تنظیمات دستگاه یا پروتکل درمانی تعیین گردد.</p>
+        <div className="cl-faq cl-services-faq">
+          <details className="cl-card">
+            <summary>آیا پیش از خدمات لیزر یا پوست نیاز به جلسهٔ مشاوره است؟<FaqToggleIcon /></summary>
+            <p>بله، در اولین مراجعه پروندهٔ سلامت شما تکمیل و نوع پوست توسط پزشک بررسی می‌شود تا مناسب‌ترین تنظیمات دستگاه یا پروتکل درمانی تعیین شود.</p>
           </details>
-
-          <details className="cl-card cl-rv">
-            <summary>فاصلهٔ زمانی بین جلسات درمانی چقدر است؟</summary>
-            <p>بسته به نوع خدمت (لیزر، مزوتراپی یا پاکسازی عمیق)، فواصل جلسات معمولاً بین ۳ تا ۶ هفته متغیر است. متخصص در پایان جلسه زمان بهینه را به شما اعلام می‌کند.</p>
+          <details className="cl-card">
+            <summary>فاصلهٔ زمانی بین جلسات درمانی چقدر است؟<FaqToggleIcon /></summary>
+            <p>بسته به نوع خدمت، فاصلهٔ جلسات متفاوت است. متخصص در پایان جلسه زمان مناسب مراجعهٔ بعدی را به شما اعلام می‌کند.</p>
           </details>
-
-          <details className="cl-card cl-rv">
-            <summary>آیا امکان لغو یا تغییر زمان نوبت وجود دارد؟</summary>
-            <p>بله، تا ۲۴ ساعت پیش از شروع نوبت می‌توانید از بخش «حساب من» یا تماس با کلینیک، زمان نوبت خود را بدون هیچ هزینه‌ای تغییر دهید یا لغو کنید.</p>
+          <details className="cl-card">
+            <summary>آیا امکان لغو یا تغییر زمان نوبت وجود دارد؟<FaqToggleIcon /></summary>
+            <p>بله، تا ۲۴ ساعت پیش از شروع نوبت می‌توانید از بخش «حساب من» یا با تماس با کلینیک، زمان نوبت خود را تغییر دهید یا لغو کنید.</p>
           </details>
-
-          <details className="cl-card cl-rv">
-            <summary>تفاوت جلسات تکی با بسته‌های چندجلسه‌ای چیست؟</summary>
-            <p>بسته‌های چندجلسه‌ای شامل تا ۳۰٪ صرفه‌جویی اقتصادی نسبت به جلسهٔ تکی هستند و اعتبار زمانی طولانی برای رزرو آزادانهٔ جلسات در اختیارتان می‌گذارند.</p>
+          <details className="cl-card">
+            <summary>تفاوت جلسات تکی با بسته‌های چندجلسه‌ای چیست؟<FaqToggleIcon /></summary>
+            <p>بسته‌های چندجلسه‌ای با توجه به خدمت، تعداد جلسات و اعتبار زمانی مشخصی دارند. جزئیات هر بسته را در بخش بسته‌ها ببینید.</p>
           </details>
         </div>
       </section>

@@ -13,11 +13,23 @@ export function installAccordionAnimation() {
     window.CSS.supports('interpolate-size', 'allow-keywords') &&
     window.CSS.supports('selector(::details-content)');
 
-  if (supportsNativeDetailsContent) {
-    return;
-  }
+  document.addEventListener('click', (event) => {
+    if (event.detail !== 0) return;
+    const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const summary = target?.closest('.cl-faq details summary');
+    const details = summary?.parentElement;
+    if (!details || details.tagName !== 'DETAILS') return;
+
+    details.setAttribute('data-instant-toggle', '');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => details.removeAttribute('data-instant-toggle'));
+    });
+  });
+
+  if (supportsNativeDetailsContent) return;
 
   document.addEventListener('click', (event) => {
+    if (event.detail === 0) return;
     // Target any summary inside .cl-faq details, details.cl-accordion, or details.cl-card
     const summary = event.target.closest('.cl-faq details summary, details.cl-accordion summary, details.cl-card summary');
     if (!summary) return;
@@ -61,7 +73,7 @@ export function installAccordionAnimation() {
           { height: `${endHeight}px`, opacity: 0.95 }
         ],
         {
-          duration: 250,
+          duration: 220,
           easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
         }
       );
@@ -99,7 +111,7 @@ export function installAccordionAnimation() {
           { height: `${endHeight}px` }
         ],
         {
-          duration: 280,
+          duration: 220,
           easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
         }
       );

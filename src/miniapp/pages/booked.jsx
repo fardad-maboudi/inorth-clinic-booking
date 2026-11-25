@@ -26,27 +26,26 @@ export default function MiniappBooked() {
       ) : (
         <div className="flex flex-col items-center pt-6 text-center">
           <div className="relative grid size-24 place-items-center">
-            <span aria-hidden className="ma-ring absolute inset-0 rounded-full bg-primary/30" />
-            <span className="ma-pop grid size-24 place-items-center rounded-full bg-primary text-primary-foreground">
+            <span className="grid size-24 place-items-center rounded-full bg-primary text-primary-foreground">
               <svg viewBox="0 0 32 32" className="size-12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path className="ma-draw" d="M8 17l5.5 5.5L24 11" />
               </svg>
             </span>
           </div>
-          <h1 className="ma-rise mt-6 text-2xl font-extrabold tracking-tight" style={{ "--i": 3 }}>
+          <h1 className="mt-6 text-2xl font-extrabold tracking-tight">
             {data.booking.status === "pending" ? "درخواست نوبت ثبت شد" : "نوبت شما تأیید شد"}
           </h1>
-          <p className="ma-rise mt-1.5 text-sm leading-6 text-muted-foreground" style={{ "--i": 4 }}>
+          <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
             {data.service?.name}
           </p>
-          <Card className="ma-rise mt-6 w-full text-start" style={{ "--i": 5 }}>
+          <Card className="mt-6 w-full text-start">
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <CalendarDays size={16} strokeWidth={1.75} aria-hidden />
               {faDateRelative(data.booking.startsAt)}
             </p>
             <p className="mt-1 text-[32px] font-extrabold leading-tight tracking-tight">{faTime(data.booking.startsAt)}</p>
           </Card>
-          <Link to="/reminders" style={{ "--i": 6 }} className="ma-rise ma-press mt-3 flex w-full items-center gap-3 rounded-surface bg-primary/10 p-4 text-start">
+          <Link to="/reminders" className="ma-press mt-3 flex w-full items-center gap-3 rounded-surface bg-primary/10 p-4 text-start">
             <BellRing size={20} strokeWidth={1.75} aria-hidden className="shrink-0 text-brand" />
             <span className="min-w-0 flex-1 text-sm leading-6">
               یادآور تلگرام {(data.settings.reminderOffsetsMinutes ?? []).map((m) => offsetLabel(m)).join(" و ")} قبل از نوبت برایتان ارسال می‌شود.

@@ -40,7 +40,7 @@ export default function SlotPicker({ slots, value, onChange }) {
     <div>
       <p className="mb-2.5 px-1 text-sm font-bold text-muted-foreground">{first ? faMonthYear(first) : ""}</p>
       <div ref={strip} role="tablist" aria-label="روز" className="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1">
-        {days.map((day, index) => {
+        {days.map((day) => {
           const on = day.key === activeKey;
           const iso = day.items[0].startsAt;
           return (
@@ -50,8 +50,7 @@ export default function SlotPicker({ slots, value, onChange }) {
               role="tab"
               aria-selected={on}
               onClick={() => setPickedDay(day.key)}
-              style={{ "--i": Math.min(index, 6) }}
-              className={`ma-rise ma-press flex min-h-[80px] w-[66px] shrink-0 snap-start flex-col items-center justify-center rounded-surface px-1 text-center ring-1 ${
+              className={`ma-press flex min-h-[80px] w-[66px] shrink-0 snap-start flex-col items-center justify-center rounded-surface px-1 text-center ring-1 ${
                 on ? "bg-primary text-primary-foreground shadow-[0_10px_20px_-10px_color-mix(in_srgb,var(--primary)_80%,transparent)] ring-primary" : "bg-card ring-foreground/10"
               }`}
             >
@@ -75,7 +74,7 @@ export default function SlotPicker({ slots, value, onChange }) {
               <div key={label} className="mb-5">
                 <h3 className="mb-2 px-1 text-[13px] font-bold">{label}</h3>
                 <div role="listbox" aria-label={label} className="grid grid-cols-3 gap-2.5">
-                  {items.map((slot, index) => {
+                  {items.map((slot) => {
                     const on = slot.id === value;
                     return (
                       <button
@@ -84,8 +83,7 @@ export default function SlotPicker({ slots, value, onChange }) {
                         role="option"
                         aria-selected={on}
                         onClick={() => onChange(slot)}
-                        style={{ "--i": index }}
-                        className={`ma-fade ma-press h-12 rounded-control text-base font-bold ring-1 ${
+                        className={`ma-press h-12 rounded-control text-base font-bold ring-1 ${
                           on ? "bg-primary text-primary-foreground ring-primary" : "bg-card ring-foreground/10 active:bg-foreground/[.05]"
                         }`}
                       >

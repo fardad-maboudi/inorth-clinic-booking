@@ -8,28 +8,35 @@ import { errText, idOf, money, nf, normalizePhone, rowsOf, toToman } from '@/com
 import { useAsync, useCatalog, useSession, useTitle } from '@/components/site/hooks';
 
 /**
- * Resolves the public callback URL for banking gateway returns.
- * - Prioritizes VITE_PUBLIC_URL if a tunnel (e.g. ngrok/cloudflare/pinggy) is configured.
- * - When running on localhost, falls back to the registered Joorchin preview domain
- *   (banking gateways reject http://localhost).
- * - On production/preview deployments, uses appUrl(routePath).
+ * Resolves the public frontend URL that the payment provider returns to.
+ * For localhost checkout, this must be an HTTPS tunnel or a deployed site URL;
+ * the API origin is separate and must never be used as the callback host.
  */
 function getCallbackUrl(routePath = '/order-success') {
-  const envPublic = (import.meta.env?.VITE_PUBLIC_URL || import.meta.env?.VITE_APP_URL || '').trim();
-  if (envPublic) {
-    const base = envPublic.replace(/\/+$/, '');
+  const isLocalhost =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const publicOrigin = String(
+    import.meta.env?.VITE_PUBLIC_URL || import.meta.env?.VITE_APP_URL || import.meta.env?.VITE_SITE_URL || '',
+  ).trim();
+
+  if (publicOrigin) {
+    let publicUrl;
+    try {
+      publicUrl = new URL(publicOrigin);
+    } catch {
+      throw new Error('آدرس بازگشت پرداخت معتبر نیست؛ یک آدرس عمومی HTTPS وارد کنید.');
+    }
+    if (publicUrl.protocol !== 'https:' || publicUrl.hostname === 'api.joorchin.site') {
+      throw new Error('آدرس بازگشت پرداخت باید HTTPS و مربوط به سایت باشد، نه API.');
+    }
+    const base = `${publicUrl.origin}${publicUrl.pathname.replace(/\/+$/, '')}`;
     const clean = routePath.replace(/^\/+/, '');
     return `${base}/${clean}`;
   }
 
-  const isLocalhost =
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
   if (isLocalhost) {
-    const appId = String(import.meta.env?.VITE_APP_ID || '6ae869523c5af491ed8a859b');
-    const clean = routePath.replace(/^\/+/, '');
-    return `https://preview.joorchin.site/app/${appId}/${clean}`;
+    throw new Error('برای پرداخت محلی، VITE_PUBLIC_URL را روی آدرس HTTPS تونل سایت یا دامنهٔ منتشرشده تنظیم کنید.');
   }
 
   return appUrl(routePath);
@@ -84,9 +91,9 @@ export default function PackagesPage() {
     setBusy(true);
     setFail('');
     try {
+      const callbackUrl = getCallbackUrl('/order-success');
       await clearCart().catch(() => null);
       await addToCart(idOf(buying.product), 1);
-      const callbackUrl = getCallbackUrl('/order-success');
       const order = await checkout({
         customer: { name: form.name.trim(), phone },
         paymentMethod: 'online',
@@ -105,26 +112,44 @@ export default function PackagesPage() {
   return (
     <>
       <header className="cl-pkg-hero">
-        <div className="cl-wrap cl-rv">
-          <p className="cl-eyebrow">بسته‌ها و کارت هدیه</p>
-          <h1>سرمایه‌گذاری روی زیبایی و تندرستی، با تضمین قیمت</h1>
-          <p className="cl-lead">
-            جلسات درمانی را در قالب بسته‌های چندجلسه‌ای تهیه کنید و از صرفه‌جویی چشمگیر قیمت نسبت به جلسات تکی بهره‌مند شوید. زمان هر جلسه را با آزادی کامل در طول دوره رزرو کنید.
-          </p>
-          <div className="cl-pkg-value-strip" role="list" aria-label="مزایای بسته‌های چندجلسه‌ای کلینیک">
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>تا ۳۰٪ صرفه‌جویی در هر جلسه نسبت به تعرفهٔ آزاد</span>
-            </div>
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>رزرو آزاد روز و ساعت هر جلسه از حساب کاربری</span>
-            </div>
-            <div className="cl-pkg-value-item" role="listitem">
-              <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
-              <span>اعتبار زمانی طولانی و امکان تغییر زمان بدون جریمه</span>
+        <div className="cl-wrap cl-pkg-hero-grid">
+          <div className="cl-pkg-hero-copy">
+            <p className="cl-eyebrow cl-eyebrow-light">بسته‌های چندجلسه‌ای و کارت هدیه</p>
+            <h1>برای مراقبت، یک مسیر پیوسته بچینید</h1>
+            <p className="cl-lead cl-pkg-hero-lead">
+              جلسات درمانی را در قالب بسته تهیه کنید، هزینهٔ هر جلسه را با تعرفهٔ آزاد مقایسه کنید و زمان مراجعه را با توجه به برنامهٔ خود رزرو کنید.
+            </p>
+            <div className="cl-pkg-value-strip" role="list" aria-label="مزایای بسته‌های چندجلسه‌ای کلینیک">
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>تا ۳۰٪ صرفه‌جویی در هر جلسه نسبت به تعرفهٔ آزاد</span>
+              </div>
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>رزرو روز و ساعت هر جلسه از حساب کاربری</span>
+              </div>
+              <div className="cl-pkg-value-item" role="listitem">
+                <span className="cl-pkg-value-icon" aria-hidden="true">✓</span>
+                <span>اعتبار مشخص برای استفاده از جلسات بسته</span>
+              </div>
             </div>
           </div>
+
+          <aside className="cl-pkg-hero-art" aria-label="راهنمای استفاده از بسته‌های درمانی">
+            <div className="cl-pkg-art-orbit" aria-hidden="true" />
+            <div className="cl-pkg-pass">
+              <div className="cl-pkg-pass-top">
+                <span>کلینیک نیلوفر</span>
+                <span aria-hidden="true">✦</span>
+              </div>
+              <div className="cl-pkg-pass-icon" aria-hidden="true">N</div>
+              <p className="cl-pkg-pass-kicker">برنامهٔ مراقبت شما</p>
+              <h2>جلسه به جلسه، با آرامش</h2>
+              <p>جزئیات هر بسته، تعداد جلسات و بازهٔ استفاده را پیش از خرید ببینید.</p>
+              <div className="cl-pkg-pass-foot"><span>قابل رزرو آنلاین</span><span>۰۱ — ۰۲ — ۰۳</span></div>
+            </div>
+            <div className="cl-pkg-art-note"><span aria-hidden="true">✓</span> انتخاب متناسب با برنامهٔ شما</div>
+          </aside>
         </div>
       </header>
 
@@ -141,8 +166,8 @@ export default function PackagesPage() {
           <div className="cl-pkg-step">
             <span className="cl-pkg-step-num" aria-hidden="true">۲</span>
             <div className="cl-pkg-step-text">
-              <strong>شارژ فوری جلسات</strong>
-              <span>افزایش اعتبار جلسات در «حساب من»</span>
+                <strong>فعال‌سازی پس از تأیید سفارش</strong>
+                <span>کلینیک اعتبار جلسات را در حساب شما فعال می‌کند</span>
             </div>
           </div>
           <div className="cl-pkg-step">
@@ -168,7 +193,7 @@ export default function PackagesPage() {
               const singleSessionPrice = toToman(s.price, s.currency);
               const diffPerSession = singleSessionPrice - perSession;
               return (
-                <article key={idOf(s)} className="cl-pkg-card cl-rv">
+                <article key={idOf(s)} className="cl-pkg-card">
                   <div className="cl-pkg-top">
                     <span className="cl-chip">{s.name}</span>
                     <span className="cl-muted cl-small">{nf(s.durationMinutes || 45)} دقیقه هر جلسه</span>
@@ -230,7 +255,7 @@ export default function PackagesPage() {
       </section>
         {/* Dark Closing CTA Band for Custom Combinations */}
       <section className="cl-cta" aria-label="مشاوره پکیج‌های ترکیبی">
-        <div className="cl-wrap cl-rv">
+        <div className="cl-wrap">
           <p className="cl-eyebrow cl-eyebrow-light">پکیج‌های درمانی اختصاصی</p>
           <h2>نیاز به بستهٔ ترکیبی یا مشاوره دارید؟</h2>
           <p className="cl-lead-cl-lead-package">
@@ -252,7 +277,7 @@ export default function PackagesPage() {
             <div className="cl-sechead"><div><p className="cl-eyebrow">کارت هدیه</p><h2>مراقبت را هدیه بدهید</h2></div></div>
             <div className="cl-grid cl-grid-2">
               {gifts.map((g) => (
-                <article key={idOf(g)} className="cl-gift-card cl-rv">
+                <article key={idOf(g)} className="cl-gift-card">
                   <div className="cl-pkg-top">
                     <span className="cl-badge">کارت هدیه اختصاصی</span>
                   </div>

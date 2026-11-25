@@ -1,4 +1,5 @@
 import { getPreviewToken } from "@/api/auth.js";
+import { joorchinFetch } from "@/api/joorchin.js";
 
 export function telegramWebApp() {
   return typeof window === "undefined" ? null : window.Telegram?.WebApp ?? null;
@@ -62,7 +63,7 @@ async function validatedPreviewTicket() {
   const token = getPreviewToken();
   const claims = previewTokenClaims(token ?? "");
   if (!token || claims?.tokenKind !== "preview" || claims?.appId !== import.meta.env.VITE_APP_ID) return null;
-  const response = await fetch("/api/v1/auth/me", { headers: { Authorization: `Bearer ${token}` } });
+  const response = await joorchinFetch("/api/v1/auth/me", { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) return null;
   const user = await response.json();
   return user.tokenKind === "preview" && String(user.appId) === String(import.meta.env.VITE_APP_ID) ? user : null;

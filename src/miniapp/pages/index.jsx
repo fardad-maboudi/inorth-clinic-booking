@@ -24,7 +24,7 @@ function NextAppointment({ booking, now, services, staff }) {
   const service = services.get(String(booking.service));
   const member = staff.get(String(booking.resource));
   return (
-    <Link to="/my-bookings" className="ma-rise ma-press relative block overflow-hidden rounded-surface bg-primary p-5 text-primary-foreground shadow-[0_18px_36px_-18px_color-mix(in_srgb,var(--primary)_80%,transparent)]">
+    <Link to="/my-bookings" className="ma-press relative block overflow-hidden rounded-surface bg-primary p-5 text-primary-foreground shadow-[0_18px_36px_-18px_color-mix(in_srgb,var(--primary)_80%,transparent)]">
       <span aria-hidden className="pointer-events-none absolute -left-10 -top-12 size-44 rounded-full border border-primary-foreground/15" />
       <span aria-hidden className="pointer-events-none absolute -left-4 -top-6 size-28 rounded-full border border-primary-foreground/15" />
       <div className="flex items-start justify-between gap-3">
@@ -53,7 +53,7 @@ function NextAppointment({ booking, now, services, staff }) {
 
 function NoAppointment() {
   return (
-    <Link to="/services" className="ma-rise ma-press flex items-center gap-4 rounded-surface border border-dashed border-foreground/25 p-5">
+    <Link to="/services" className="ma-press flex items-center gap-4 rounded-surface border border-dashed border-foreground/25 p-5">
       <IconChip icon={CalendarPlus} size={52} />
       <span className="min-w-0">
         <span className="block text-base font-bold">هنوز نوبتی ندارید</span>
@@ -81,7 +81,7 @@ export default function MiniappHome() {
 
   return (
     <Screen back={false} action={<MainAction text="رزرو نوبت جدید" onClick={() => navigate("/services")} />}>
-      <header className="ma-rise mb-5 flex items-center gap-3">
+      <header className="mb-5 flex items-center gap-3">
         {profile?.photo_url ? (
           <img src={profile.photo_url} alt="" className="size-12 rounded-full object-cover" />
         ) : (
@@ -104,12 +104,11 @@ export default function MiniappHome() {
       )}
 
       <nav aria-label="میان‌بر" className="mt-4 grid grid-cols-2 gap-3">
-        {TILES.map((tile, index) => (
+        {TILES.map((tile) => (
           <Link
             key={tile.to}
             to={tile.to}
-            style={{ "--i": index + 2 }}
-            className="ma-rise ma-press flex min-h-[116px] flex-col justify-between rounded-surface bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/.05),0_6px_16px_-10px_rgb(0_0_0/.12)] ring-1 ring-foreground/[.07]"
+            className="ma-press flex min-h-[116px] flex-col justify-between rounded-surface bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/.05),0_6px_16px_-10px_rgb(0_0_0/.12)] ring-1 ring-foreground/[.07]"
           >
             <IconChip icon={tile.icon} size={42} />
             <span>
@@ -119,7 +118,7 @@ export default function MiniappHome() {
           </Link>
         ))}
         {canManage ? (
-          <Link to="/owner" style={{ "--i": 6 }} className="ma-rise ma-press col-span-2 flex items-center gap-3.5 rounded-surface bg-foreground p-4 text-background">
+          <Link to="/owner" className="ma-press col-span-2 flex items-center gap-3.5 rounded-surface bg-foreground p-4 text-background">
             <ClipboardList size={22} strokeWidth={1.75} aria-hidden />
             <span className="min-w-0 flex-1">
               <span className="block text-[15px] font-bold">پذیرش و برنامهٔ امروز</span>

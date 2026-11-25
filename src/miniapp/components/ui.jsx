@@ -82,10 +82,10 @@ export function IconChip({ icon, size = 44, className = "" }) {
   );
 }
 
-/** Whole-row tap target that navigates; `i` staggers its entrance. */
-export function RowLink({ to, children, i = 0, className = "" }) {
+/** Whole-row tap target that navigates. */
+export function RowLink({ to, children, className = "" }) {
   return (
-    <Link to={to} style={{ "--i": i }} className={`ma-rise ma-press flex items-center gap-3.5 rounded-surface bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/.05),0_6px_16px_-10px_rgb(0_0_0/.12)] ring-1 ring-foreground/[.07] active:bg-foreground/[.04] ${className}`}>
+    <Link to={to} className={`ma-press flex items-center gap-3.5 rounded-surface bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/.05),0_6px_16px_-10px_rgb(0_0_0/.12)] ring-1 ring-foreground/[.07] active:bg-foreground/[.04] ${className}`}>
       {children}
       <ChevronLeft size={18} strokeWidth={1.75} aria-hidden className="shrink-0 text-muted-foreground" />
     </Link>
@@ -150,12 +150,12 @@ export function Field({ label, hint, children }) {
 export const inputClass =
   "h-[52px] w-full rounded-control border border-foreground/15 bg-card px-4 text-base outline-none transition-shadow placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15";
 
-/** Shimmer placeholders shaped like the content they stand in for. */
+/** Static loading placeholders shaped like the content they stand in for. */
 export function SkeletonRows({ rows = 3, height = 84 }) {
   return (
     <div role="status" aria-label="در حال بارگذاری" className="space-y-3">
       {Array.from({ length: rows }, (_, index) => (
-        <div key={index} style={{ height, "--i": index }} className="ma-skel ma-fade rounded-surface" />
+        <div key={index} style={{ height }} className="ma-skel rounded-surface" />
       ))}
     </div>
   );
@@ -164,7 +164,7 @@ export function SkeletonRows({ rows = 3, height = 84 }) {
 export function Empty({ icon = CalendarX, title, hint, children }) {
   const Icon = icon;
   return (
-    <div className="ma-rise flex flex-col items-center px-6 py-14 text-center">
+    <div className="flex flex-col items-center px-6 py-14 text-center">
       <span className="grid size-16 place-items-center rounded-full bg-foreground/[.06] text-muted-foreground">
         <Icon size={28} strokeWidth={1.5} aria-hidden />
       </span>
@@ -177,7 +177,7 @@ export function Empty({ icon = CalendarX, title, hint, children }) {
 
 export function Failure({ message = "خطایی رخ داد.", onRetry }) {
   return (
-    <div role="alert" className="ma-rise flex flex-col items-center px-6 py-14 text-center">
+    <div role="alert" className="flex flex-col items-center px-6 py-14 text-center">
       <span className="grid size-16 place-items-center rounded-full bg-red-500/12 text-red-600">
         <AlertTriangle size={28} strokeWidth={1.5} aria-hidden />
       </span>

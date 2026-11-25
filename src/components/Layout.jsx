@@ -18,47 +18,47 @@ const NAV = [
 export default function Layout({ children }) {
   const { user, loading } = useSession();
   const [open, setOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const root = useRef(null);
-
-  // Scroll reveals: transform/opacity only, one observer, never blocks interaction.
-  useEffect(() => {
-    const el = root.current;
-    if (!el || !('IntersectionObserver' in window)) return undefined;
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-      }),
-      { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
-    );
-    let timer = 0;
-    const scan = () => {
-      el.querySelectorAll('.cl-rv:not(.in)').forEach((n) => io.observe(n));
-      // failsafe for throttled/background tabs: whatever is on screen shows up
-      clearTimeout(timer);
-      timer = setTimeout(() => el.querySelectorAll('.cl-rv:not(.in)').forEach((n) => {
-        const r = n.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0) n.classList.add('in');
-      }), 700);
-    };
-    el.setAttribute('data-js', '');
-    scan();
-    const mo = new MutationObserver(scan);
-    mo.observe(el, { childList: true, subtree: true });
-    return () => {
-      io.disconnect();
-      mo.disconnect();
-      clearTimeout(timer);
-    };
-  }, []);
+  const burgerRef = useRef(null);
+  const accountMenuRef = useRef(null);
+  const profileTriggerRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [pathname]);
+
+  useEffect(() => {
+    if (!open && !accountMenuOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key !== 'Escape') return;
+      if (accountMenuOpen) {
+        setAccountMenuOpen(false);
+        profileTriggerRef.current?.focus();
+      }
+      if (open) {
+        setOpen(false);
+        if (!accountMenuOpen) burgerRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [open, accountMenuOpen]);
+
+  useEffect(() => {
+    if (!accountMenuOpen) return undefined;
+    const closeOnOutsidePointer = (event) => {
+      if (!accountMenuRef.current?.contains(event.target)) setAccountMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
+  }, [accountMenuOpen]);
+
+  useEffect(() => {
+    if (!accountMenuOpen) return;
+    accountMenuRef.current?.querySelector('[role="menuitem"]')?.focus();
+  }, [accountMenuOpen]);
 
   async function signOut() {
     try {
@@ -68,7 +68,25 @@ export default function Layout({ children }) {
     }
     clearAuthToken();
     announceAuthChange();
-    navigate('/');
+    setOpen(false);
+    setAccountMenuOpen(false);
+    navigate('/auth/login');
+  }
+
+  function handleAccountMenuKeyDown(event) {
+    const items = [...(accountMenuRef.current?.querySelectorAll('[role="menuitem"]') ?? [])];
+    if (!items.length) return;
+
+    const currentIndex = items.indexOf(document.activeElement);
+    let nextIndex;
+    if (event.key === 'ArrowDown') nextIndex = (currentIndex + 1) % items.length;
+    else if (event.key === 'ArrowUp') nextIndex = (currentIndex - 1 + items.length) % items.length;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = items.length - 1;
+    else return;
+
+    event.preventDefault();
+    items[nextIndex]?.focus();
   }
 
   // Admin routes have their own dedicated header and layout.
@@ -77,7 +95,7 @@ export default function Layout({ children }) {
 
   if (isAdminRoute) {
     return (
-      <div className="cl-app cl-app-admin" dir="rtl" lang="fa" ref={root}>
+      <div className="cl-app cl-app-admin" dir="rtl" lang="fa">
         <a className="cl-skip" href="#main">رفتن به محتوای اصلی</a>
         {children}
       </div>
@@ -85,21 +103,97 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="cl-app" dir="rtl" lang="fa" ref={root}>
+    <div className="cl-app" dir="rtl" lang="fa">
       <a className="cl-skip" href="#main">رفتن به محتوای اصلی</a>
       <header className="cl-header">
         <div className="cl-wrap cl-header-in">
           <Link to="/" className="cl-brand" aria-label={`${siteConfig.name} – صفحهٔ اصلی`}>
             <Logo size={34} />
-            <span>{siteConfig.name}</span>
+            <span className="cl-brand-copy">
+              <span>{siteConfig.name}</span>
+              <span className="cl-brand-caption">{siteConfig.tagline}</span>
+            </span>
           </Link>
 
-          <button type="button" className="cl-burger" aria-expanded={open} aria-controls="cl-nav" onClick={() => setOpen((o) => !o)}>
-            <span className="cl-sr">{open ? 'بستن منو' : 'باز کردن منو'}</span>
-            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-              {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-            </svg>
-          </button>
+          <div className="cl-header-controls">
+            <div
+              className="cl-account"
+              ref={accountMenuRef}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) setAccountMenuOpen(false);
+              }}
+            >
+              {loading ? (
+                <button
+                  type="button"
+                  className="cl-profile-trigger"
+                  aria-label="در حال بررسی وضعیت حساب کاربری"
+                  aria-busy="true"
+                  disabled
+                >
+                  <AccountIcon />
+                </button>
+              ) : user ? (
+                <>
+                  <button
+                    ref={profileTriggerRef}
+                    type="button"
+                    className="cl-profile-trigger"
+                    aria-label="منوی حساب کاربری"
+                    aria-haspopup="menu"
+                    aria-expanded={accountMenuOpen}
+                    aria-controls="cl-account-menu"
+                    onClick={() => setAccountMenuOpen((value) => !value)}
+                  >
+                    <AccountIcon />
+                  </button>
+                  {accountMenuOpen ? (
+                    <div
+                      id="cl-account-menu"
+                      className="cl-account-menu"
+                      role="menu"
+                      aria-label="حساب کاربری"
+                      onKeyDown={handleAccountMenuKeyDown}
+                    >
+                      <Link
+                        to="/client"
+                        className="cl-account-menu-link"
+                        role="menuitem"
+                        onClick={() => setAccountMenuOpen(false)}
+                      >
+                        حساب من
+                      </Link>
+                      <button
+                        type="button"
+                        className="cl-account-menu-link cl-account-logout"
+                        role="menuitem"
+                        onClick={signOut}
+                      >
+                        خروج
+                      </button>
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <Link
+                  ref={profileTriggerRef}
+                  to="/auth/login"
+                  className="cl-profile-trigger"
+                  aria-label="ورود به حساب کاربری"
+                  title="ورود"
+                >
+                  <AccountIcon />
+                </Link>
+              )}
+            </div>
+
+            <button ref={burgerRef} type="button" className="cl-burger" aria-expanded={open} aria-controls="cl-nav" onClick={() => setOpen((o) => !o)}>
+              <span className="cl-sr">{open ? 'بستن منو' : 'باز کردن منو'}</span>
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+              </svg>
+            </button>
+          </div>
 
           <nav id="cl-nav" className={`cl-nav${open ? ' open' : ''}`} aria-label="منوی اصلی" onClick={(e) => e.target.closest?.('a') && setOpen(false)}>
             <ul>
@@ -110,22 +204,14 @@ export default function Layout({ children }) {
               ))}
             </ul>
             <div className="cl-nav-actions">
-              {loading ? null : user ? (
-                <>
-                  <NotificationBell />
-                  <Link className="cl-btn cl-btn-outline" to="/client">حساب من</Link>
-                  <button type="button" className="cl-btn cl-btn-ghost" onClick={signOut}>خروج</button>
-                </>
-              ) : (
-                <Link className="cl-btn cl-btn-outline" to="/auth/login">ورود</Link>
-              )}
+              {user ? <NotificationBell /> : null}
               <Link className="cl-btn cl-btn-primary" to="/book">رزرو نوبت</Link>
             </div>
           </nav>
         </div>
       </header>
 
-      <main id="main" key={pathname} className="cl-main cl-page" tabIndex={-1}>{children}</main>
+      <main id="main" key={pathname} className="cl-main" tabIndex={-1}>{children}</main>
 
       {/^\/(book|auth)/.test(pathname) ? null : (
         <div className="cl-mcta"><Link className="cl-btn cl-btn-primary" to="/book">رزرو نوبت</Link></div>
@@ -167,5 +253,25 @@ export default function Layout({ children }) {
         <div className="cl-wrap"><p className="cl-copy">تمامی حقوق برای {siteConfig.name} محفوظ است.</p></div>
       </footer>
     </div>
+  );
+}
+
+function AccountIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="21"
+      height="21"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M4.8 20c.7-3.7 3.1-5.5 7.2-5.5s6.5 1.8 7.2 5.5" />
+    </svg>
   );
 }
