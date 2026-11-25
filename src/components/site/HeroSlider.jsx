@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion as Motion, useReducedMotion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
  * Typed slide configuration data.
@@ -80,7 +80,7 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isInteracting, setIsInteracting] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isFocusPaused, setIsFocusPaused] = useState(false);
   const prefersReduced = useReducedMotion();
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
@@ -106,14 +106,14 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
     [current],
   );
 
-  // Autoplay pauses while the user interacts, requests a pause, or prefers reduced motion.
+  // Autoplay pauses during interaction, when keyboard focus enters, or when reduced motion is preferred.
   useEffect(() => {
-    if (isInteracting || isPaused || prefersReduced || slideCount < 2) return undefined;
+    if (isInteracting || isFocusPaused || prefersReduced || slideCount < 2) return undefined;
     const timer = setInterval(() => {
       paginate(1);
     }, MOTION_CONFIG.autoplayIntervalMs);
     return () => clearInterval(timer);
-  }, [paginate, isInteracting, isPaused, prefersReduced, slideCount]);
+  }, [paginate, isInteracting, isFocusPaused, prefersReduced, slideCount]);
 
   // Touch / Swipe handlers for mobile & tablet (RTL-aware)
   function handleTouchStart(e) {
@@ -146,13 +146,7 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
 
   function handleFocus() {
     // Stop rotation as soon as keyboard or assistive-technology focus enters.
-    if (!pointerInteraction.current) setIsPaused(true);
-  }
-
-  function toggleAutoPlay() {
-    // Explicit play/pause takes precedence over the hover pause.
-    setIsInteracting(false);
-    setIsPaused((paused) => !paused);
+    if (!pointerInteraction.current) setIsFocusPaused(true);
   }
 
   function handleBlur(e) {
@@ -256,7 +250,7 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
     >
-      <div className="cl-hero-slider-track" aria-live={isInteracting || isPaused ? 'polite' : 'off'}>
+      <div className="cl-hero-slider-track" aria-live={isInteracting || isFocusPaused ? 'polite' : 'off'}>
         <AnimatePresence initial={false} custom={direction}>
           <div
             key={slide.id}
@@ -360,18 +354,6 @@ export default function HeroSlider({ slides = HERO_SLIDES, slotCard }) {
             onClick={() => paginate(1)}
           >
             <ChevronLeft size={20} aria-hidden="true" />
-          </button>
-
-          <span className="cl-hero-control-divider" aria-hidden="true" />
-
-          <button
-            type="button"
-            className="cl-hero-control-btn cl-hero-autoplay"
-            disabled={Boolean(prefersReduced)}
-            aria-label={prefersReduced ? 'پخش خودکار با تنظیم کاهش حرکت خاموش است' : isPaused ? 'ادامهٔ پخش خودکار اسلایدها' : 'توقف پخش خودکار اسلایدها'}
-            onClick={toggleAutoPlay}
-          >
-            {isPaused || prefersReduced ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
           </button>
         </div>
       </div>

@@ -3048,13 +3048,6 @@ html {
   outline-offset: 2px;
 }
 
-.cl-hero-control-divider {
-  width: 1px;
-  height: 22px;
-  margin-inline: .18rem;
-  background: rgb(255 255 255 / .24);
-}
-
 .cl-hero-dots {
   gap: .1rem;
   margin-inline: 0;
