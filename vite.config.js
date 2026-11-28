@@ -157,7 +157,7 @@ export default defineConfig(async ({ command, mode }) => {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           navigateFallback: "/index.html",
           navigateFallbackDenylist: [/^\/api\//, /^\/miniapp(?:\/|$)/],
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,webmanifest}"],
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,avif,woff2,webmanifest}"],
         },
       }),
     ],

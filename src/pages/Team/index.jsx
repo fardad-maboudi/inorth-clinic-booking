@@ -59,7 +59,7 @@ export default function TeamPage() {
           </div>
 
           <div className="cl-team-hero-media">
-            <img src="/images/clinic-team-hero.jpg" alt="دو عضو تیم درمانی در حال بررسی پروندهٔ مراجع" fetchPriority="high" />
+            <img src="/images/clinic-team-hero.avif" alt="دو عضو تیم درمانی در حال بررسی پروندهٔ مراجع" fetchPriority="high" decoding="async" />
             <div className="cl-team-image-caption">
               <span>رویکرد نیلوفر</span>
               <strong>تخصص، دقت و همراهی در هر مرحله</strong>
