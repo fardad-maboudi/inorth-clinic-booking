@@ -1,1231 +1,317 @@
 [
   {
-    "name": "booking_resource",
+    "name": "hero_slide",
     "schemaDefinition": {
-      "label": "همکاران و منابع",
-      "description": "پزشکان، همکاران، اتاق‌ها و سایر منابع قابل رزرو.",
+      "label": "اسلایدهای بنر اصلی",
+      "description": "تصاویر، متن‌ها و دکمه‌های اسلایدر صفحه اصلی کلینیک",
       "required": [
-        "name",
-        "kind",
-        "capacity"
+        "title",
+        "image"
       ],
       "properties": {
-        "name": {
+        "slideKey": {
           "type": "string",
-          "label": "نام",
-          "description": "نام",
-          "maxLength": 160
+          "label": "شناسه اسلاید",
+          "description": "کلید یکتای اسلاید (مثلاً skin-care)"
         },
-        "kind": {
+        "eyebrow": {
           "type": "string",
-          "label": "نوع",
-          "description": "نوع",
-          "enum": [
-            "staff",
-            "room",
-            "table",
-            "chair",
-            "court",
-            "equipment",
-            "other"
-          ],
-          "enumLabels": {
-            "staff": "همکار",
-            "room": "اتاق",
-            "table": "میز",
-            "chair": "صندلی",
-            "court": "زمین",
-            "equipment": "تجهیزات",
-            "other": "سایر"
-          }
+          "label": "روتیتر",
+          "description": "متن کوتاه بالای عنوان اصلی"
         },
         "title": {
           "type": "string",
-          "label": "عنوان",
-          "description": "عنوان",
-          "maxLength": 120
+          "label": "عنوان اصلی",
+          "description": "تیتر بزرگ نمایش‌داده‌شده روی اسلاید",
+          "minLength": 1
         },
-        "bio": {
+        "subtitle": {
           "type": "string",
-          "label": "معرفی",
-          "description": "معرفی",
-          "maxLength": 2000
-        },
-        "avatar": {
-          "type": "string",
-          "label": "تصویر",
-          "description": "تصویر",
-          "maxLength": 500
-        },
-        "phoneNumber": {
-          "type": "string",
-          "label": "شماره تماس",
-          "description": "شماره تماس",
-          "maxLength": 32
-        },
-        "email": {
-          "type": "string",
-          "label": "ایمیل",
-          "description": "ایمیل",
-          "maxLength": 320
-        },
-        "staffUserId": {
-          "type": "string",
-          "label": "کاربر مرتبط",
-          "description": "کاربر مرتبط",
-          "maxLength": 120
-        },
-        "capacity": {
-          "type": "number",
-          "label": "ظرفیت هم‌زمان",
-          "description": "ظرفیت هم‌زمان",
-          "min": 1
-        },
-        "color": {
-          "type": "string",
-          "label": "رنگ",
-          "description": "رنگ",
-          "maxLength": 20
-        },
-        "active": {
-          "type": "boolean",
-          "label": "فعال",
-          "description": "فعال"
-        },
-        "sortOrder": {
-          "type": "number",
-          "label": "ترتیب نمایش",
-          "description": "ترتیب نمایش",
-          "min": 0
-        },
-        "lockedUntil": {
-          "type": "date",
-          "label": "زمان انقضای قفل تراکنش",
-          "description": "زمان انقضای قفل تراکنش"
-        },
-        "googleOAuth": {
-          "type": "object",
-          "label": "اتصال تقویم گوگل",
-          "description": "اتصال تقویم گوگل"
-        }
-      }
-    }
-  },
-  {
-    "name": "booking_service",
-    "schemaDefinition": {
-      "label": "خدمات قابل رزرو",
-      "description": "تعریف خدمت‌های کلینیک، مدت، ظرفیت، قیمت و سیاست رزرو.",
-      "required": [
-        "name",
-        "kind",
-        "durationMinutes",
-        "capacity"
-      ],
-      "properties": {
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "enum": [
-            "IRR",
-            "IRT"
-          ],
-          "enumLabels": {
-            "IRR": "ریال",
-            "IRT": "تومان"
-          }
-        },
-        "name": {
-          "type": "string",
-          "label": "نام خدمت",
-          "description": "نام خدمت",
-          "maxLength": 160
-        },
-        "group": {
-          "type": "string",
-          "label": "دسته",
-          "description": "دسته",
-          "maxLength": 80
-        },
-        "description": {
-          "type": "string",
-          "label": "توضیح",
-          "description": "توضیح",
-          "maxLength": 2000
-        },
-        "kind": {
-          "type": "string",
-          "label": "نوع",
-          "description": "نوع",
-          "enum": [
-            "solo",
-            "group"
-          ],
-          "enumLabels": {
-            "solo": "انفرادی",
-            "group": "گروهی"
-          }
-        },
-        "mode": {
-          "type": "string",
-          "label": "شکل برگزاری",
-          "description": "شکل برگزاری",
-          "enum": [
-            "in_person",
-            "phone",
-            "google_meet"
-          ],
-          "enumLabels": {
-            "in_person": "حضوری",
-            "phone": "تلفنی",
-            "google_meet": "آنلاین (Google Meet)"
-          }
-        },
-        "phoneNumber": {
-          "type": "string",
-          "label": "شماره تماس هماهنگی",
-          "description": "شماره تماس هماهنگی",
-          "maxLength": 32
-        },
-        "package": {
-          "type": "object",
-          "label": "بسته جلسه‌ای",
-          "description": "بسته جلسه‌ای"
-        },
-        "savedLocationId": {
-          "type": "objectId",
-          "label": "مکان ذخیره‌شده",
-          "description": "مکان ذخیره‌شده"
-        },
-        "location": {
-          "type": "string",
-          "label": "مکان برگزاری / آدرس",
-          "description": "مکان برگزاری / آدرس",
-          "maxLength": 500
-        },
-        "durationMinutes": {
-          "type": "number",
-          "label": "مدت (دقیقه)",
-          "description": "مدت (دقیقه)",
-          "min": 5,
-          "max": 1440
-        },
-        "bufferBeforeMinutes": {
-          "type": "number",
-          "label": "فاصله قبل (دقیقه)",
-          "description": "فاصله قبل (دقیقه)",
-          "min": 0,
-          "max": 720
-        },
-        "bufferAfterMinutes": {
-          "type": "number",
-          "label": "فاصله بعد (دقیقه)",
-          "description": "فاصله بعد (دقیقه)",
-          "min": 0,
-          "max": 720
-        },
-        "capacity": {
-          "type": "number",
-          "label": "ظرفیت",
-          "description": "ظرفیت",
-          "min": 1
-        },
-        "price": {
-          "type": "number",
-          "label": "قیمت",
-          "description": "قیمت",
-          "min": 0
-        },
-        "depositAmount": {
-          "type": "number",
-          "label": "بیعانه",
-          "description": "بیعانه",
-          "min": 0
-        },
-        "autoConfirm": {
-          "type": "boolean",
-          "label": "تأیید خودکار",
-          "description": "تأیید خودکار"
-        },
-        "resourceIds": {
-          "type": "array",
-          "label": "ارائه‌دهندگان",
-          "description": "ارائه‌دهندگان"
-        },
-        "intakeFields": {
-          "type": "array",
-          "label": "سوال‌های هنگام رزرو",
-          "description": "سوال‌های هنگام رزرو"
-        },
-        "leadTimeMinutes": {
-          "type": "number",
-          "label": "حداقل فاصله تا رزرو (دقیقه)",
-          "description": "حداقل فاصله تا رزرو (دقیقه)",
-          "min": 0
-        },
-        "horizonDays": {
-          "type": "number",
-          "label": "بازه رزرو (روز)",
-          "description": "بازه رزرو (روز)",
-          "min": 0
-        },
-        "cancellationWindowHours": {
-          "type": "number",
-          "label": "مهلت لغو (ساعت)",
-          "description": "مهلت لغو (ساعت)",
-          "min": 0
+          "label": "زیرعنوان",
+          "description": "توضیح تکمیلی زیر عنوان اصلی"
         },
         "image": {
           "type": "string",
-          "label": "تصویر",
-          "description": "تصویر",
-          "maxLength": 500
+          "label": "آدرس تصویر",
+          "description": "مسیر یا لینک تصویر پس‌زمینه اسلاید"
         },
-        "color": {
+        "alt": {
           "type": "string",
-          "label": "رنگ",
-          "description": "رنگ",
-          "maxLength": 20
+          "label": "متن جایگزین تصویر",
+          "description": "توضیح تصویر برای سئو و دسترس‌پذیری"
         },
-        "active": {
-          "type": "boolean",
-          "label": "فعال",
-          "description": "فعال"
+        "fallbackColor": {
+          "type": "string",
+          "label": "رنگ جایگزین",
+          "description": "کد رنگ پس‌زمینه در زمان بارگذاری تصویر",
+          "default": "#0f3a37"
         },
-        "sortOrder": {
+        "ctaLabel": {
+          "type": "string",
+          "label": "متن دکمه اصلی",
+          "description": "عنوان دکمه فراخوان اصلی"
+        },
+        "ctaTo": {
+          "type": "string",
+          "label": "لینک دکمه اصلی",
+          "description": "مسیر صفحه مقصد برای دکمه اصلی"
+        },
+        "secondaryCtaLabel": {
+          "type": "string",
+          "label": "متن دکمه دوم",
+          "description": "عنوان دکمه فراخوان دوم"
+        },
+        "secondaryCtaTo": {
+          "type": "string",
+          "label": "لینک دکمه دوم",
+          "description": "مسیر صفحه مقصد برای دکمه دوم"
+        },
+        "order": {
           "type": "number",
           "label": "ترتیب نمایش",
-          "description": "ترتیب نمایش",
-          "min": 0
-        }
-      }
-    }
-  },
-  {
-    "name": "booking_schedule",
-    "schemaDefinition": {
-      "label": "برنامه‌های کاری",
-      "description": "ساعات کاری تکرارشوندهٔ همکاران و منابع.",
-      "required": [
-        "resource",
-        "weekday",
-        "startTime",
-        "endTime"
-      ],
-      "properties": {
-        "resource": {
-          "type": "objectId",
-          "label": "همکار / فضا",
-          "description": "همکار / فضا",
-          "relationTarget": "booking_resource"
-        },
-        "service": {
-          "type": "objectId",
-          "label": "خدمت",
-          "description": "خدمت",
-          "relationTarget": "booking_service"
-        },
-        "weekday": {
-          "type": "number",
-          "label": "روز هفته",
-          "description": "روز هفته",
-          "min": 0,
-          "max": 6,
-          "enum": [
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6"
-          ],
-          "enumLabels": {
-            "0": "یکشنبه",
-            "1": "دوشنبه",
-            "2": "سه‌شنبه",
-            "3": "چهارشنبه",
-            "4": "پنج‌شنبه",
-            "5": "جمعه",
-            "6": "شنبه"
-          }
-        },
-        "startTime": {
-          "type": "string",
-          "label": "ساعت شروع",
-          "description": "ساعت شروع",
-          "maxLength": 5,
-          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
-        },
-        "endTime": {
-          "type": "string",
-          "label": "ساعت پایان",
-          "description": "ساعت پایان",
-          "maxLength": 5,
-          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
-        },
-        "slotIntervalMinutes": {
-          "type": "number",
-          "label": "فاصله بازه‌ها (دقیقه)",
-          "description": "فاصله بازه‌ها (دقیقه)",
-          "min": 5,
-          "max": 1440
-        },
-        "capacityPerSlot": {
-          "type": "number",
-          "label": "ظرفیت هر بازه",
-          "description": "ظرفیت هر بازه",
-          "min": 1
-        },
-        "effectiveFrom": {
-          "type": "date",
-          "label": "اعتبار از",
-          "description": "اعتبار از"
-        },
-        "effectiveUntil": {
-          "type": "date",
-          "label": "اعتبار تا",
-          "description": "اعتبار تا"
+          "description": "ترتیب قرارگیری اسلاید در بنر",
+          "default": 0
         },
         "active": {
           "type": "boolean",
           "label": "فعال",
-          "description": "فعال"
+          "description": "نمایش یا عدم نمایش اسلاید در سایت",
+          "default": true
         }
       }
     }
   },
   {
-    "name": "booking_timeoff",
+    "name": "site_setting",
     "schemaDefinition": {
-      "label": "تعطیلی و عدم دسترسی",
-      "description": "بازه‌های تعطیلی کلینیک یا عدم دسترسی همکاران.",
+      "label": "تنظیمات کلینیک",
+      "description": "اطلاعات عمومی، نشانی، تلفن و ساعات کاری کلینیک",
       "required": [
-        "startsAt",
-        "endsAt"
+        "name"
       ],
       "properties": {
-        "resource": {
-          "type": "objectId",
-          "label": "همکار / فضا",
-          "description": "همکار / فضا",
-          "relationTarget": "booking_resource"
-        },
-        "startsAt": {
-          "type": "date",
-          "label": "تاریخ شروع",
-          "description": "تاریخ شروع"
-        },
-        "endsAt": {
-          "type": "date",
-          "label": "تاریخ پایان",
-          "description": "تاریخ پایان"
-        },
-        "allDay": {
-          "type": "boolean",
-          "label": "تمام روز (تعطیلی روزانه)",
-          "description": "تمام روز (تعطیلی روزانه)"
-        },
-        "startTime": {
+        "name": {
           "type": "string",
-          "label": "ساعت شروع",
-          "description": "ساعت شروع",
-          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+          "label": "نام کلینیک",
+          "description": "نام برند و عنوان اصلی کلینیک",
+          "minLength": 1
         },
-        "endTime": {
+        "tagline": {
           "type": "string",
-          "label": "ساعت پایان",
-          "description": "ساعت پایان",
-          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+          "label": "شعار کلینیک",
+          "description": "توضیح کوتاه معرفی کلینیک"
         },
-        "recurrence": {
+        "logoUrl": {
           "type": "string",
-          "label": "تکرار دوره‌ای",
-          "description": "تکرار دوره‌ای",
-          "enum": [
-            "none",
-            "daily",
-            "weekly",
-            "monthly",
-            "yearly"
-          ],
-          "enumLabels": {
-            "none": "بدون تکرار",
-            "daily": "روزانه",
-            "weekly": "هفتگی",
-            "monthly": "ماهانه",
-            "yearly": "سالانه"
-          }
+          "label": "آدرس لوگو",
+          "description": "مسیر فایل لوگوی کلینیک"
         },
-        "repeatUntil": {
-          "type": "date",
-          "label": "پایان تکرار",
-          "description": "پایان تکرار"
-        },
-        "kind": {
+        "address": {
           "type": "string",
-          "label": "نوع",
-          "description": "نوع",
-          "enum": [
-            "holiday",
-            "vacation",
-            "sick",
-            "break",
-            "closed",
-            "other"
-          ],
-          "enumLabels": {
-            "holiday": "تعطیلی",
-            "vacation": "مرخصی",
-            "sick": "بیماری",
-            "break": "استراحت",
-            "closed": "تعطیلی مجموعه",
-            "other": "سایر"
-          }
+          "label": "نشانی",
+          "description": "آدرس کامل کلینیک"
         },
-        "reason": {
+        "phone": {
           "type": "string",
-          "label": "توضیح",
-          "description": "توضیح",
-          "maxLength": 240
+          "label": "تلفن تماس",
+          "description": "شماره تماس پذیرش کلینیک"
         },
-        "repeatsAnnually": {
-          "type": "boolean",
-          "label": "تکرار سالانه",
-          "description": "تکرار سالانه"
-        }
-      }
-    }
-  },
-  {
-    "name": "booking_setting",
-    "schemaDefinition": {
-      "label": "تنظیمات رزرو",
-      "description": "قواعد عمومی رزرو، مهلت‌ها، منطقهٔ زمانی و یادآوری‌ها.",
-      "required": [],
-      "properties": {
-        "businessName": {
-          "type": "string",
-          "label": "نام کسب‌وکار",
-          "description": "نام کسب‌وکار",
-          "maxLength": 200
-        },
-        "timezone": {
-          "type": "string",
-          "label": "منطقه زمانی",
-          "description": "منطقه زمانی",
-          "maxLength": 64
-        },
-        "weekStartsOn": {
-          "type": "number",
-          "label": "شروع هفته",
-          "description": "شروع هفته",
-          "min": 0,
-          "max": 6,
-          "enum": [
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6"
-          ],
-          "enumLabels": {
-            "0": "یکشنبه",
-            "1": "دوشنبه",
-            "2": "سه‌شنبه",
-            "3": "چهارشنبه",
-            "4": "پنج‌شنبه",
-            "5": "جمعه",
-            "6": "شنبه"
-          }
-        },
-        "leadTimeMinutes": {
-          "type": "number",
-          "label": "حداقل فاصله تا رزرو (دقیقه)",
-          "description": "حداقل فاصله تا رزرو (دقیقه)",
-          "min": 0,
-          "max": 43200
-        },
-        "horizonDays": {
-          "type": "number",
-          "label": "بازه رزرو (روز)",
-          "description": "بازه رزرو (روز)",
-          "min": 1,
-          "max": 730
-        },
-        "slotIntervalMinutes": {
-          "type": "number",
-          "label": "فاصله پیش‌فرض بازه‌ها (دقیقه)",
-          "description": "فاصله پیش‌فرض بازه‌ها (دقیقه)",
-          "min": 5,
-          "max": 1440
-        },
-        "cancellationWindowHours": {
-          "type": "number",
-          "label": "مهلت لغو (ساعت)",
-          "description": "مهلت لغو (ساعت)",
-          "min": 0
-        },
-        "rescheduleWindowHours": {
-          "type": "number",
-          "label": "مهلت جابه‌جایی (ساعت)",
-          "description": "مهلت جابه‌جایی (ساعت)",
-          "min": 0
-        },
-        "noShowFeeAmount": {
-          "type": "number",
-          "label": "جریمه غیبت",
-          "description": "جریمه غیبت",
-          "min": 0
-        },
-        "allowGuestBooking": {
-          "type": "boolean",
-          "label": "رزرو بدون ثبت‌نام",
-          "description": "رزرو بدون ثبت‌نام"
-        },
-        "requirePhone": {
-          "type": "boolean",
-          "label": "شماره تماس الزامی",
-          "description": "شماره تماس الزامی"
-        },
-        "autoConfirm": {
-          "type": "boolean",
-          "label": "تأیید خودکار",
-          "description": "تأیید خودکار"
-        },
-        "maxActivePerClient": {
-          "type": "number",
-          "label": "حداکثر نوبت باز هر مشتری",
-          "description": "حداکثر نوبت باز هر مشتری",
-          "min": 1
-        },
-        "reminderOffsetsMinutes": {
+        "hours": {
           "type": "array",
-          "label": "یادآوری‌ها (دقیقه)",
-          "description": "یادآوری‌ها (دقیقه)"
+          "label": "ساعات کاری",
+          "description": "لیست روزها و ساعات پذیرش کلینیک"
         },
-        "cancellationPolicyText": {
-          "type": "string",
-          "label": "متن شرایط لغو",
-          "description": "متن شرایط لغو",
-          "maxLength": 2000
-        },
-        "workingHoursNote": {
-          "type": "string",
-          "label": "توضیح ساعات کاری",
-          "description": "توضیح ساعات کاری",
-          "maxLength": 500
-        },
-        "googleOAuth": {
-          "type": "object",
-          "label": "اتصال گوگل میت",
-          "description": "اتصال گوگل میت"
-        }
-      }
-    }
-  },
-  {
-    "name": "booking_client",
-    "schemaDefinition": {
-      "label": "پروندهٔ مراجعان",
-      "description": "اطلاعات تماس، سابقهٔ مراجعه و یادداشت‌های مراجعان.",
-      "required": [
-        "fullName",
-        "phoneNumber"
-      ],
-      "properties": {
-        "fullName": {
-          "type": "string",
-          "label": "نام و نام خانوادگی",
-          "description": "نام و نام خانوادگی",
-          "maxLength": 200
-        },
-        "phoneNumber": {
-          "type": "string",
-          "label": "شماره تماس",
-          "description": "شماره تماس",
-          "maxLength": 32
-        },
-        "email": {
-          "type": "string",
-          "label": "ایمیل",
-          "description": "ایمیل",
-          "maxLength": 320
-        },
-        "clientUserId": {
-          "type": "string",
-          "label": "کاربر مرتبط",
-          "description": "کاربر مرتبط",
-          "maxLength": 120
-        },
-        "birthDate": {
-          "type": "date",
-          "label": "تاریخ تولد",
-          "description": "تاریخ تولد"
-        },
-        "gender": {
-          "type": "string",
-          "label": "جنسیت",
-          "description": "جنسیت",
-          "enum": [
-            "female",
-            "male",
-            "other",
-            "unspecified"
-          ],
-          "enumLabels": {
-            "female": "زن",
-            "male": "مرد",
-            "other": "سایر",
-            "unspecified": "مشخص‌نشده"
-          }
-        },
-        "notes": {
-          "type": "string",
-          "label": "یادداشت همکاران",
-          "description": "یادداشت همکاران",
-          "maxLength": 4000
-        },
-        "intake": {
-          "type": "object",
-          "label": "اطلاعات تکمیلی",
-          "description": "اطلاعات تکمیلی"
-        },
-        "tags": {
+        "facilities": {
           "type": "array",
-          "label": "برچسب‌ها",
-          "description": "برچسب‌ها"
-        },
-        "blockedAt": {
-          "type": "date",
-          "label": "مسدود از تاریخ",
-          "description": "مسدود از تاریخ"
-        },
-        "blockedReason": {
-          "type": "string",
-          "label": "دلیل مسدودی",
-          "description": "دلیل مسدودی",
-          "maxLength": 240
-        },
-        "marketingConsentAt": {
-          "type": "date",
-          "label": "رضایت پیام تبلیغاتی",
-          "description": "رضایت پیام تبلیغاتی"
-        },
-        "lastVisitAt": {
-          "type": "date",
-          "label": "آخرین مراجعه",
-          "description": "زمان آخرین مراجعهٔ ثبت‌شده."
-        },
-        "noShowCount": {
-          "type": "number",
-          "label": "تعداد عدم حضور",
-          "description": "تعداد دفعات عدم حضور مراجع.",
-          "min": 0
-        },
-        "visitCount": {
-          "type": "number",
-          "label": "تعداد مراجعه",
-          "description": "تعداد مراجعه‌های ثبت‌شده.",
-          "min": 0
+          "label": "امکانات رفاهی",
+          "description": "برچسب‌های امکانات کلینیک در صفحه تماس (مثل پارکینگ اختصاصی)"
         }
       }
     }
   },
   {
-    "name": "booking_event",
+    "name": "service",
     "schemaDefinition": {
-      "label": "رویدادها و کلاس‌ها",
-      "description": "کارگاه‌ها، کلاس‌ها و رویدادهای ظرفیت‌دار کلینیک.",
+      "label": "خدمات کلینیک",
+      "description": "خدمات پوست، لیزر و ماساژ قابل رزرو در کلینیک",
       "required": [
-        "title",
-        "kind",
-        "capacity",
-        "startsAt",
-        "endsAt"
+        "name",
+        "durationMinutes",
+        "price"
       ],
       "properties": {
-        "title": {
+        "name": {
           "type": "string",
-          "label": "عنوان رویداد",
-          "description": "عنوان رویداد",
-          "maxLength": 200
+          "label": "نام خدمت",
+          "description": "عنوان خدمت درمانی یا زیبایی",
+          "minLength": 1
+        },
+        "group": {
+          "type": "string",
+          "label": "دسته‌بندی",
+          "description": "گروه خدمت (مثل پوست و مو، لیزر، ماساژ و اسپا)"
         },
         "description": {
           "type": "string",
           "label": "توضیحات",
-          "description": "توضیحات",
-          "maxLength": 3000
+          "description": "شرح کامل خدمت"
         },
-        "kind": {
-          "type": "string",
-          "label": "نوع برگزاری",
-          "description": "نوع برگزاری",
-          "enum": [
-            "solo",
-            "group"
-          ],
-          "enumLabels": {
-            "solo": "انفرادی",
-            "group": "گروهی"
-          }
+        "durationMinutes": {
+          "type": "number",
+          "label": "مدت زمان (دقیقه)",
+          "description": "مدت زمان انجام خدمت به دقیقه"
         },
-        "mode": {
-          "type": "string",
-          "label": "شکل برگزاری",
-          "description": "شکل برگزاری",
-          "enum": [
-            "in_person",
-            "phone",
-            "google_meet"
-          ],
-          "enumLabels": {
-            "in_person": "حضوری",
-            "phone": "تلفنی",
-            "google_meet": "آنلاین (Google Meet)"
-          }
-        },
-        "phoneNumber": {
-          "type": "string",
-          "label": "شماره تماس هماهنگی",
-          "description": "شماره تماس هماهنگی",
-          "maxLength": 32
-        },
-        "meetingUrl": {
-          "type": "string",
-          "label": "لینک جلسه آنلاین",
-          "description": "لینک جلسه آنلاین",
-          "maxLength": 500
-        },
-        "meetingStatus": {
-          "type": "string",
-          "label": "وضعیت جلسه",
-          "description": "وضعیت جلسه"
-        },
-        "externalEventId": {
-          "type": "string",
-          "label": "شناسه رویداد تقویم گوگل",
-          "description": "شناسه رویداد تقویم گوگل",
-          "maxLength": 200
-        },
-        "package": {
-          "type": "object",
-          "label": "بسته دوره / ثبت‌نام کل جلسات",
-          "description": "بسته دوره / ثبت‌نام کل جلسات"
-        },
-        "savedLocationId": {
-          "type": "objectId",
-          "label": "مکان ذخیره‌شده",
-          "description": "مکان ذخیره‌شده"
-        },
-        "place": {
-          "type": "string",
-          "label": "مکان برگزاری",
-          "description": "مکان برگزاری",
-          "maxLength": 500
-        },
-        "resource": {
-          "type": "objectId",
-          "label": "همکار / فضا",
-          "description": "همکار / فضا",
-          "relationTarget": "booking_resource"
-        },
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "enum": [
-            "IRR",
-            "IRT"
-          ],
-          "enumLabels": {
-            "IRR": "ریال",
-            "IRT": "تومان"
-          }
+        "bufferAfterMinutes": {
+          "type": "number",
+          "label": "زمان تنفس بعد از نوبت (دقیقه)",
+          "description": "فاصله زمانی بین نوبت‌ها به دقیقه",
+          "default": 10
         },
         "price": {
           "type": "number",
-          "label": "هزینه شرکت",
-          "description": "هزینه شرکت",
-          "min": 0
+          "label": "قیمت (ریال)",
+          "description": "هزینه خدمت به ریال"
         },
-        "capacity": {
-          "type": "number",
-          "label": "ظرفیت کل",
-          "description": "ظرفیت کل",
-          "min": 1
-        },
-        "seatsRemaining": {
-          "type": "number",
-          "label": "ظرفیت باقی‌مانده",
-          "description": "ظرفیت باقی‌مانده",
-          "min": 0
-        },
-        "startsAt": {
-          "type": "date",
-          "label": "زمان شروع",
-          "description": "زمان شروع"
-        },
-        "endsAt": {
-          "type": "date",
-          "label": "زمان پایان",
-          "description": "زمان پایان"
-        },
-        "recurrence": {
-          "type": "object",
-          "label": "الگوی تکرار",
-          "description": "الگوی تکرار"
-        },
-        "parentEventId": {
-          "type": "objectId",
-          "label": "رویداد اصلی",
-          "description": "رویداد اصلی",
-          "relationTarget": "booking_event"
-        },
-        "status": {
+        "color": {
           "type": "string",
-          "label": "وضعیت",
-          "description": "وضعیت",
-          "enum": [
-            "scheduled",
-            "cancelled",
-            "completed"
-          ],
-          "enumLabels": {
-            "scheduled": "برگزار می‌شود",
-            "cancelled": "لغوشده",
-            "completed": "برگزارشده"
-          }
-        },
-        "cancelledAt": {
-          "type": "date",
-          "label": "زمان لغو",
-          "description": "زمان لغو"
-        },
-        "cancelledReason": {
-          "type": "string",
-          "label": "دلیل لغو",
-          "description": "دلیل لغو",
-          "maxLength": 300
+          "label": "رنگ شاخص",
+          "description": "رنگ نمایشی کارت خدمت"
         },
         "image": {
           "type": "string",
-          "label": "تصویر کاور",
-          "description": "تصویر کاور",
-          "maxLength": 500
+          "label": "تصویر خدمت",
+          "description": "مسیر تصویر مربوط به خدمت"
+        },
+        "resourceIds": {
+          "type": "array",
+          "label": "متخصصان ارائه‌دهنده",
+          "description": "شناسه‌های متخصصانی که این خدمت را انجام می‌دهند"
+        },
+        "packageEnabled": {
+          "type": "boolean",
+          "label": "دارای بسته چندجلسه‌ای",
+          "description": "آیا این خدمت در قالب بسته فروخته می‌شود",
+          "default": false
+        },
+        "packageName": {
+          "type": "string",
+          "label": "نام بسته",
+          "description": "عنوان بسته چندجلسه‌ای"
+        },
+        "packageSessionCount": {
+          "type": "number",
+          "label": "تعداد جلسات بسته",
+          "description": "تعداد جلسات موجود در بسته"
+        },
+        "packagePrice": {
+          "type": "number",
+          "label": "قیمت بسته (ریال)",
+          "description": "قیمت کل بسته به ریال"
+        },
+        "packageValidityDays": {
+          "type": "number",
+          "label": "اعتبار بسته (روز)",
+          "description": "مدت زمان اعتبار بسته به روز"
         },
         "active": {
           "type": "boolean",
           "label": "فعال",
-          "description": "فعال"
+          "description": "وضعیت نمایش و قابل رزرو بودن خدمت",
+          "default": true
         }
       }
     }
   },
   {
-    "name": "slot",
+    "name": "staff",
     "schemaDefinition": {
-      "label": "زمان‌های قابل رزرو",
-      "description": "بازه‌های زمانی تولیدشده برای رزرو خدمات.",
+      "label": "تیم متخصصان",
+      "description": "پزشکان و کارشناسان کلینیک به همراه برنامه کاری",
       "required": [
-        "startsAt",
-        "endsAt"
+        "name"
       ],
       "properties": {
-        "startsAt": {
-          "type": "date",
-          "label": "زمان شروع",
-          "description": "زمان شروع"
-        },
-        "endsAt": {
-          "type": "date",
-          "label": "زمان پایان",
-          "description": "زمان پایان"
-        },
-        "capacity": {
-          "type": "number",
-          "label": "ظرفیت باقی‌مانده",
-          "description": "ظرفیت باقی‌مانده",
-          "min": 0
-        },
-        "available": {
-          "type": "boolean",
-          "label": "موجود",
-          "description": "موجود"
-        },
-        "service": {
-          "type": "objectId",
-          "label": "خدمت",
-          "description": "خدمت",
-          "relationTarget": "booking_service"
-        },
-        "resource": {
-          "type": "objectId",
-          "label": "همکار / فضا",
-          "description": "همکار / فضا",
-          "relationTarget": "booking_resource"
-        },
-        "mode": {
+        "name": {
           "type": "string",
-          "label": "شکل برگزاری",
-          "description": "شکل برگزاری",
-          "enum": [
-            "in_person",
-            "phone",
-            "google_meet"
-          ],
-          "enumLabels": {
-            "in_person": "حضوری",
-            "phone": "تلفنی",
-            "google_meet": "آنلاین (Google Meet)"
-          }
-        },
-        "meetingUrl": {
-          "type": "string",
-          "label": "لینک جلسه آنلاین",
-          "description": "لینک جلسه آنلاین",
-          "maxLength": 500
-        },
-        "meetingStatus": {
-          "type": "string",
-          "label": "وضعیت جلسه",
-          "description": "وضعیت جلسه"
-        },
-        "cancelledAt": {
-          "type": "date",
-          "label": "زمان لغو",
-          "description": "زمان لغو"
-        },
-        "cancelledReason": {
-          "type": "string",
-          "label": "دلیل لغو",
-          "description": "دلیل لغو",
-          "maxLength": 240
-        },
-        "notes": {
-          "type": "string",
-          "label": "یادداشت داخلی",
-          "description": "یادداشت داخلی",
-          "maxLength": 1000
-        },
-        "capacityTotal": {
-          "type": "number",
-          "label": "ظرفیت کل",
-          "description": "ظرفیت اولیهٔ بازه پیش از رزروها.",
-          "min": 0
-        },
-        "externalEventId": {
-          "type": "string",
-          "label": "شناسهٔ رویداد تقویم",
-          "description": "شناسهٔ رویداد متناظر در تقویم بیرونی."
-        },
-        "generatedFrom": {
-          "type": "string",
-          "label": "منبع تولید",
-          "description": "منبع یا برنامه‌ای که این بازه را ساخته است."
-        },
-        "generationKey": {
-          "type": "string",
-          "label": "کلید تولید",
-          "description": "کلید یکتای تولید بازه برای جلوگیری از تکرار."
-        },
-        "location": {
-          "type": "string",
-          "label": "مکان",
-          "description": "نشانی یا توضیح مکان این بازه."
-        },
-        "price": {
-          "type": "number",
-          "label": "قیمت",
-          "description": "قیمت رزرو این بازه.",
-          "min": 0
+          "label": "نام و نام خانوادگی",
+          "description": "نام متخصص",
+          "minLength": 1
         },
         "title": {
           "type": "string",
-          "label": "عنوان",
-          "description": "عنوان نمایشی بازهٔ قابل رزرو."
-        }
-      }
-    }
-  },
-  {
-    "name": "booking_credit",
-    "schemaDefinition": {
-      "label": "اعتبار جلسات",
-      "description": "اعتبارهای پیش‌پرداخت یا اهدایی که برای رزرو جلسات مصرف می‌شوند.",
-      "required": [
-        "client",
-        "totalSessions"
-      ],
-      "properties": {
-        "client": {
-          "type": "objectId",
-          "label": "پروندهٔ مراجع",
-          "description": "مراجعی که اعتبار به حساب او افزوده شده است.",
-          "relationTarget": "booking_client"
+          "label": "عنوان شغلی",
+          "description": "تخصص یا سمت (مثل متخصص پوست و مو)"
         },
-        "eventId": {
-          "type": "objectId",
-          "label": "رویداد",
-          "description": "رویدادی که اعتبار برای آن قابل استفاده است.",
-          "relationTarget": "booking_event"
-        },
-        "expiresAt": {
-          "type": "date",
-          "label": "تاریخ انقضا",
-          "description": "زمان پایان اعتبار؛ در صورت خالی بودن اعتبار منقضی نمی‌شود."
-        },
-        "grantReason": {
+        "bio": {
           "type": "string",
-          "label": "دلیل اعطا",
-          "description": "دلیل یا شمارهٔ سفارش مرتبط با اعطای اعتبار.",
-          "maxLength": 240
+          "label": "معرفی",
+          "description": "سوابق و توضیحات متخصص"
         },
-        "remainingSessions": {
-          "type": "number",
-          "label": "جلسات باقی‌مانده",
-          "description": "تعداد جلسات قابل استفاده.",
-          "min": 0
+        "color": {
+          "type": "string",
+          "label": "رنگ شاخص",
+          "description": "رنگ تقویم و پروفایل متخصص"
         },
-        "serviceIds": {
+        "image": {
+          "type": "string",
+          "label": "تصویر پروفایل",
+          "description": "مسیر تصویر متخصص"
+        },
+        "hours": {
           "type": "array",
-          "label": "خدمات مجاز",
-          "description": "شناسهٔ خدماتی که اعتبار برای آن‌ها قابل استفاده است."
+          "label": "ساعات حضور",
+          "description": "برنامه هفتگی حضور متخصص"
         },
-        "sourceType": {
-          "type": "string",
-          "label": "نوع منبع",
-          "description": "نوع اعتبار یا خدمت مبنای آن.",
-          "enum": [
-            "service",
-            "event"
-          ],
-          "enumLabels": {
-            "service": "خدمت",
-            "event": "رویداد"
-          }
-        },
-        "status": {
-          "type": "string",
-          "label": "وضعیت اعتبار",
-          "description": "وضعیت جاری اعتبار جلسات.",
-          "enum": [
-            "active",
-            "exhausted",
-            "used",
-            "expired",
-            "cancelled"
-          ],
-          "enumLabels": {
-            "active": "فعال",
-            "exhausted": "تمام‌شده",
-            "used": "مصرف‌شده",
-            "expired": "منقضی",
-            "cancelled": "لغوشده"
-          }
-        },
-        "totalSessions": {
-          "type": "number",
-          "label": "کل جلسات",
-          "description": "تعداد کل جلسات اعطاشده.",
-          "min": 1
-        },
-        "unlimited": {
+        "active": {
           "type": "boolean",
-          "label": "اعتبار نامحدود",
-          "description": "آیا تعداد جلسات اعتبار محدود نیست؟"
-        },
-        "serviceId": {
-          "type": "objectId",
-          "label": "خدمت",
-          "description": "خدمتی که اعتبار برای آن قابل استفاده است؛ در نسخه‌های قدیمی‌تر به‌جای serviceIds ذخیره می‌شود.",
-          "relationTarget": "booking_service"
+          "label": "فعال",
+          "description": "وضعیت فعال بودن متخصص",
+          "default": true
         }
       }
     }
   },
   {
-    "name": "booking_event_registration",
+    "name": "client",
     "schemaDefinition": {
-      "label": "ثبت‌نام رویداد",
-      "description": "ثبت‌نام مراجعان در رویدادها و کلاس‌های کلینیک.",
+      "label": "مراجعان",
+      "description": "پرونده و اطلاعات تماس مراجعان کلینیک",
       "required": [
-        "eventId",
-        "customerName",
-        "customerPhone"
+        "fullName"
       ],
       "properties": {
-        "cancelledAt": {
-          "type": "date",
-          "label": "زمان لغو",
-          "description": "زمان لغو ثبت‌نام."
-        },
-        "cancelledReason": {
+        "fullName": {
           "type": "string",
-          "label": "دلیل لغو",
-          "description": "دلیل ثبت‌شده برای لغو ثبت‌نام.",
-          "maxLength": 240
+          "label": "نام کامل",
+          "description": "نام و نام خانوادگی مراجع",
+          "minLength": 1
         },
-        "customerEmail": {
+        "phoneNumber": {
           "type": "string",
-          "label": "ایمیل شرکت‌کننده",
-          "description": "ایمیل تماس شرکت‌کننده.",
-          "maxLength": 320
+          "label": "شماره موبایل",
+          "description": "شماره تماس مراجع"
         },
-        "customerName": {
+        "email": {
           "type": "string",
-          "label": "نام شرکت‌کننده",
-          "description": "نام شرکت‌کننده در رویداد.",
-          "maxLength": 200
+          "label": "ایمیل",
+          "description": "نشانی ایمیل مراجع"
         },
-        "customerPhone": {
-          "type": "string",
-          "label": "تلفن شرکت‌کننده",
-          "description": "شمارهٔ تماس شرکت‌کننده.",
-          "maxLength": 32
+        "visitCount": {
+          "type": "number",
+          "label": "تعداد مراجعات",
+          "description": "تعداد نوبت‌های انجام‌شده",
+          "default": 0
         },
-        "eventId": {
-          "type": "objectId",
-          "label": "رویداد",
-          "description": "رویدادی که شرکت‌کننده در آن ثبت‌نام کرده است.",
-          "relationTarget": "booking_event"
+        "noShowCount": {
+          "type": "number",
+          "label": "تعداد عدم حضور",
+          "description": "تعداد نوبت‌هایی که مراجع حضور نیافته است",
+          "default": 0
         },
         "notes": {
           "type": "string",
-          "label": "یادداشت",
-          "description": "یادداشت یا توضیح شرکت‌کننده.",
-          "maxLength": 2000
-        },
-        "seats": {
-          "type": "number",
-          "label": "تعداد نفرات",
-          "description": "تعداد صندلی‌های ثبت‌شده.",
-          "min": 1,
-          "default": 1
-        },
-        "sessionId": {
-          "type": "string",
-          "label": "شناسهٔ نشست",
-          "description": "شناسهٔ نشست مهمان برای پیگیری ثبت‌نام.",
-          "maxLength": 120
-        },
-        "status": {
-          "type": "string",
-          "label": "وضعیت ثبت‌نام",
-          "description": "وضعیت جاری ثبت‌نام.",
-          "enum": [
-            "pending",
-            "confirmed",
-            "cancelled"
-          ],
-          "enumLabels": {
-            "pending": "در انتظار",
-            "confirmed": "تأییدشده",
-            "cancelled": "لغوشده"
-          }
+          "label": "یادداشت‌ها",
+          "description": "توضیحات داخلی درباره مراجع"
         }
       }
     }
@@ -1233,237 +319,83 @@
   {
     "name": "booking",
     "schemaDefinition": {
-      "label": "رزروها",
-      "description": "رزروهای ثبت‌شده برای خدمات یا رویدادهای کلینیک.",
+      "label": "نوبت‌ها و رزروها",
+      "description": "نوبت‌های ثبت‌شده مراجعان برای خدمات کلینیک",
       "required": [
-        "customerName"
+        "customerName",
+        "startsAt"
       ],
       "properties": {
-        "type": {
-          "type": "string",
-          "label": "نوع رزرو",
-          "description": "نوع رزرو",
-          "enum": [
-            "service",
-            "event"
-          ],
-          "enumLabels": {
-            "service": "خدمت",
-            "event": "رویداد"
-          }
-        },
-        "eventId": {
-          "type": "objectId",
-          "label": "رویداد",
-          "description": "رویداد",
-          "relationTarget": "booking_event"
-        },
-        "mode": {
-          "type": "string",
-          "label": "شکل برگزاری",
-          "description": "شکل برگزاری",
-          "enum": [
-            "in_person",
-            "phone",
-            "google_meet"
-          ],
-          "enumLabels": {
-            "in_person": "حضوری",
-            "phone": "تلفنی",
-            "google_meet": "آنلاین (Google Meet)"
-          }
-        },
-        "meetingUrl": {
-          "type": "string",
-          "label": "لینک جلسه آنلاین",
-          "description": "لینک جلسه آنلاین",
-          "maxLength": 500
-        },
-        "meetingStatus": {
-          "type": "string",
-          "label": "وضعیت جلسه آنلاین",
-          "description": "وضعیت جلسه آنلاین"
-        },
-        "staffCalendarEventId": {
-          "type": "string",
-          "label": "شناسه رویداد تقویم همکار",
-          "description": "شناسه رویداد تقویم همکار",
-          "maxLength": 200
-        },
         "customerName": {
           "type": "string",
-          "label": "نام مشتری",
-          "description": "نام مشتری",
-          "maxLength": 200
-        },
-        "customerEmail": {
-          "type": "string",
-          "label": "ایمیل مشتری",
-          "description": "ایمیل مشتری",
-          "maxLength": 320
-        },
-        "notes": {
-          "type": "string",
-          "label": "یادداشت مشتری",
-          "description": "یادداشت مشتری",
-          "maxLength": 2000
+          "label": "نام مراجع",
+          "description": "نام و نام خانوادگی رزروکننده",
+          "minLength": 1
         },
         "customerPhone": {
           "type": "string",
-          "label": "شماره تماس",
-          "description": "شماره تماس",
-          "maxLength": 32
+          "label": "تلفن مراجع",
+          "description": "شماره تماس رزروکننده"
         },
-        "service": {
+        "customerEmail": {
+          "type": "string",
+          "label": "ایمیل مراجع",
+          "description": "ایمیل رزروکننده"
+        },
+        "serviceId": {
           "type": "objectId",
+          "relationTarget": "service",
           "label": "خدمت",
-          "description": "خدمت",
-          "relationTarget": "booking_service"
+          "description": "خدمت انتخاب‌شده برای نوبت"
         },
-        "resource": {
+        "staffId": {
           "type": "objectId",
-          "label": "همکار / فضا",
-          "description": "همکار / فضا",
-          "relationTarget": "booking_resource"
+          "relationTarget": "staff",
+          "label": "متخصص",
+          "description": "متخصص ارائه‌دهنده نوبت"
         },
-        "client": {
+        "clientId": {
           "type": "objectId",
-          "label": "پرونده مشتری",
-          "description": "پرونده مشتری",
-          "relationTarget": "booking_client"
+          "relationTarget": "client",
+          "label": "مراجع",
+          "description": "پرونده مراجع مرتبط با نوبت"
         },
-        "partySize": {
-          "type": "number",
-          "label": "تعداد نفرات",
-          "description": "تعداد نفرات",
-          "min": 1
-        },
-        "intake": {
-          "type": "object",
-          "label": "پاسخ سوال‌ها",
-          "description": "پاسخ سوال‌ها"
-        },
-        "source": {
+        "startsAt": {
           "type": "string",
-          "label": "منبع ثبت",
-          "description": "منبع ثبت",
-          "enum": [
-            "web",
-            "telegram",
-            "miniapp",
-            "phone",
-            "walk_in",
-            "staff"
-          ],
-          "enumLabels": {
-            "web": "سایت",
-            "telegram": "تلگرام",
-            "miniapp": "مینی‌اپ تلگرام",
-            "phone": "تلفنی",
-            "walk_in": "مراجعهٔ حضوری",
-            "staff": "ثبت توسط همکار"
-          }
-        },
-        "totalPrice": {
-          "type": "number",
-          "label": "مبلغ کل",
-          "description": "مبلغ کل",
-          "min": 0
-        },
-        "cancelledReason": {
-          "type": "string",
-          "label": "دلیل لغو",
-          "description": "دلیل لغو",
-          "maxLength": 240
-        },
-        "cancelledAt": {
-          "type": "date",
-          "label": "زمان لغو",
-          "description": "زمان لغو رزرو."
-        },
-        "cancelledBy": {
-          "type": "string",
-          "label": "لغوشده توسط",
-          "description": "شخص یا سامانه‌ای که رزرو را لغو کرده است.",
-          "enum": [
-            "customer",
-            "staff",
-            "system"
-          ],
-          "enumLabels": {
-            "customer": "مراجع",
-            "staff": "همکار",
-            "system": "سامانه"
-          }
-        },
-        "checkedInAt": {
-          "type": "date",
-          "label": "زمان پذیرش",
-          "description": "زمان پذیرش مراجع در کلینیک."
-        },
-        "completedAt": {
-          "type": "date",
-          "label": "زمان تکمیل",
-          "description": "زمان تکمیل خدمت."
-        },
-        "confirmedAt": {
-          "type": "date",
-          "label": "زمان تأیید",
-          "description": "زمان تأیید رزرو."
-        },
-        "credit": {
-          "type": "objectId",
-          "label": "اعتبار جلسه",
-          "description": "اعتباری که برای این رزرو مصرف شده است.",
-          "relationTarget": "booking_credit"
-        },
-        "depositAmount": {
-          "type": "number",
-          "label": "مبلغ بیعانه",
-          "description": "مبلغ بیعانهٔ ثبت‌شده برای رزرو.",
-          "min": 0
+          "label": "زمان شروع",
+          "description": "تاریخ و ساعت شروع نوبت (ISO)"
         },
         "endsAt": {
-          "type": "date",
-          "label": "پایان رزرو",
-          "description": "زمان پایان رزرو."
-        },
-        "eventPhoneKey": {
           "type": "string",
-          "label": "کلید تلفن رویداد",
-          "description": "شناسهٔ داخلی تلفن برای تطبیق ثبت‌نام رویداد."
+          "label": "زمان پایان",
+          "description": "تاریخ و ساعت پایان نوبت (ISO)"
         },
-        "eventUserKey": {
+        "status": {
           "type": "string",
-          "label": "کلید کاربر رویداد",
-          "description": "شناسهٔ داخلی کاربر برای تطبیق ثبت‌نام رویداد."
-        },
-        "externalEventId": {
-          "type": "string",
-          "label": "شناسهٔ رویداد بیرونی",
-          "description": "شناسهٔ متناظر در تقویم بیرونی."
-        },
-        "location": {
-          "type": "string",
-          "label": "مکان",
-          "description": "نشانی یا محل برگزاری رزرو."
-        },
-        "orderId": {
-          "type": "objectId",
-          "label": "سفارش",
-          "description": "سفارش فروشگاهی مرتبط با رزرو.",
-          "relationTarget": "order"
-        },
-        "paidAmount": {
-          "type": "number",
-          "label": "مبلغ پرداخت‌شده",
-          "description": "مبلغی که برای رزرو پرداخت شده است.",
-          "min": 0
+          "label": "وضعیت نوبت",
+          "description": "وضعیت فعلی نوبت",
+          "enum": [
+            "pending",
+            "confirmed",
+            "checked_in",
+            "completed",
+            "cancelled",
+            "no_show"
+          ],
+          "enumLabels": {
+            "pending": "در انتظار تأیید",
+            "confirmed": "تأییدشده",
+            "checked_in": "پذیرش‌شده",
+            "completed": "انجام‌شده",
+            "cancelled": "لغوشده",
+            "no_show": "عدم حضور"
+          },
+          "default": "confirmed"
         },
         "paymentStatus": {
           "type": "string",
           "label": "وضعیت پرداخت",
-          "description": "وضعیت پرداخت رزرو.",
+          "description": "وضعیت تسویه مالی نوبت",
           "enum": [
             "unpaid",
             "deposit_paid",
@@ -1475,77 +407,301 @@
             "unpaid": "پرداخت‌نشده",
             "deposit_paid": "بیعانه پرداخت‌شده",
             "paid": "پرداخت‌شده",
-            "refunded": "بازپرداخت‌شده",
-            "credit": "با اعتبار جلسه"
-          }
+            "refunded": "عودت‌شده",
+            "credit": "از اعتبار بسته"
+          },
+          "default": "unpaid"
+        },
+        "price": {
+          "type": "number",
+          "label": "مبلغ (ریال)",
+          "description": "هزینه نوبت به ریال"
+        },
+        "paidAmount": {
+          "type": "number",
+          "label": "مبلغ پرداخت‌شده",
+          "description": "مبلغ دریافت‌شده تا این لحظه",
+          "default": 0
+        },
+        "mode": {
+          "type": "string",
+          "label": "نوع مراجعه",
+          "description": "نحوه انجام نوبت",
+          "enum": [
+            "in_person",
+            "phone",
+            "google_meet"
+          ],
+          "enumLabels": {
+            "in_person": "حضوری",
+            "phone": "تلفنی",
+            "google_meet": "آنلاین"
+          },
+          "default": "in_person"
+        },
+        "source": {
+          "type": "string",
+          "label": "کانال ثبت",
+          "description": "محل ثبت نوبت",
+          "enum": [
+            "web",
+            "telegram",
+            "miniapp",
+            "phone",
+            "walk_in",
+            "staff"
+          ],
+          "enumLabels": {
+            "web": "وب‌سایت",
+            "telegram": "تلگرام",
+            "miniapp": "مینی‌اپ",
+            "phone": "تلفنی",
+            "walk_in": "حضوری",
+            "staff": "پنل پذیرش"
+          },
+          "default": "web"
+        },
+        "notes": {
+          "type": "string",
+          "label": "یادداشت مراجع",
+          "description": "توضیحات ثبت‌شده هنگام رزرو"
+        }
+      }
+    }
+  },
+  {
+    "name": "time_off",
+    "schemaDefinition": {
+      "label": "تعطیلات و مرخصی‌ها",
+      "description": "زمان‌های تعطیلی کلینیک یا مرخصی متخصصان",
+      "required": [
+        "startsAt",
+        "endsAt"
+      ],
+      "properties": {
+        "staffId": {
+          "type": "objectId",
+          "relationTarget": "staff",
+          "label": "متخصص",
+          "description": "در صورت خالی بودن برای کل کلینیک اعمال می‌شود"
+        },
+        "startsAt": {
+          "type": "string",
+          "label": "شروع",
+          "description": "تاریخ و ساعت شروع (ISO)"
+        },
+        "endsAt": {
+          "type": "string",
+          "label": "پایان",
+          "description": "تاریخ و ساعت پایان (ISO)"
+        },
+        "allDay": {
+          "type": "boolean",
+          "label": "تمام روز",
+          "description": "آیا کل روز تعطیل است",
+          "default": true
+        },
+        "kind": {
+          "type": "string",
+          "label": "نوع",
+          "description": "دلیل عدم پذیرش",
+          "enum": [
+            "holiday",
+            "leave",
+            "break"
+          ],
+          "enumLabels": {
+            "holiday": "تعطیل رسمی",
+            "leave": "مرخصی",
+            "break": "استراحت"
+          },
+          "default": "holiday"
+        },
+        "reason": {
+          "type": "string",
+          "label": "توضیح",
+          "description": "عنوان یا دلیل تعطیلی"
+        },
+        "repeatsAnnually": {
+          "type": "boolean",
+          "label": "تکرار سالانه",
+          "description": "تکرار خودکار در هر سال",
+          "default": false
+        }
+      }
+    }
+  },
+  {
+    "name": "event",
+    "schemaDefinition": {
+      "label": "رویدادها و کارگاه‌ها",
+      "description": "رویدادها، کارگاه‌ها و جلسات گروهی کلینیک",
+      "required": [
+        "title",
+        "startsAt"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "label": "عنوان رویداد",
+          "description": "نام رویداد یا کارگاه",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "label": "توضیحات",
+          "description": "جزئیات رویداد"
+        },
+        "startsAt": {
+          "type": "string",
+          "label": "زمان شروع",
+          "description": "تاریخ و ساعت شروع رویداد (ISO)"
+        },
+        "endsAt": {
+          "type": "string",
+          "label": "زمان پایان",
+          "description": "تاریخ و ساعت پایان رویداد (ISO)"
+        },
+        "capacity": {
+          "type": "number",
+          "label": "ظرفیت",
+          "description": "حداکثر تعداد شرکت‌کنندگان"
+        },
+        "price": {
+          "type": "number",
+          "label": "هزینه ثبت‌نام",
+          "description": "مبلغ شرکت در رویداد"
+        },
+        "staffId": {
+          "type": "objectId",
+          "relationTarget": "staff",
+          "label": "مدرس یا متخصص",
+          "description": "متخصص برگزارکننده رویداد"
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "وضعیت نمایش و ثبت‌نام رویداد",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "product",
+    "schemaDefinition": {
+      "label": "بسته‌ها و کارت‌های هدیه",
+      "description": "محصولات دیجیتال شامل بسته‌های چندجلسه‌ای و کارت هدیه",
+      "required": [
+        "title",
+        "price"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "label": "عنوان محصول",
+          "description": "نام بسته یا کارت هدیه",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "label": "نامک (Slug)",
+          "description": "شناسه متنی یکتا در آدرس"
         },
         "price": {
           "type": "number",
           "label": "قیمت",
-          "description": "قیمت ثبت‌شدهٔ رزرو.",
-          "min": 0
+          "description": "قیمت محصول"
         },
-        "rescheduledFromBookingId": {
-          "type": "objectId",
-          "label": "رزرو مبدأ جابه‌جایی",
-          "description": "رزروی که این رزرو از آن جابه‌جا شده است.",
-          "relationTarget": "booking"
-        },
-        "rescheduledToBookingId": {
-          "type": "objectId",
-          "label": "رزرو مقصد جابه‌جایی",
-          "description": "رزروی که جایگزین این رزرو شده است.",
-          "relationTarget": "booking"
-        },
-        "seats": {
-          "type": "number",
-          "label": "تعداد نفرات",
-          "description": "تعداد نفرات ثبت‌شده برای این رزرو.",
-          "min": 1
-        },
-        "seriesRegistrationId": {
-          "type": "objectId",
-          "label": "ثبت‌نام سری رویداد",
-          "description": "ثبت‌نام کلی مرتبط با یک سری رویداد.",
-          "relationTarget": "booking_event_registration"
-        },
-        "slotId": {
-          "type": "objectId",
-          "label": "بازهٔ زمانی",
-          "description": "بازه‌ای که برای این رزرو انتخاب شده است.",
-          "relationTarget": "slot"
-        },
-        "staffNotes": {
+        "description": {
           "type": "string",
-          "label": "یادداشت همکار",
-          "description": "یادداشت داخلی همکار دربارهٔ رزرو."
+          "label": "توضیحات",
+          "description": "شرح بسته یا کارت هدیه"
         },
-        "startsAt": {
-          "type": "date",
-          "label": "شروع رزرو",
-          "description": "زمان شروع رزرو."
+        "tags": {
+          "type": "array",
+          "label": "برچسب‌ها",
+          "description": "دسته‌بندی محصول (مثل booking-package یا gift-card)"
+        },
+        "serviceId": {
+          "type": "objectId",
+          "relationTarget": "service",
+          "label": "خدمت مرتبط",
+          "description": "خدمت متصل به بسته چندجلسه‌ای"
+        },
+        "sessions": {
+          "type": "number",
+          "label": "تعداد جلسات",
+          "description": "تعداد جلسات در صورت بسته بودن"
+        },
+        "validityDays": {
+          "type": "number",
+          "label": "مدت اعتبار (روز)",
+          "description": "تعداد روز اعتبار بسته"
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "قابل خرید بودن محصول",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "order",
+    "schemaDefinition": {
+      "label": "سفارش‌ها",
+      "description": "سفارش‌های خرید بسته و کارت هدیه",
+      "required": [
+        "customerName",
+        "totalAmount"
+      ],
+      "properties": {
+        "customerName": {
+          "type": "string",
+          "label": "نام خریدار",
+          "description": "نام کامل مشتری",
+          "minLength": 1
+        },
+        "customerPhone": {
+          "type": "string",
+          "label": "تلفن خریدار",
+          "description": "شماره تماس مشتری"
+        },
+        "productId": {
+          "type": "objectId",
+          "relationTarget": "product",
+          "label": "محصول",
+          "description": "بسته یا کارت هدیه خریداری‌شده"
+        },
+        "totalAmount": {
+          "type": "number",
+          "label": "مبلغ کل",
+          "description": "مبلغ قابل پرداخت سفارش"
         },
         "status": {
           "type": "string",
-          "label": "وضعیت رزرو",
-          "description": "وضعیت جاری رزرو.",
+          "label": "وضعیت سفارش",
+          "description": "وضعیت پرداخت و پردازش سفارش",
           "enum": [
             "pending",
-            "confirmed",
+            "paid",
             "cancelled",
-            "completed",
-            "no_show",
-            "rescheduled"
+            "refunded"
           ],
           "enumLabels": {
-            "pending": "در انتظار",
-            "confirmed": "تأییدشده",
+            "pending": "در انتظار پرداخت",
+            "paid": "پرداخت‌شده",
             "cancelled": "لغوشده",
-            "completed": "تکمیل‌شده",
-            "no_show": "عدم حضور",
-            "rescheduled": "جابه‌جاشده"
+            "refunded": "عودت‌شده"
           },
           "default": "pending"
+        },
+        "paymentRef": {
+          "type": "string",
+          "label": "کد پیگیری پرداخت",
+          "description": "شناسه تراکنش درگاه پرداخت"
         }
       }
     }
@@ -1554,7 +710,7 @@
     "name": "faq",
     "schemaDefinition": {
       "label": "پرسش‌های متداول",
-      "description": "پرسش‌ها و پاسخ‌های نمایش‌داده‌شده در صفحهٔ راهنمای سایت.",
+      "description": "سؤالات پرتکرار مراجعان و پاسخ‌های راهنما",
       "required": [
         "question",
         "answer"
@@ -1563,794 +719,31 @@
         "question": {
           "type": "string",
           "label": "پرسش",
-          "description": "پرسش",
-          "maxLength": 500
+          "description": "متن سؤال مراجع",
+          "minLength": 1
         },
         "answer": {
           "type": "string",
           "label": "پاسخ",
-          "description": "پاسخ",
-          "maxLength": 10000
+          "description": "پاسخ کامل کلینیک",
+          "minLength": 1
         },
         "category": {
           "type": "string",
-          "label": "دسته",
-          "description": "دسته",
-          "maxLength": 120
-        },
-        "tags": {
-          "type": "array",
-          "label": "برچسب‌ها",
-          "description": "برچسب‌ها"
-        },
-        "sortOrder": {
-          "type": "number",
-          "label": "ترتیب",
-          "description": "ترتیب",
-          "min": 0
-        },
-        "active": {
-          "type": "boolean",
-          "label": "فعال",
-          "description": "فعال"
-        }
-      }
-    }
-  },
-  {
-    "name": "product",
-    "schemaDefinition": {
-      "label": "محصولات فروشگاه",
-      "description": "بسته‌های جلسات و کارت‌های هدیهٔ فروخته‌شده در سایت.",
-      "required": [
-        "title",
-        "price"
-      ],
-      "properties": {
-        "title": {
-          "type": "string",
-          "label": "عنوان",
-          "description": "عنوان",
-          "maxLength": 300
-        },
-        "goodsKind": {
-          "type": "string",
-          "label": "نوع کالا برای سیاست پرداخت تلگرام؛ مقدار نامشخص در تلگرام قابل خرید نیست",
-          "description": "نوع کالا برای سیاست پرداخت تلگرام؛ مقدار نامشخص در تلگرام قابل خرید نیست",
-          "enum": [
-            "physical",
-            "digital"
-          ],
-          "enumLabels": {
-            "physical": "فیزیکی",
-            "digital": "دیجیتال"
-          }
-        },
-        "slug": {
-          "type": "string",
-          "label": "شناسه (لاتین)",
-          "description": "شناسه (لاتین)",
-          "maxLength": 160
-        },
-        "sku": {
-          "type": "string",
-          "label": "کد کالا",
-          "description": "کد کالا",
-          "maxLength": 120
-        },
-        "description": {
-          "type": "string",
-          "label": "توضیحات",
-          "description": "توضیحات"
-        },
-        "price": {
-          "type": "number",
-          "label": "قیمت",
-          "description": "قیمت",
-          "min": 0
-        },
-        "compareAtPrice": {
-          "type": "number",
-          "label": "قیمت قبل از تخفیف",
-          "description": "قیمت قبل از تخفیف",
-          "min": 0
-        },
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "maxLength": 8,
-          "enum": [
-            "IRR",
-            "IRT"
-          ],
-          "enumLabels": {
-            "IRR": "ریال",
-            "IRT": "تومان"
-          }
-        },
-        "images": {
-          "type": "array",
-          "label": "تصاویر",
-          "description": "تصاویر"
-        },
-        "mediaProvenance": {
-          "type": "string",
-          "label": "منبع تصاویر",
-          "description": "منبع تصاویر",
-          "enum": [
-            "interim_seed",
-            "asset",
-            "mixed"
-          ],
-          "enumLabels": {
-            "interim_seed": "تصویر موقت",
-            "asset": "رسانهٔ نهایی",
-            "mixed": "ترکیبی"
-          }
-        },
-        "stock": {
-          "type": "number",
-          "label": "موجودی",
-          "description": "موجودی",
-          "min": 0
+          "label": "دسته‌بندی",
+          "description": "موضوع پرسش (مثلاً نوبت، بسته‌ها، یادآوری)"
         },
         "order": {
           "type": "number",
           "label": "ترتیب نمایش",
-          "description": "ترتیب نمایش",
-          "min": 0
-        },
-        "categoryId": {
-          "type": "objectId",
-          "label": "دسته‌بندی",
-          "description": "دسته‌بندی"
-        },
-        "attributes": {
-          "type": "object",
-          "label": "ویژگی‌ها",
-          "description": "ویژگی‌ها"
-        },
-        "variants": {
-          "type": "array",
-          "label": "تنوع‌ها",
-          "description": "تنوع‌ها"
-        },
-        "tags": {
-          "type": "array",
-          "label": "برچسب‌ها",
-          "description": "برچسب‌ها"
-        },
-        "weight": {
-          "type": "number",
-          "label": "وزن (گرم)",
-          "description": "وزن (گرم)",
-          "min": 0
+          "description": "اولویت نمایش در صفحه پرسش‌ها",
+          "default": 0
         },
         "active": {
           "type": "boolean",
           "label": "فعال",
-          "description": "فعال"
-        }
-      }
-    }
-  },
-  {
-    "name": "cart",
-    "schemaDefinition": {
-      "label": "سبدهای خرید",
-      "description": "سبد خرید مهمان یا کاربر؛ قیمت‌ها و جمع‌ها توسط سرور محاسبه می‌شوند.",
-      "required": [],
-      "properties": {
-        "sessionId": {
-          "type": "string",
-          "label": "شناسه نشست",
-          "description": "شناسه نشست",
-          "maxLength": 120
-        },
-        "items": {
-          "type": "array",
-          "label": "اقلام",
-          "description": "اقلام"
-        },
-        "couponCode": {
-          "type": "string",
-          "label": "کد تخفیف",
-          "description": "کد تخفیف",
-          "maxLength": 60
-        },
-        "status": {
-          "type": "string",
-          "label": "وضعیت",
-          "description": "وضعیت",
-          "enum": [
-            "active",
-            "converted",
-            "abandoned"
-          ],
-          "enumLabels": {
-            "active": "فعال",
-            "converted": "تبدیل‌شده به سفارش",
-            "abandoned": "رهاشده"
-          }
-        },
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "maxLength": 8
-        },
-        "shippingMethodId": {
-          "type": "string",
-          "label": "روش ارسال",
-          "description": "روش ارسال",
-          "maxLength": 120
-        },
-        "expiresAt": {
-          "type": "string",
-          "label": "تاریخ انقضا",
-          "description": "تاریخ انقضا"
-        },
-        "discount": {
-          "type": "number",
-          "label": "تخفیف",
-          "description": "مبلغ تخفیف محاسبه‌شده.",
-          "min": 0
-        },
-        "mergedSessionIds": {
-          "type": "array",
-          "label": "نشست‌های ادغام‌شده",
-          "description": "شناسهٔ نشست‌هایی که سبدشان ادغام شده است."
-        },
-        "shipping": {
-          "type": "object",
-          "label": "اطلاعات ارسال",
-          "description": "روش و جزئیات ارسال انتخاب‌شده."
-        },
-        "shippingCost": {
-          "type": "number",
-          "label": "هزینهٔ ارسال",
-          "description": "هزینهٔ ارسال محاسبه‌شده.",
-          "min": 0
-        },
-        "subtotal": {
-          "type": "number",
-          "label": "جمع جزء",
-          "description": "جمع قیمت اقلام پیش از تخفیف و مالیات.",
-          "min": 0
-        },
-        "tax": {
-          "type": "number",
-          "label": "مالیات",
-          "description": "مالیات محاسبه‌شده.",
-          "min": 0
-        },
-        "total": {
-          "type": "number",
-          "label": "مبلغ کل",
-          "description": "مبلغ نهایی سبد که سرور محاسبه می‌کند.",
-          "min": 0
-        }
-      }
-    }
-  },
-  {
-    "name": "customer",
-    "schemaDefinition": {
-      "label": "مشتریان فروشگاه",
-      "description": "اطلاعات مشتریانی که در سفارش‌های فروشگاه ثبت می‌شوند.",
-      "required": [],
-      "properties": {
-        "name": {
-          "type": "string",
-          "label": "نام",
-          "description": "نام",
-          "maxLength": 200
-        },
-        "email": {
-          "type": "string",
-          "label": "ایمیل",
-          "description": "ایمیل",
-          "maxLength": 320
-        },
-        "phone": {
-          "type": "string",
-          "label": "تلفن",
-          "description": "تلفن",
-          "maxLength": 40
-        },
-        "addresses": {
-          "type": "array",
-          "label": "آدرس‌ها",
-          "description": "آدرس‌ها"
-        }
-      }
-    }
-  },
-  {
-    "name": "order",
-    "schemaDefinition": {
-      "label": "سفارش‌های فروشگاه",
-      "description": "سفارش‌ها، وضعیت پرداخت، اقلام و وضعیت انجام سفارش.",
-      "required": [
-        "items",
-        "total"
-      ],
-      "properties": {
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "maxLength": 8
-        },
-        "status": {
-          "type": "string",
-          "label": "وضعیت",
-          "description": "وضعیت",
-          "enum": [
-            "pending",
-            "free_order",
-            "paid",
-            "shipped",
-            "delivered",
-            "cancelled",
-            "refunded",
-            "partially_refunded",
-            "expired"
-          ],
-          "enumLabels": {
-            "pending": "در انتظار پرداخت",
-            "free_order": "سفارش رایگان",
-            "paid": "پرداخت‌شده",
-            "shipped": "ارسال‌شده",
-            "delivered": "تحویل‌شده",
-            "cancelled": "لغوشده",
-            "refunded": "بازپرداخت‌شده",
-            "partially_refunded": "بازپرداخت جزئی",
-            "expired": "منقضی"
-          }
-        },
-        "customerId": {
-          "type": "objectId",
-          "label": "مشتری",
-          "description": "مشتری",
-          "relationTarget": "customer"
-        },
-        "customer": {
-          "type": "object",
-          "label": "اطلاعات مشتری",
-          "description": "اطلاعات مشتری"
-        },
-        "address": {
-          "type": "object",
-          "label": "آدرس",
-          "description": "آدرس"
-        },
-        "couponCode": {
-          "type": "string",
-          "label": "کد تخفیف",
-          "description": "کد تخفیف",
-          "maxLength": 60
-        },
-        "sessionId": {
-          "type": "string",
-          "label": "شناسه نشست مهمان",
-          "description": "شناسه نشست مهمان",
-          "maxLength": 120
-        },
-        "paymentRef": {
-          "type": "string",
-          "label": "کد پیگیری پرداخت",
-          "description": "کد پیگیری پرداخت",
-          "maxLength": 200
-        },
-        "refundRef": {
-          "type": "string",
-          "label": "کد پیگیری مرجوعی در درگاه",
-          "description": "کد پیگیری مرجوعی در درگاه",
-          "maxLength": 200
-        },
-        "expiredAt": {
-          "type": "date",
-          "label": "تاریخ انقضای سفارش",
-          "description": "تاریخ انقضای سفارش"
-        },
-        "cancelledAt": {
-          "type": "date",
-          "label": "زمان لغو",
-          "description": "زمان لغو سفارش."
-        },
-        "cancelReason": {
-          "type": "string",
-          "label": "دلیل لغو",
-          "description": "دلیل لغو سفارش."
-        },
-        "discount": {
-          "type": "number",
-          "label": "تخفیف",
-          "description": "مبلغ تخفیف سفارش.",
-          "min": 0
-        },
-        "expiredEventEmittedAt": {
-          "type": "date",
-          "label": "زمان ثبت رویداد انقضا",
-          "description": "زمان ثبت رویداد انقضای سفارش."
-        },
-        "fulfillmentHistory": {
-          "type": "array",
-          "label": "تاریخچهٔ انجام سفارش",
-          "description": "تغییرات و رویدادهای انجام سفارش."
-        },
-        "fulfillmentStatus": {
-          "type": "string",
-          "label": "وضعیت انجام",
-          "description": "وضعیت پردازش، ارسال یا تحویل سفارش.",
-          "enum": [
-            "unfulfilled",
-            "shipping_pending",
-            "booking_failed",
-            "processing",
-            "ready_for_pickup",
-            "shipped",
-            "in_transit",
-            "delivered",
-            "returned",
-            "lost",
-            "failed"
-          ],
-          "enumLabels": {
-            "unfulfilled": "انجام‌نشده",
-            "shipping_pending": "در انتظار ارسال",
-            "booking_failed": "خطا در ثبت رزرو",
-            "processing": "در حال پردازش",
-            "ready_for_pickup": "آمادهٔ دریافت",
-            "shipped": "ارسال‌شده",
-            "in_transit": "در مسیر",
-            "delivered": "تحویل‌شده",
-            "returned": "مرجوع‌شده",
-            "lost": "مفقودشده",
-            "failed": "ناموفق"
-          }
-        },
-        "inventoryRestockedAt": {
-          "type": "date",
-          "label": "زمان بازگشت موجودی",
-          "description": "زمان بازگرداندن موجودی کالا پس از لغو یا انقضا."
-        },
-        "inventoryRestockReason": {
-          "type": "string",
-          "label": "دلیل بازگشت موجودی",
-          "description": "دلیل بازگرداندن موجودی کالا."
-        },
-        "items": {
-          "type": "array",
-          "label": "اقلام سفارش",
-          "description": "تصویر ثبت‌شده از محصولات و تعداد آن‌ها در زمان سفارش."
-        },
-        "latePayment": {
-          "type": "object",
-          "label": "پرداخت دیرهنگام",
-          "description": "اطلاعات پرداختی که پس از انقضای سفارش انجام شده است."
-        },
-        "manualPaymentAuthority": {
-          "type": "string",
-          "label": "شناسهٔ پرداخت دستی",
-          "description": "شناسهٔ پرداخت کارت‌به‌کارت یا پرداخت دستی."
-        },
-        "manualPaymentStatus": {
-          "type": "string",
-          "label": "وضعیت پرداخت دستی",
-          "description": "وضعیت بررسی رسید پرداخت دستی.",
-          "enum": [
-            "pending_receipt",
-            "awaiting_approval",
-            "approved"
-          ],
-          "enumLabels": {
-            "pending_receipt": "در انتظار رسید",
-            "awaiting_approval": "در انتظار تأیید",
-            "approved": "تأییدشده"
-          }
-        },
-        "manualReceiptSubmittedAt": {
-          "type": "date",
-          "label": "زمان ارسال رسید",
-          "description": "زمان ارسال رسید پرداخت دستی."
-        },
-        "paidEventEmittedAt": {
-          "type": "date",
-          "label": "زمان ثبت رویداد پرداخت",
-          "description": "زمان ثبت رویداد پرداخت موفق."
-        },
-        "paymentHistory": {
-          "type": "array",
-          "label": "تاریخچهٔ پرداخت",
-          "description": "تلاش‌ها و رخدادهای پرداخت سفارش."
-        },
-        "paymentMethod": {
-          "type": "string",
-          "label": "روش پرداخت",
-          "description": "روش پرداخت انتخاب‌شده.",
-          "enum": [
-            "online",
-            "cod",
-            "cardtocard"
-          ],
-          "enumLabels": {
-            "online": "درگاه آنلاین",
-            "cod": "پرداخت هنگام دریافت",
-            "cardtocard": "کارت‌به‌کارت"
-          }
-        },
-        "refundedAmount": {
-          "type": "number",
-          "label": "مبلغ بازپرداخت",
-          "description": "مبلغ بازپرداخت‌شده.",
-          "min": 0
-        },
-        "refundedAt": {
-          "type": "date",
-          "label": "زمان بازپرداخت",
-          "description": "زمان انجام بازپرداخت."
-        },
-        "refundHistory": {
-          "type": "array",
-          "label": "تاریخچهٔ بازپرداخت",
-          "description": "رخدادهای بازپرداخت سفارش."
-        },
-        "refundReason": {
-          "type": "string",
-          "label": "دلیل بازپرداخت",
-          "description": "دلیل ثبت‌شده برای بازپرداخت."
-        },
-        "shipping": {
-          "type": "object",
-          "label": "اطلاعات ارسال",
-          "description": "نشانی و جزئیات ارسال ثبت‌شده."
-        },
-        "shippingCost": {
-          "type": "number",
-          "label": "هزینهٔ ارسال",
-          "description": "هزینهٔ ارسال سفارش.",
-          "min": 0
-        },
-        "subtotal": {
-          "type": "number",
-          "label": "جمع جزء",
-          "description": "جمع قیمت اقلام پیش از تخفیف و مالیات.",
-          "min": 0
-        },
-        "surface": {
-          "type": "string",
-          "label": "بستر ثبت سفارش",
-          "description": "بستری که سفارش از آن ثبت شده است.",
-          "enum": [
-            "telegram-miniapp"
-          ],
-          "enumLabels": {
-            "telegram-miniapp": "مینی‌اپ تلگرام"
-          }
-        },
-        "tax": {
-          "type": "number",
-          "label": "مالیات",
-          "description": "مالیات سفارش.",
-          "min": 0
-        },
-        "total": {
-          "type": "number",
-          "label": "مبلغ کل",
-          "description": "مبلغ نهایی سفارش.",
-          "min": 0
-        }
-      }
-    }
-  },
-  {
-    "name": "storesetting",
-    "schemaDefinition": {
-      "label": "تنظیمات فروشگاه",
-      "description": "واحد پول، مالیات، اطلاعات تماس و نشانی مبدأ فروشگاه.",
-      "required": [],
-      "properties": {
-        "storeName": {
-          "type": "string",
-          "label": "نام فروشگاه",
-          "description": "نام فروشگاه",
-          "maxLength": 200
-        },
-        "currency": {
-          "type": "string",
-          "label": "واحد پول",
-          "description": "واحد پول",
-          "maxLength": 8,
-          "enum": [
-            "IRR",
-            "IRT"
-          ],
-          "enumLabels": {
-            "IRR": "ریال",
-            "IRT": "تومان"
-          }
-        },
-        "taxRate": {
-          "type": "number",
-          "label": "نرخ مالیات (درصد)",
-          "description": "نرخ مالیات (درصد)",
-          "min": 0
-        },
-        "taxIncluded": {
-          "type": "boolean",
-          "label": "قیمت‌ها شامل مالیات است",
-          "description": "قیمت‌ها شامل مالیات است"
-        },
-        "pendingOrderTtlHours": {
-          "type": "number",
-          "label": "مهلت نگه‌داشتن موجودی سفارش پرداخت‌نشده (ساعت)",
-          "description": "مهلت نگه‌داشتن موجودی سفارش پرداخت‌نشده (ساعت)",
-          "min": 0
-        },
-        "originName": {
-          "type": "string",
-          "label": "نام فرستنده",
-          "description": "نام فرستنده",
-          "maxLength": 120
-        },
-        "originPhone": {
-          "type": "string",
-          "label": "موبایل فرستنده",
-          "description": "موبایل فرستنده",
-          "maxLength": 40
-        },
-        "originLine1": {
-          "type": "string",
-          "label": "نشانی مبدأ",
-          "description": "نشانی مبدأ",
-          "maxLength": 400
-        },
-        "originCity": {
-          "type": "string",
-          "label": "شهر مبدأ",
-          "description": "شهر مبدأ",
-          "maxLength": 120
-        },
-        "originProvince": {
-          "type": "string",
-          "label": "استان مبدأ",
-          "description": "استان مبدأ",
-          "maxLength": 120
-        },
-        "originPostalCode": {
-          "type": "string",
-          "label": "کد پستی مبدأ",
-          "description": "کد پستی مبدأ",
-          "maxLength": 20
-        },
-        "contactEmail": {
-          "type": "string",
-          "label": "ایمیل تماس",
-          "description": "ایمیل تماس",
-          "maxLength": 200
-        },
-        "contactPhone": {
-          "type": "string",
-          "label": "تلفن تماس",
-          "description": "تلفن تماس",
-          "maxLength": 40
-        }
-      }
-    }
-  },
-  {
-    "name": "loyalty_member",
-    "schemaDefinition": {
-      "label": "اعضای باشگاه مشتریان",
-      "description": "ماندهٔ امتیاز، سطح عضویت و اعتبار هدیهٔ هر عضو.",
-      "required": [],
-      "properties": {
-        "giftCardBalance": {
-          "type": "number",
-          "label": "ماندهٔ کارت هدیه",
-          "description": "موجودی کارت هدیهٔ عضو.",
-          "min": 0
-        },
-        "giftEffects": {
-          "type": "array",
-          "label": "اثرهای کارت هدیه",
-          "description": "کلیدهای اثر کارت هدیه برای جلوگیری از اعمال تکراری."
-        },
-        "lifetimeSpend": {
-          "type": "number",
-          "label": "مجموع خرید",
-          "description": "مجموع هزینهٔ ثبت‌شدهٔ عضو.",
-          "min": 0
-        },
-        "pointEffects": {
-          "type": "array",
-          "label": "اثرهای امتیاز",
-          "description": "کلیدهای اثر امتیاز برای جلوگیری از ثبت تکراری."
-        },
-        "points": {
-          "type": "number",
-          "label": "امتیاز",
-          "description": "ماندهٔ امتیاز وفاداری عضو.",
-          "min": 0
-        },
-        "spendEffects": {
-          "type": "array",
-          "label": "اثرهای خرید",
-          "description": "کلیدهای اثر خرید برای جلوگیری از محاسبهٔ تکراری."
-        },
-        "tier": {
-          "type": "string",
-          "label": "سطح عضویت",
-          "description": "سطح فعلی عضو در باشگاه مشتریان.",
-          "enum": [
-            "bronze",
-            "silver",
-            "gold"
-          ],
-          "enumLabels": {
-            "bronze": "برنزی",
-            "silver": "نقره‌ای",
-            "gold": "طلایی"
-          }
-        }
-      }
-    }
-  },
-  {
-    "name": "loyalty_ledger",
-    "schemaDefinition": {
-      "label": "دفتر امتیاز وفاداری",
-      "description": "رویدادهای ثبت‌شدهٔ کسب، مصرف، اصلاح یا انقضای امتیاز.",
-      "required": [
-        "delta",
-        "effectKey",
-        "reason"
-      ],
-      "properties": {
-        "delta": {
-          "type": "number",
-          "label": "تغییر امتیاز",
-          "description": "مقدار افزایش یا کاهش امتیاز."
-        },
-        "effectKey": {
-          "type": "string",
-          "label": "کلید اثر",
-          "description": "کلید یکتای رویداد برای جلوگیری از اعمال دوباره."
-        },
-        "note": {
-          "type": "string",
-          "label": "یادداشت",
-          "description": "شرح رویداد امتیاز."
-        },
-        "orderId": {
-          "type": "objectId",
-          "label": "سفارش",
-          "description": "سفارشی که این رویداد امتیاز از آن ناشی شده است.",
-          "relationTarget": "order"
-        },
-        "reason": {
-          "type": "string",
-          "label": "دلیل",
-          "description": "نوع رویداد در دفتر امتیاز.",
-          "enum": [
-            "earn",
-            "redeem",
-            "adjust",
-            "expire",
-            "cashback",
-            "gift_card"
-          ],
-          "enumLabels": {
-            "earn": "کسب",
-            "redeem": "مصرف",
-            "adjust": "اصلاح",
-            "expire": "انقضا",
-            "cashback": "بازگشت وجه",
-            "gift_card": "کارت هدیه"
-          }
+          "description": "نمایش یا عدم نمایش پرسش",
+          "default": true
         }
       }
     }
@@ -2358,60 +751,53 @@
   {
     "name": "review",
     "schemaDefinition": {
-      "label": "نظرهای مراجعان",
-      "description": "نظرها و امتیازهای ثبت‌شده دربارهٔ خدمات یا محصولات.",
+      "label": "نظرات مراجعان",
+      "description": "دیدگاه‌ها و امتیازهای ثبت‌شده توسط مراجعان",
       "required": [
-        "targetId",
-        "rating"
+        "authorName",
+        "rating",
+        "comment"
       ],
       "properties": {
         "targetId": {
-          "type": "string",
-          "label": "شناسه مورد",
-          "description": "شناسه مورد"
-        },
-        "targetType": {
-          "type": "string",
-          "label": "نوع مورد",
-          "description": "نوع مورد",
-          "maxLength": 80
-        },
-        "rating": {
-          "type": "number",
-          "label": "امتیاز",
-          "description": "امتیاز",
-          "min": 1,
-          "max": 5
-        },
-        "title": {
-          "type": "string",
-          "label": "عنوان",
-          "description": "عنوان",
-          "maxLength": 200
-        },
-        "body": {
-          "type": "string",
-          "label": "متن",
-          "description": "متن",
-          "maxLength": 5000
+          "type": "objectId",
+          "relationTarget": "service",
+          "label": "خدمت مرتبط",
+          "description": "خدمتی که نظر درباره آن ثبت شده است"
         },
         "authorName": {
           "type": "string",
           "label": "نام نویسنده",
-          "description": "نام نویسنده",
-          "maxLength": 200
+          "description": "نام مراجع ثبت‌کننده نظر",
+          "minLength": 1
+        },
+        "rating": {
+          "type": "number",
+          "label": "امتیاز",
+          "description": "امتیاز از ۱ تا ۵"
+        },
+        "title": {
+          "type": "string",
+          "label": "عنوان نظر",
+          "description": "تیتر کوتاه دیدگاه"
+        },
+        "comment": {
+          "type": "string",
+          "label": "متن نظر",
+          "description": "توضیح تجربه مراجع",
+          "minLength": 1
         },
         "status": {
           "type": "string",
-          "label": "وضعیت نظر",
-          "description": "وضعیت بررسی و انتشار نظر.",
+          "label": "وضعیت انتشار",
+          "description": "وضعیت تأیید نظر برای نمایش عمومی",
           "enum": [
             "pending",
             "approved",
             "rejected"
           ],
           "enumLabels": {
-            "pending": "در انتظار بررسی",
+            "pending": "در انتظار تأیید",
             "approved": "تأییدشده",
             "rejected": "ردشده"
           },
@@ -2421,192 +807,124 @@
     }
   },
   {
-    "name": "support_ticket",
+    "name": "loyalty_member",
     "schemaDefinition": {
-      "label": "درخواست‌های پشتیبانی",
-      "description": "درخواست‌ها و وضعیت رسیدگی به پشتیبانی سایت.",
+      "label": "باشگاه مشتریان",
+      "description": "امتیازها و سطح عضویت مراجعان در باشگاه وفاداری",
       "required": [
-        "subject",
-        "body"
+        "fullName",
+        "phoneNumber"
       ],
       "properties": {
-        "subject": {
+        "clientId": {
+          "type": "objectId",
+          "relationTarget": "client",
+          "label": "مراجع",
+          "description": "پرونده مراجع مرتبط"
+        },
+        "fullName": {
           "type": "string",
-          "label": "موضوع",
-          "description": "موضوع",
-          "minLength": 3,
-          "maxLength": 200
+          "label": "نام کامل",
+          "description": "نام عضو باشگاه",
+          "minLength": 1
         },
-        "body": {
+        "phoneNumber": {
           "type": "string",
-          "label": "شرح درخواست",
-          "description": "شرح درخواست",
-          "minLength": 1,
-          "maxLength": 10000
+          "label": "شماره موبایل",
+          "description": "شماره تماس عضو"
         },
-        "category": {
+        "points": {
+          "type": "number",
+          "label": "امتیاز فعلی",
+          "description": "مجموع امتیاز قابل استفاده",
+          "default": 0
+        },
+        "tier": {
           "type": "string",
-          "label": "دسته‌بندی",
-          "description": "دسته‌بندی",
-          "maxLength": 80
-        },
-        "affectedAppId": {
-          "type": "string",
-          "label": "شناسهٔ برنامهٔ مرتبط",
-          "description": "شناسهٔ برنامه‌ای که درخواست به آن مربوط است."
-        },
-        "affectedPaymentId": {
-          "type": "string",
-          "label": "شناسهٔ پرداخت مرتبط",
-          "description": "شناسهٔ پرداختی که درخواست به آن مربوط است."
-        },
-        "agentRunId": {
-          "type": "string",
-          "label": "شناسهٔ اجرای عامل",
-          "description": "شناسهٔ اجرای عامل مرتبط با درخواست."
-        },
-        "assigneeId": {
-          "type": "string",
-          "label": "شناسهٔ مسئول",
-          "description": "شناسهٔ همکار مسئول رسیدگی."
-        },
-        "closedAt": {
-          "type": "date",
-          "label": "زمان بسته‌شدن",
-          "description": "زمان بسته‌شدن درخواست."
-        },
-        "errorCode": {
-          "type": "string",
-          "label": "کد خطا",
-          "description": "کد خطای مرتبط با درخواست."
-        },
-        "lastMessageAt": {
-          "type": "date",
-          "label": "زمان آخرین پیام",
-          "description": "زمان آخرین پیام در گفت‌وگوی درخواست."
-        },
-        "lastMessageBy": {
-          "type": "string",
-          "label": "فرستندهٔ آخرین پیام",
-          "description": "نوع فرستندهٔ آخرین پیام.",
+          "label": "سطح عضویت",
+          "description": "رده فعلی عضو در باشگاه",
           "enum": [
-            "customer",
-            "support"
+            "bronze",
+            "silver",
+            "gold",
+            "vip"
           ],
           "enumLabels": {
-            "customer": "مراجع",
-            "support": "پشتیبانی"
-          }
-        },
-        "occurredAt": {
-          "type": "date",
-          "label": "زمان رخداد",
-          "description": "زمان رخدادی که باعث ایجاد درخواست شده است."
-        },
-        "priority": {
-          "type": "string",
-          "label": "اولویت",
-          "description": "اولویت رسیدگی به درخواست.",
-          "enum": [
-            "low",
-            "normal",
-            "high",
-            "urgent"
-          ],
-          "enumLabels": {
-            "low": "کم",
-            "normal": "عادی",
-            "high": "زیاد",
-            "urgent": "فوری"
-          }
-        },
-        "resolvedAt": {
-          "type": "date",
-          "label": "زمان حل‌شدن",
-          "description": "زمان حل‌شدن درخواست."
-        },
-        "source": {
-          "type": "string",
-          "label": "منبع ثبت",
-          "description": "بستری که درخواست از آن ثبت شده است.",
-          "enum": [
-            "web",
-            "studio",
-            "telegram",
-            "api"
-          ],
-          "enumLabels": {
-            "web": "سایت",
-            "studio": "استودیو",
-            "telegram": "تلگرام",
-            "api": "رابط برنامه‌نویسی"
-          }
-        },
-        "status": {
-          "type": "string",
-          "label": "وضعیت درخواست",
-          "description": "وضعیت جاری رسیدگی.",
-          "enum": [
-            "open",
-            "waiting_on_support",
-            "waiting_on_customer",
-            "resolved",
-            "closed"
-          ],
-          "enumLabels": {
-            "open": "باز",
-            "waiting_on_support": "در انتظار پشتیبانی",
-            "waiting_on_customer": "در انتظار مراجع",
-            "resolved": "حل‌شده",
-            "closed": "بسته"
+            "bronze": "برنزی",
+            "silver": "نقره‌ای",
+            "gold": "طلایی",
+            "vip": "ویژه (VIP)"
           },
-          "default": "open"
+          "default": "bronze"
         }
       }
     }
   },
   {
-    "name": "support_ticket_reply",
+    "name": "support_ticket",
     "schemaDefinition": {
-      "label": "پاسخ‌های پشتیبانی",
-      "description": "پیام‌های ردوبدل‌شده در هر درخواست پشتیبانی.",
+      "label": "تیکت‌های پشتیبانی",
+      "description": "درخواست‌ها و پیام‌های پشتیبانی مراجعان",
       "required": [
-        "ticketId",
-        "authorType",
-        "body"
+        "subject",
+        "message"
       ],
       "properties": {
-        "authorType": {
+        "subject": {
           "type": "string",
-          "label": "نوع نویسنده",
-          "description": "مشخص می‌کند پیام را مراجع نوشته یا پشتیبانی.",
+          "label": "موضوع",
+          "description": "عنوان تیکت پشتیبانی",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "label": "پیام",
+          "description": "متن درخواست پشتیبانی",
+          "minLength": 1
+        },
+        "customerName": {
+          "type": "string",
+          "label": "نام مراجع",
+          "description": "نام ارسال‌کننده تیکت"
+        },
+        "customerPhone": {
+          "type": "string",
+          "label": "تلفن مراجع",
+          "description": "شماره تماس ارسال‌کننده"
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت تیکت",
+          "description": "وضعیت رسیدگی به تیکت",
           "enum": [
-            "customer",
-            "support"
+            "open",
+            "in_progress",
+            "resolved",
+            "closed"
           ],
           "enumLabels": {
-            "customer": "مراجع",
-            "support": "پشتیبانی"
-          }
+            "open": "باز",
+            "in_progress": "در حال بررسی",
+            "resolved": "پاسخ‌داده‌شده",
+            "closed": "بسته"
+          },
+          "default": "open"
         },
-        "body": {
+        "priority": {
           "type": "string",
-          "label": "متن پیام",
-          "description": "متن پاسخ یا یادداشت در رشتهٔ پشتیبانی.",
-          "minLength": 1,
-          "maxLength": 10000
-        },
-        "internal": {
-          "type": "boolean",
-          "label": "یادداشت داخلی",
-          "description": "آیا این پیام فقط برای همکاران قابل مشاهده است?",
-          "default": false
-        },
-        "ticketId": {
-          "type": "objectId",
-          "label": "درخواست پشتیبانی",
-          "description": "درخواستی که این پاسخ به آن تعلق دارد.",
-          "relationTarget": "support_ticket"
+          "label": "اولویت",
+          "description": "سطح فوریت تیکت",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "enumLabels": {
+            "low": "کم",
+            "medium": "متوسط",
+            "high": "زیاد"
+          },
+          "default": "medium"
         }
       }
     }
@@ -2614,70 +932,56 @@
   {
     "name": "notification",
     "schemaDefinition": {
-      "label": "اعلان‌های کاربر",
-      "description": "اعلان‌های درون‌برنامه‌ای نمایش‌داده‌شده در صندوق اعلان کاربر.",
+      "label": "اعلان‌ها و یادآورها",
+      "description": "پیام‌های اطلاع‌رسانی و یادآور نوبت برای مراجعان",
       "required": [
-        "title"
+        "title",
+        "body"
       ],
       "properties": {
         "title": {
           "type": "string",
-          "label": "عنوان",
-          "description": "عنوان",
-          "maxLength": 200
+          "label": "عنوان اعلان",
+          "description": "تیتر پیام ارسالی",
+          "minLength": 1
         },
         "body": {
           "type": "string",
-          "label": "متن",
-          "description": "متن",
-          "maxLength": 5000
+          "label": "متن اعلان",
+          "description": "محتوای کامل پیام",
+          "minLength": 1
         },
-        "type": {
+        "channel": {
           "type": "string",
-          "label": "نوع",
-          "description": "نوع",
+          "label": "کانال ارسال",
+          "description": "بستر ارسال اعلان",
           "enum": [
-            "order",
-            "account",
-            "system",
-            "promo",
-            "platform"
+            "in_app",
+            "telegram",
+            "sms"
           ],
           "enumLabels": {
-            "order": "سفارش",
-            "account": "حساب کاربری",
-            "system": "سیستمی",
-            "promo": "تبلیغاتی",
-            "platform": "پلتفرم"
-          }
+            "in_app": "داخل سایت",
+            "telegram": "تلگرام",
+            "sms": "پیامک"
+          },
+          "default": "in_app"
         },
-        "link": {
+        "recipientPhone": {
           "type": "string",
-          "label": "لینک",
-          "description": "لینک",
-          "maxLength": 500
+          "label": "گیرنده",
+          "description": "شماره تماس مراجع گیرنده"
         },
-        "readAt": {
-          "type": "date",
-          "label": "زمان خواندن",
-          "description": "زمان خواندن"
+        "read": {
+          "type": "boolean",
+          "label": "خوانده‌شده",
+          "description": "آیا پیام توسط کاربر دیده شده است",
+          "default": false
         },
-        "sourceEvent": {
+        "sentAt": {
           "type": "string",
-          "label": "رویداد منبع",
-          "description": "رویداد منبع",
-          "maxLength": 120
-        },
-        "dedupKey": {
-          "type": "string",
-          "label": "کلید تکرار",
-          "description": "کلید تکرار",
-          "maxLength": 240
-        },
-        "channels": {
-          "type": "object",
-          "label": "کانال‌های ارسال",
-          "description": "کانال‌های ارسال"
+          "label": "زمان ارسال",
+          "description": "تاریخ و ساعت ارسال اعلان (ISO)"
         }
       }
     }

@@ -1,0 +1,632 @@
+[
+  {
+    "name": "hero_slide",
+    "schemaDefinition": {
+      "label": "اسلایدهای بنر اصلی",
+      "description": "تصاویر، متن‌ها و دکمه‌های اسلایدر صفحه اصلی کلینیک",
+      "required": [
+        "title",
+        "image"
+      ],
+      "properties": {
+        "slideKey": {
+          "type": "string",
+          "label": "شناسه اسلاید",
+          "description": "کلید یکتای اسلاید (مثلاً skin-care)"
+        },
+        "eyebrow": {
+          "type": "string",
+          "label": "روتیتر",
+          "description": "متن کوتاه بالای عنوان اصلی"
+        },
+        "title": {
+          "type": "string",
+          "label": "عنوان اصلی",
+          "description": "تیتر بزرگ نمایش‌داده‌شده روی اسلاید",
+          "minLength": 1
+        },
+        "subtitle": {
+          "type": "string",
+          "label": "زیرعنوان",
+          "description": "توضیح تکمیلی زیر عنوان اصلی"
+        },
+        "image": {
+          "type": "string",
+          "label": "آدرس تصویر",
+          "description": "مسیر یا لینک تصویر پس‌زمینه اسلاید"
+        },
+        "alt": {
+          "type": "string",
+          "label": "متن جایگزین تصویر",
+          "description": "توضیح تصویر برای سئو و دسترس‌پذیری"
+        },
+        "fallbackColor": {
+          "type": "string",
+          "label": "رنگ جایگزین",
+          "description": "کد رنگ پس‌زمینه در زمان بارگذاری تصویر",
+          "default": "#0f3a37"
+        },
+        "ctaLabel": {
+          "type": "string",
+          "label": "متن دکمه اصلی",
+          "description": "عنوان دکمه فراخوان اصلی"
+        },
+        "ctaTo": {
+          "type": "string",
+          "label": "لینک دکمه اصلی",
+          "description": "مسیر صفحه مقصد برای دکمه اصلی"
+        },
+        "secondaryCtaLabel": {
+          "type": "string",
+          "label": "متن دکمه دوم",
+          "description": "عنوان دکمه فراخوان دوم"
+        },
+        "secondaryCtaTo": {
+          "type": "string",
+          "label": "لینک دکمه دوم",
+          "description": "مسیر صفحه مقصد برای دکمه دوم"
+        },
+        "order": {
+          "type": "number",
+          "label": "ترتیب نمایش",
+          "description": "ترتیب قرارگیری اسلاید در بنر",
+          "default": 0
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "نمایش یا عدم نمایش اسلاید در سایت",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "site_setting",
+    "schemaDefinition": {
+      "label": "تنظیمات کلینیک",
+      "description": "اطلاعات عمومی، نشانی، تلفن و ساعات کاری کلینیک",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "label": "نام کلینیک",
+          "description": "نام برند و عنوان اصلی کلینیک",
+          "minLength": 1
+        },
+        "tagline": {
+          "type": "string",
+          "label": "شعار کلینیک",
+          "description": "توضیح کوتاه معرفی کلینیک"
+        },
+        "logoUrl": {
+          "type": "string",
+          "label": "آدرس لوگو",
+          "description": "مسیر فایل لوگوی کلینیک"
+        },
+        "address": {
+          "type": "string",
+          "label": "نشانی",
+          "description": "آدرس کامل کلینیک"
+        },
+        "phone": {
+          "type": "string",
+          "label": "تلفن تماس",
+          "description": "شماره تماس پذیرش کلینیک"
+        },
+        "hours": {
+          "type": "array",
+          "label": "ساعات کاری",
+          "description": "لیست روزها و ساعات پذیرش کلینیک"
+        },
+        "facilities": {
+          "type": "array",
+          "label": "امکانات رفاهی",
+          "description": "برچسب‌های امکانات کلینیک در صفحه تماس (مثل پارکینگ اختصاصی)"
+        }
+      }
+    }
+  },
+  {
+    "name": "service",
+    "schemaDefinition": {
+      "label": "خدمات کلینیک",
+      "description": "خدمات پوست، لیزر و ماساژ قابل رزرو در کلینیک",
+      "required": [
+        "name",
+        "durationMinutes",
+        "price"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "label": "نام خدمت",
+          "description": "عنوان خدمت درمانی یا زیبایی",
+          "minLength": 1
+        },
+        "group": {
+          "type": "string",
+          "label": "دسته‌بندی",
+          "description": "گروه خدمت (مثل پوست و مو، لیزر، ماساژ و اسپا)"
+        },
+        "description": {
+          "type": "string",
+          "label": "توضیحات",
+          "description": "شرح کامل خدمت"
+        },
+        "durationMinutes": {
+          "type": "number",
+          "label": "مدت زمان (دقیقه)",
+          "description": "مدت زمان انجام خدمت به دقیقه"
+        },
+        "bufferAfterMinutes": {
+          "type": "number",
+          "label": "زمان تنفس بعد از نوبت (دقیقه)",
+          "description": "فاصله زمانی بین نوبت‌ها به دقیقه",
+          "default": 10
+        },
+        "price": {
+          "type": "number",
+          "label": "قیمت (ریال)",
+          "description": "هزینه خدمت به ریال"
+        },
+        "color": {
+          "type": "string",
+          "label": "رنگ شاخص",
+          "description": "رنگ نمایشی کارت خدمت"
+        },
+        "image": {
+          "type": "string",
+          "label": "تصویر خدمت",
+          "description": "مسیر تصویر مربوط به خدمت"
+        },
+        "resourceIds": {
+          "type": "array",
+          "label": "متخصصان ارائه‌دهنده",
+          "description": "شناسه‌های متخصصانی که این خدمت را انجام می‌دهند"
+        },
+        "packageEnabled": {
+          "type": "boolean",
+          "label": "دارای بسته چندجلسه‌ای",
+          "description": "آیا این خدمت در قالب بسته فروخته می‌شود",
+          "default": false
+        },
+        "packageName": {
+          "type": "string",
+          "label": "نام بسته",
+          "description": "عنوان بسته چندجلسه‌ای"
+        },
+        "packageSessionCount": {
+          "type": "number",
+          "label": "تعداد جلسات بسته",
+          "description": "تعداد جلسات موجود در بسته"
+        },
+        "packagePrice": {
+          "type": "number",
+          "label": "قیمت بسته (ریال)",
+          "description": "قیمت کل بسته به ریال"
+        },
+        "packageValidityDays": {
+          "type": "number",
+          "label": "اعتبار بسته (روز)",
+          "description": "مدت زمان اعتبار بسته به روز"
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "وضعیت نمایش و قابل رزرو بودن خدمت",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "staff",
+    "schemaDefinition": {
+      "label": "تیم متخصصان",
+      "description": "پزشکان و کارشناسان کلینیک به همراه برنامه کاری",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "label": "نام و نام خانوادگی",
+          "description": "نام متخصص",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "label": "عنوان شغلی",
+          "description": "تخصص یا سمت (مثل متخصص پوست و مو)"
+        },
+        "bio": {
+          "type": "string",
+          "label": "معرفی",
+          "description": "سوابق و توضیحات متخصص"
+        },
+        "color": {
+          "type": "string",
+          "label": "رنگ شاخص",
+          "description": "رنگ تقویم و پروفایل متخصص"
+        },
+        "image": {
+          "type": "string",
+          "label": "تصویر پروفایل",
+          "description": "مسیر تصویر متخصص"
+        },
+        "hours": {
+          "type": "array",
+          "label": "ساعات حضور",
+          "description": "برنامه هفتگی حضور متخصص"
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "وضعیت فعال بودن متخصص",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "client",
+    "schemaDefinition": {
+      "label": "مراجعان",
+      "description": "پرونده و اطلاعات تماس مراجعان کلینیک",
+      "required": [
+        "fullName"
+      ],
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "label": "نام کامل",
+          "description": "نام و نام خانوادگی مراجع",
+          "minLength": 1
+        },
+        "phoneNumber": {
+          "type": "string",
+          "label": "شماره موبایل",
+          "description": "شماره تماس مراجع"
+        },
+        "email": {
+          "type": "string",
+          "label": "ایمیل",
+          "description": "نشانی ایمیل مراجع"
+        },
+        "visitCount": {
+          "type": "number",
+          "label": "تعداد مراجعات",
+          "description": "تعداد نوبت‌های انجام‌شده",
+          "default": 0
+        },
+        "noShowCount": {
+          "type": "number",
+          "label": "تعداد عدم حضور",
+          "description": "تعداد نوبت‌هایی که مراجع حضور نیافته است",
+          "default": 0
+        },
+        "notes": {
+          "type": "string",
+          "label": "یادداشت‌ها",
+          "description": "توضیحات داخلی درباره مراجع"
+        }
+      }
+    }
+  },
+  {
+    "name": "booking",
+    "schemaDefinition": {
+      "label": "نوبت‌ها و رزروها",
+      "description": "نوبت‌های ثبت‌شده مراجعان برای خدمات کلینیک",
+      "required": [
+        "customerName",
+        "startsAt"
+      ],
+      "properties": {
+        "customerName": {
+          "type": "string",
+          "label": "نام مراجع",
+          "description": "نام و نام خانوادگی رزروکننده",
+          "minLength": 1
+        },
+        "customerPhone": {
+          "type": "string",
+          "label": "تلفن مراجع",
+          "description": "شماره تماس رزروکننده"
+        },
+        "customerEmail": {
+          "type": "string",
+          "label": "ایمیل مراجع",
+          "description": "ایمیل رزروکننده"
+        },
+        "serviceId": {
+          "type": "objectId",
+          "relationTarget": "service",
+          "label": "خدمت",
+          "description": "خدمت انتخاب‌شده برای نوبت"
+        },
+        "staffId": {
+          "type": "objectId",
+          "relationTarget": "staff",
+          "label": "متخصص",
+          "description": "متخصص ارائه‌دهنده نوبت"
+        },
+        "clientId": {
+          "type": "objectId",
+          "relationTarget": "client",
+          "label": "مراجع",
+          "description": "پرونده مراجع مرتبط با نوبت"
+        },
+        "startsAt": {
+          "type": "string",
+          "label": "زمان شروع",
+          "description": "تاریخ و ساعت شروع نوبت (ISO)"
+        },
+        "endsAt": {
+          "type": "string",
+          "label": "زمان پایان",
+          "description": "تاریخ و ساعت پایان نوبت (ISO)"
+        },
+        "status": {
+          "type": "string",
+          "label": "وضعیت نوبت",
+          "description": "وضعیت فعلی نوبت",
+          "enum": [
+            "pending",
+            "confirmed",
+            "checked_in",
+            "completed",
+            "cancelled",
+            "no_show"
+          ],
+          "enumLabels": {
+            "pending": "در انتظار تأیید",
+            "confirmed": "تأییدشده",
+            "checked_in": "پذیرش‌شده",
+            "completed": "انجام‌شده",
+            "cancelled": "لغوشده",
+            "no_show": "عدم حضور"
+          },
+          "default": "confirmed"
+        },
+        "paymentStatus": {
+          "type": "string",
+          "label": "وضعیت پرداخت",
+          "description": "وضعیت تسویه مالی نوبت",
+          "enum": [
+            "unpaid",
+            "deposit_paid",
+            "paid",
+            "refunded",
+            "credit"
+          ],
+          "enumLabels": {
+            "unpaid": "پرداخت‌نشده",
+            "deposit_paid": "بیعانه پرداخت‌شده",
+            "paid": "پرداخت‌شده",
+            "refunded": "عودت‌شده",
+            "credit": "از اعتبار بسته"
+          },
+          "default": "unpaid"
+        },
+        "price": {
+          "type": "number",
+          "label": "مبلغ (ریال)",
+          "description": "هزینه نوبت به ریال"
+        },
+        "paidAmount": {
+          "type": "number",
+          "label": "مبلغ پرداخت‌شده",
+          "description": "مبلغ دریافت‌شده تا این لحظه",
+          "default": 0
+        },
+        "mode": {
+          "type": "string",
+          "label": "نوع مراجعه",
+          "description": "نحوه انجام نوبت",
+          "enum": [
+            "in_person",
+            "phone",
+            "google_meet"
+          ],
+          "enumLabels": {
+            "in_person": "حضوری",
+            "phone": "تلفنی",
+            "google_meet": "آنلاین"
+          },
+          "default": "in_person"
+        },
+        "source": {
+          "type": "string",
+          "label": "کانال ثبت",
+          "description": "محل ثبت نوبت",
+          "enum": [
+            "web",
+            "telegram",
+            "miniapp",
+            "phone",
+            "walk_in",
+            "staff"
+          ],
+          "enumLabels": {
+            "web": "وب‌سایت",
+            "telegram": "تلگرام",
+            "miniapp": "مینی‌اپ",
+            "phone": "تلفنی",
+            "walk_in": "حضوری",
+            "staff": "پنل پذیرش"
+          },
+          "default": "web"
+        },
+        "notes": {
+          "type": "string",
+          "label": "یادداشت مراجع",
+          "description": "توضیحات ثبت‌شده هنگام رزرو"
+        }
+      }
+    }
+  },
+  {
+    "name": "time_off",
+    "schemaDefinition": {
+      "label": "تعطیلات و مرخصی‌ها",
+      "description": "زمان‌های تعطیلی کلینیک یا مرخصی متخصصان",
+      "required": [
+        "startsAt",
+        "endsAt"
+      ],
+      "properties": {
+        "staffId": {
+          "type": "objectId",
+          "relationTarget": "staff",
+          "label": "متخصص",
+          "description": "در صورت خالی بودن برای کل کلینیک اعمال می‌شود"
+        },
+        "startsAt": {
+          "type": "string",
+          "label": "شروع",
+          "description": "تاریخ و ساعت شروع (ISO)"
+        },
+        "endsAt": {
+          "type": "string",
+          "label": "پایان",
+          "description": "تاریخ و ساعت پایان (ISO)"
+        },
+        "allDay": {
+          "type": "boolean",
+          "label": "تمام روز",
+          "description": "آیا کل روز تعطیل است",
+          "default": true
+        },
+        "kind": {
+          "type": "string",
+          "label": "نوع",
+          "description": "دلیل عدم پذیرش",
+          "enum": [
+            "holiday",
+            "leave",
+            "break"
+          ],
+          "enumLabels": {
+            "holiday": "تعطیل رسمی",
+            "leave": "مرخصی",
+            "break": "استراحت"
+          },
+          "default": "holiday"
+        },
+        "reason": {
+          "type": "string",
+          "label": "توضیح",
+          "description": "عنوان یا دلیل تعطیلی"
+        },
+        "repeatsAnnually": {
+          "type": "boolean",
+          "label": "تکرار سالانه",
+          "description": "تکرار خودکار در هر سال",
+          "default": false
+        }
+      }
+    }
+  },
+  {
+    "name": "event",
+    "schemaDefinition": {
+      "label": "رویدادها و کارگاه‌ها",
+      "description": "رویدادها، کارگاه‌ها و جلسات گروهی کلینیک",
+      "required": [
+        "title",
+        "startsAt"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "label": "عنوان رویداد",
+          "description": "نام رویداد یا کارگاه",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "label": "توضیحات",
+          "description": "جزئیات رویداد"
+        },
+        "startsAt": {
+          "type": "string",
+          "label": "زمان شروع",
+          "description": "تاریخ و ساعت شروع رویداد (ISO)"
+        },
+        "endsAt": {
+          "type": "string",
+          "label": "زمان پایان",
+          "description": "تاریخ و ساعت پایان رویداد (ISO)"
+        },
+        "capacity": {
+          "type": "number",
+          "label": "ظرفیت",
+          "description": "حداکثر تعداد شرکت‌کنندگان"
+        },
+        "price": {
+          "type": "number",
+          "label": "هزینه ثبت‌نام",
+          "description": "مبلغ شرکت در رویداد"
+        },
+        "staffId": {
+          "type": "objectId",
+          "relationTarget": "staff",
+          "label": "مدرس یا متخصص",
+          "description": "متخصص برگزارکننده رویداد"
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "وضعیت نمایش و ثبت‌نام رویداد",
+          "default": true
+        }
+      }
+    }
+  },
+  {
+    "name": "faq",
+    "schemaDefinition": {
+      "label": "پرسش‌های متداول",
+      "description": "سؤالات پرتکرار مراجعان و پاسخ‌های راهنما",
+      "required": [
+        "question",
+        "answer"
+      ],
+      "properties": {
+        "question": {
+          "type": "string",
+          "label": "پرسش",
+          "description": "متن سؤال مراجع",
+          "minLength": 1
+        },
+        "answer": {
+          "type": "string",
+          "label": "پاسخ",
+          "description": "پاسخ کامل کلینیک",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "label": "دسته‌بندی",
+          "description": "موضوع پرسش (مثلاً نوبت، بسته‌ها، یادآوری)"
+        },
+        "order": {
+          "type": "number",
+          "label": "ترتیب نمایش",
+          "description": "اولویت نمایش در صفحه پرسش‌ها",
+          "default": 0
+        },
+        "active": {
+          "type": "boolean",
+          "label": "فعال",
+          "description": "نمایش یا عدم نمایش پرسش",
+          "default": true
+        }
+      }
+    }
+  }
+]
