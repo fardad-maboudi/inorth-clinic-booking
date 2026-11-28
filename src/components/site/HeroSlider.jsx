@@ -11,7 +11,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export const HERO_SLIDES = [
   {
     id: 'skin-care',
-    image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1920&q=80',
+    image: '/images/hero-skin-care_converted.avif',
     fallbackColor: '#0f3a37',
     alt: 'کلینیک تخصصی و اتاق مشاوره پوست و زیبایی نیلوفر',
     eyebrow: 'کلینیک زیبایی نیلوفر',
@@ -28,7 +28,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 'laser-tech',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1920&q=80',
+    image: '/images/hero-laser-tech_converted.avif',
     fallbackColor: '#1a3331',
     alt: 'تجهیزات مدرن لیزر پوست با سیستم خنک‌کننده',
     eyebrow: 'فناوری روز دنیا',
@@ -45,7 +45,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 'relaxation-massage',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1920&q=80',
+    image: '/images/hero-relaxation-massage_converted.avif',
     fallbackColor: '#1c3634',
     alt: 'فضای آرام ماساژ و ریلکسیشن کلینیک',
     eyebrow: 'آرامش و تندرستی',

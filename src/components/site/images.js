@@ -1,21 +1,21 @@
 const SERVICE_IMAGES = {
   skin: [
-    '/images/skincare-facial-care.jpg',
-    '/images/skincare-consultation.jpg',
+    '/images/skincare-facial-care.avif',
+    '/images/skincare-consultation.avif',
   ],
   laser: [
-    '/images/skin-laser-care.jpg',
-    '/images/laser-hair-removal.jpg',
+    '/images/skin-laser-care.avif',
+    '/images/laser-hair-removal.avif',
   ],
   wellness: [
-    '/images/spa-massage-care.jpg',
-    '/images/spa-aromatherapy-care.jpg',
+    '/images/spa-massage-care.avif',
+    '/images/spa-aromatherapy-care.avif',
   ],
 };
 
 const DEFAULT_STAFF_IMAGES = [
-  '/images/clinic-team-consultation.jpg',
-  '/images/skincare-consultation.jpg',
+  '/images/clinic-team-consultation.avif',
+  '/images/skincare-consultation.avif',
 ];
 
 function normalizeLabel(value) {

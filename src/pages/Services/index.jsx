@@ -33,10 +33,10 @@ export default function ServicesPage() {
 
             <div className="cl-services-mosaic" role="img" aria-label="تصاویر مراقبت پوست و لیزر در محیط کلینیک">
               <div className="cl-services-photo cl-services-photo-main">
-                <img src="/images/skincare-facial-care.jpg" alt="" fetchPriority="high" />
+                <img src="/images/skincare-facial-care.avif" alt="" fetchPriority="high" decoding="async" />
               </div>
               <div className="cl-services-photo cl-services-photo-laser">
-                <img src="/images/skin-laser-care.jpg" alt="" loading="lazy" />
+                <img src="/images/skin-laser-care.avif" alt="" loading="lazy" decoding="async" />
               </div>
               <div className="cl-services-mosaic-note">
                 <ServiceIcon group="پوست و مو" />
